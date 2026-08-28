@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avance Proyecto 1 - Planificación y Toma de Decisiones en IA (UTEC)</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #0284c7;
+            --accent-light: #e0f2fe;
+            --text-dark: #334155;
+            --bg-card: #ffffff;
+            --bg-page: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            max-height: 680px;
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+
+        .slide {
+            display: none;
+            padding: 40px 50px;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-header {
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-header h2 {
+            color: var(--primary);
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .cover-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: #0f172a;
+            color: white;
+            padding: 60px 40px;
+        }
+
+        .cover-slide h1 {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .cover-slide h3 {
+            font-weight: 400;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .cover-meta {
+            margin-top: 25px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .cover-pill {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--accent);
+            padding: 18px 20px;
+            border-radius: 6px;
+        }
+
+        .card h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .card p, .card ul {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .card ul {
+            list-style-position: inside;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #f1f5f9;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1e293b;
+        }
+
+        .btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .metric-box {
+            background: white;
+            border-radius: 6px;
+            padding: 16px;
+            border: 1px solid #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Portada -->
+        <div class="slide cover-slide active">
+            <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
+            <h1>Avance Proyecto 1: Sistema Inteligente Adaptativo</h1>
+            <h3>Planificación y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas / JTP: Robert</h3>
+            
+            <div style="max-width: 650px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Detección de Fraude Financiero en E-Commerce</p>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">Dataset: IEEE-CIS Fraud Detection (Kaggle)</p>
+            </div>
+
+            <div class="cover-meta">
+                <div class="cover-pill">Duración: 10 - 15 min</div>
+                <div class="cover-pill">Formato: Presentación de Avance</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Objetivos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>1. Definición de Objetivos</h2>
+                <span class="badge">Propósito del Sistema</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Objetivo Principal</h4>
+                    <p>Desarrollar un sistema de clasificación supervisada para clasificar transacciones en Legítimas (0) o Fraudulentas (1) en tiempo real, considerando la naturaleza dinámica de los datos en el tiempo (Concept Drift).</p>
+                </div>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Dimensión Temporal</h4>
+                    <p>Respetar la secuencia cronológica estricta a través de la marca de tiempo real <code>TransactionDT</code> para prevenir fuga de información del futuro hacia el pasado (data leakage).</p>
+                </div>
+                <div class="card" style="border-left-color: #475569; grid-column: span 2;">
+                    <h4>Objetivo de Adaptabilidad</h4>
+                    <p>Evaluar de manera continua la degradación del rendimiento del modelo a lo largo de bloques de tiempo y establecer estrategias de adaptación eficientes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Restricciones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>2. Definición de Restricciones</h2>
+                <span class="badge">Limitaciones Técnicas y Operativas</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <h4>Latencia e Inferencia en Tiempo Real</h4>
+                    <p>El tiempo de predicción por transacción debe ser menor a 200 ms para no generar fricción en el proceso de pago del usuario.</p>
+                </div>
+                <div class="card">
+                    <h4>Desbalance Severo de Clases</h4>
+                    <p>Solo aproximadamente el 3.5% de las transacciones son fraudulentas. Las métricas convencionales como el Accuracy quedan descartadas.</p>
+                </div>
+                <div class="card">
+                    <h4>Calidad de Datos e Identidades</h4>
+                    <p>Gran volumen de valores nulos en atributos categóricos de dispositivos y conexiones. Requiere tratamiento sistemático de faltantes.</p>
+                </div>
+                <div class="card">
+                    <h4>Validación Temporal Estricta</h4>
+                    <p>No se puede aplicar validación cruzada aleatoria tradicional (K-Fold); la división de entrenamiento, validación y prueba debe ser puramente cronológica.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Métricas de Éxito -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>3. Métricas de Éxito (3 Dimensiones)</h2>
+                <span class="badge">Evaluación Integral</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 8px;">Técnicas</h4>
+                    <ul style="font-size: 0.9rem; line-height: 1.6;">
+                        <li><strong>F1-Score:</strong> Métrica principal dada la desproporción de clases.</li>
+                        <li><strong>ROC-AUC / PR-AUC:</strong> Capacidad discriminativa.</li>
+                        <li><strong>Latencia:</strong> Milisegundos por predicción.</li>
+                    </ul>
+                </div>
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 8px;">Decisión / Negocio</h4>
+                    <ul style="font-size: 0.9rem; line-height: 1.6;">
+                        <li><strong>Costo por Error:</strong> Falsos Negativos (Fraude omitido) vs. Falsos Positivos (Fricción).</li>
+                        <li><strong>Tasa de Cobertura:</strong> Porcentaje de dinero riesgoso interceptado.</li>
+                    </ul>
+                </div>
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 8px;">Sociales / Riesgo</h4>
+                    <ul style="font-size: 0.9rem; line-height: 1.6;">
+                        <li><strong>Equidad de Monto:</strong> Evitar sesgos en transacciones de bajo o alto valor.</li>
+                        <li><strong>Riesgo por Dispositivo:</strong> Sin tasa de rechazo injusta por sistema operativo o navegador.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Modelos Mapeados -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>4. Modelos Mapeados</h2>
+                <span class="badge">Tradicional vs. Avanzado</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #64748b;">
+                    <h4>Modelos Tradicionales (Línea Base)</h4>
+                    <ul>
+                        <li><strong>Regresión Logística:</strong> Inferencia rápida, modelo interpretable de referencia inicial.</li>
+                        <li><strong>Random Forest Classifier:</strong> Captura interacciones no lineales entre características mediante ensamble (bagging).</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Modelo Avanzado</h4>
+                    <ul>
+                        <li><strong>LightGBM / XGBoost:</strong> Ensamble basado en Gradient Boosting optimizado para datos tabulares masivos.</li>
+                        <li>Manejo nativo de valores faltantes y velocidad superior de entrenamiento.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Estrategia de Monitoreo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>5. Estrategia de Monitoreo: Ventanas Fijas</h2>
+                <span class="badge">Seguimiento Temporal</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Evaluación por Ventanas Fijas</h4>
+                    <p>En esta etapa inicial se emplearán ventanas de tiempo de tamaño fijo (ejemplo: bloques de 30 días fijados por <code>TransactionDT</code>).</p>
+                </div>
+                <div class="card" style="border-left-color: #64748b;">
+                    <h4>Medición de Degradación</h4>
+                    <p>Se evaluará el F1-Score y ROC-AUC del modelo en cada ventana sucesiva para registrar la curva de caída del desempeño a medida que transcurre el tiempo.</p>
+                </div>
+                <div class="card" style="border-left-color: #0f172a; grid-column: span 2;">
+                    <h4>Umbral de Alerta y Adaptación</h4>
+                    <p>Cuando la caída de desempeño en una ventana fija supere un umbral determinado (ejemplo: caída mayor al 5% en F1-Score), se activará una señal de alerta para ejecutar el reentrenamiento del modelo con la ventana más reciente.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Mini Plan de Trabajo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>6. Mini Plan de Trabajo y Cronograma</h2>
+                <span class="badge">Planificación</span>
+            </div>
+            <div class="slide-body">
+                <div class="card" style="margin-bottom: 10px; border-left-color: #0f172a;">
+                    <h4>Fase 1: Formulación y Diseño (Completado)</h4>
+                    <p>Definición del caso de uso, objetivos, restricciones, métricas y selección del dataset IEEE-CIS.</p>
+                </div>
+                <div class="card" style="margin-bottom: 10px; border-left-color: #0284c7;">
+                    <h4>Fase 2: Exploración Temporal y Preprocesamiento</h4>
+                    <p>Análisis exploratorio sobre la dimensión temporal, ingeniería de características con ventanas móviles y división cronológica.</p>
+                </div>
+                <div class="card" style="border-left-color: #64748b;">
+                    <h4>Fase 3 y 4: Modelado, Monitoreo y Entrega Final</h4>
+                    <p>Entrenamiento comparativo, evaluación en ventanas fijas e informe técnico con infografía final.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Footer -->
+        <div class="controls">
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 7</span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            pageIndicator.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
