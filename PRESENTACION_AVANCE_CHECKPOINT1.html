@@ -219,7 +219,7 @@
         <div class="slide cover-slide active">
             <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
             <h1>Avance Proyecto 1: Sistema Inteligente Adaptativo</h1>
-            <h3>Planificación y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas / JTP: Robert</h3>
+            <h3>Planificación y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas & Mg. Robert Buleje</h3>
             
             <div style="max-width: 650px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
                 <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Detección de Fraude Financiero en E-Commerce</p>
@@ -228,7 +228,7 @@
 
             <div class="cover-meta">
                 <div class="cover-pill">Duración: 10 - 15 min</div>
-                <div class="cover-pill">Formato: Presentación de Avance</div>
+                <div class="cover-pill">Evaluación: 2 Puntos en Rúbrica Final</div>
             </div>
         </div>
 
@@ -249,7 +249,7 @@
                 </div>
                 <div class="card" style="border-left-color: #475569; grid-column: span 2;">
                     <h4>Objetivo de Adaptabilidad</h4>
-                    <p>Evaluar de manera continua la degradación del rendimiento del modelo a lo largo de bloques de tiempo y establecer estrategias de adaptación eficientes.</p>
+                    <p>Evaluar de manera continua la degradación del rendimiento del modelo a lo largo de bloques de tiempo y establecer estrategias de adaptación basadas en ventanas deslizantes.</p>
                 </div>
             </div>
         </div>
@@ -339,21 +339,21 @@
         <!-- Slide 6: Estrategia de Monitoreo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>5. Estrategia de Monitoreo: Ventanas Fijas</h2>
-                <span class="badge">Seguimiento Temporal</span>
+                <h2>5. Estrategia de Monitoreo: Ventanas Deslizantes Fijas</h2>
+                <span class="badge">Estrategia de Olvido (Prioridad PDF)</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #0284c7;">
-                    <h4>Evaluación por Ventanas Fijas</h4>
-                    <p>En esta etapa inicial se emplearán ventanas de tiempo de tamaño fijo (ejemplo: bloques de 30 días fijados por <code>TransactionDT</code>).</p>
+                    <h4>Evaluación por Ventanas Fijas Deslizantes</h4>
+                    <p>Priorización de estrategias basadas en el olvido mediante ventanas temporales fijas y deslizantes (ej. bloques de 30 días con desplazamiento).</p>
                 </div>
                 <div class="card" style="border-left-color: #64748b;">
-                    <h4>Medición de Degradación</h4>
-                    <p>Se evaluará el F1-Score y ROC-AUC del modelo en cada ventana sucesiva para registrar la curva de caída del desempeño a medida que transcurre el tiempo.</p>
+                    <h4>Escenarios de Tamaño de Ventana</h4>
+                    <p>Evaluación del impacto del drift variando el tamaño de la ventana deslizante para comparar estabilidad vs. adaptabilidad.</p>
                 </div>
                 <div class="card" style="border-left-color: #0f172a; grid-column: span 2;">
-                    <h4>Umbral de Alerta y Adaptación</h4>
-                    <p>Cuando la caída de desempeño en una ventana fija supere un umbral determinado (ejemplo: caída mayor al 5% en F1-Score), se activará una señal de alerta para ejecutar el reentrenamiento del modelo con la ventana más reciente.</p>
+                    <h4>Umbral de Alerta y Reentrenamiento</h4>
+                    <p>Activación de reentrenamiento periódico al superar un umbral predefinido de caída en F1-Score (ejemplo: degradación mayor al 5%).</p>
                 </div>
             </div>
         </div>
@@ -361,21 +361,21 @@
         <!-- Slide 7: Mini Plan de Trabajo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>6. Mini Plan de Trabajo y Cronograma</h2>
-                <span class="badge">Planificación</span>
+                <h2>6. Mini Plan de Trabajo y Producto Final</h2>
+                <span class="badge">Hoja de Ruta</span>
             </div>
             <div class="slide-body">
                 <div class="card" style="margin-bottom: 10px; border-left-color: #0f172a;">
-                    <h4>Fase 1: Formulación y Diseño (Completado)</h4>
+                    <h4>Fase 1: Formulación y Diseño (Completado - Avance 2 Pts)</h4>
                     <p>Definición del caso de uso, objetivos, restricciones, métricas y selección del dataset IEEE-CIS.</p>
                 </div>
                 <div class="card" style="margin-bottom: 10px; border-left-color: #0284c7;">
                     <h4>Fase 2: Exploración Temporal y Preprocesamiento</h4>
-                    <p>Análisis exploratorio sobre la dimensión temporal, ingeniería de características con ventanas móviles y división cronológica.</p>
+                    <p>Análisis exploratorio temporal, ingeniería de características con ventanas deslizantes y división cronológica.</p>
                 </div>
                 <div class="card" style="border-left-color: #64748b;">
-                    <h4>Fase 3 y 4: Modelado, Monitoreo y Entrega Final</h4>
-                    <p>Entrenamiento comparativo, evaluación en ventanas fijas e informe técnico con infografía final.</p>
+                    <h4>Fase 3 y 4: Modelado, Monitoreo e Informe Técnico (Máx. 8 Pág.)</h4>
+                    <p>Entrenamiento comparativo, evaluación en ventanas deslizantes e informe de hasta 8 páginas con infografía final.</p>
                 </div>
             </div>
         </div>

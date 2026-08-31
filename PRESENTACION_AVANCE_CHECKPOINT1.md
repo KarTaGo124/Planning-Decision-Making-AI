@@ -1,10 +1,10 @@
 # Avance Proyecto 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
 
 **Curso:** Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
-**Profesor:** Dra. Aurea Soriano-Vargas  
-**Jefe de Trabajos Prácticos:** Robert  
+**Profesores:** Dra. Aurea Soriano-Vargas & Mg. Robert Buleje  
 **Caso de Uso Elegido:** Detección de Fraude Financiero en E-Commerce (IEEE-CIS Fraud Detection)  
-**Modalidad de Presentación:** Documento / PPT (10 - 15 minutos)
+**Modalidad de Presentación:** Documento / PPT (10 - 15 minutos)  
+**Puntaje del Avance en Rúbrica:** 2 Puntos (de 20)
 
 ---
 
@@ -16,7 +16,7 @@ Desarrollar un sistema de clasificación supervisada capaz de detectar transacci
 ### Objetivos Específicos
 1. **Predicción Supervisada:** Clasificar las transacciones entrantes como legítimas (0) o fraudulentas (1).
 2. **Respetar la Dimensión Temporal:** Realizar todo el proceso de entrenamiento, validación y prueba en estricto orden cronológico utilizando la marca de tiempo `TransactionDT`.
-3. **Monitoreo Continuo:** Evaluar la degradación del rendimiento del modelo a medida que transcurren los bloques de tiempo.
+3. **Monitoreo Continuo:** Evaluar la degradación del rendimiento del modelo a medida que transcurren los bloques de tiempo mediante estrategias basadas en el olvido.
 
 ---
 
@@ -36,7 +36,7 @@ El desempeño del proyecto se medirá integrando las tres dimensiones requeridas
 ### A. Métricas Técnicas
 * **F1-Score:** Métrica principal dada la desproporción de clases.
 * **ROC-AUC y PR-AUC:** Medición de la capacidad discriminativa del modelo en distintos umbrales de probabilidad.
-* **Latencia:** Tiempo promedio por predicción.
+* **Latencia:** Tiempo promedio por predicción en milisegundos.
 
 ### B. Métricas de Decisión (Costo / Negocio)
 * **Costo Neto por Error:** Balance económico calculado como:
@@ -61,20 +61,22 @@ Para este proyecto se evaluarán las siguientes alternativas:
 
 ---
 
-## 5. Estrategia de Monitoreo: Ventanas Fijas
+## 5. Estrategia de Monitoreo: Ventanas Deslizantes Fijas
 
-Siguiendo las indicaciones establecidas para esta primera entrega de avance:
-* **Esquema de Evaluación:** Se definirá una evaluación basada en **ventanas fijas de tiempo** (ejemplo: bloques fijos de 30 días fijados por la variable `TransactionDT`).
-* **Medición de Degradación:** Se evaluará el F1-Score y ROC-AUC del modelo en cada ventana fija posterior a la fecha de entrenamiento.
-* **Gatillo de Adaptación:** Al detectar una caída del desempeño superior al umbral fijado (ejemplo: caída mayor al 5% en F1-Score), se activará una alerta de reentrenamiento periódico.
+Siguiendo las indicaciones prioritarias del sílabo actualizado (Sección 3.5):
+* **Estrategia Basada en el Olvido (Prioridad):** Se priorizará el uso de ventanas fijas deslizantes (ejemplo: bloques de 30 días con desplazamiento temporal).
+* **Evaluación de Escenarios:** Se evaluará el impacto del drift variando la amplitud de la ventana deslizante para comparar la estabilidad frente a la adaptabilidad del modelo.
+* **Gatillo de Adaptación:** Al detectar una caída del desempeño superior al umbral fijado (ejemplo: caída mayor al 5% en F1-Score), se activará una alerta de reentrenamiento periódico con la ventana más reciente.
 
 ---
 
-## 6. Mini Plan de Trabajo
+## 6. Mini Plan de Trabajo y Entregables Finales
 
-```text
-[Fase 1 - Actual]     : Definición del problema, dataset, métricas y diseño conceptual (Completado).
-[Fase 2 - Próxima]    : Exploración temporal (EDA) y preprocesamiento con ventanas temporales.
-[Fase 3 - Desarrollo] : Entrenamiento comparativo de modelos tradicionales vs. avanzado.
-[Fase 4 - Evaluación] : Medición de degradación en ventanas fijas e informe técnico final.
-```
+* **Fase 1 (Actual):** Formulación del problema, dataset, métricas y diseño conceptual (Completado - Avance 2 Pts).
+* **Fase 2 (Próxima):** Exploración temporal (EDA) e ingeniería de características con ventanas deslizantes.
+* **Fase 3 (Desarrollo):** Entrenamiento comparativo de modelos tradicionales vs. avanzado.
+* **Fase 4 (Entrega Final):** 
+  * Código del sistema funcional y reproducible.
+  * Documento Técnico: **Informe de un máximo de 8 páginas**.
+  * Elementos visuales e infografía final.
+  * Presentación final en clase (15-20 minutos de exposición + 5-10 minutos de preguntas).

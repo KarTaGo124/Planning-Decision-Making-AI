@@ -1,6 +1,6 @@
 # Planificación y Toma de Decisiones en IA — UTEC (2026-2)
 
-Este repositorio contiene la propuesta y avances para los proyectos de la asignatura **Planificación y Toma de Decisiones en IA** en la Universidad de Ingeniería y Tecnología (UTEC).
+Este repositorio contiene la propuesta y avances para los proyectos de la asignatura **Planificación y Toma de Decisiones en IA** en la Universidad de Ingeniería y Tecnología (UTEC), dictada por la **Dra. Aurea Soriano-Vargas** y el **Mg. Robert Buleje**.
 
 ---
 
@@ -18,9 +18,9 @@ En este primer avance se presenta la formulación del problema, la selección de
   3. Métricas de Éxito (Técnicas, Decisión/Negocio y Sociales/Riesgo).
   4. Mini Plan de Trabajo y Cronograma de ejecución.
   5. Modelos Mapeados (Tradicionales: Regresión Logística, Random Forest vs. Avanzado: LightGBM).
-  6. Estrategia de Monitoreo inicial mediante **Ventanas Fijas de Tiempo**.
+  6. Estrategia de Monitoreo inicial mediante **Ventanas Fijas Deslizantes** (Estrategia basada en el olvido).
 
 ---
 
 ## Documentación Principal
-Para consultar el guion completo de la presentación de 10 a 15 minutos para la clase del miércoles, abre el archivo [`PRESENTACION_AVANCE_CHECKPOINT1.html`](PRESENTACION_AVANCE_CHECKPOINT1.html) en tu navegador web.
+Para consultar la presentación completa para la clase, abre el archivo [`PRESENTACION_AVANCE_CHECKPOINT1.html`](PRESENTACION_AVANCE_CHECKPOINT1.html) en tu navegador web.
