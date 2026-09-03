@@ -35,8 +35,8 @@
         .presentation-container {
             width: 90vw;
             max-width: 1100px;
-            height: 80vh;
-            max-height: 680px;
+            height: 82vh;
+            max-height: 700px;
             position: relative;
             background: var(--bg-card);
             border-radius: 12px;
@@ -49,7 +49,7 @@
 
         .slide {
             display: none;
-            padding: 40px 50px;
+            padding: 35px 45px;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
@@ -61,8 +61,8 @@
 
         .slide-header {
             border-bottom: 2px solid var(--accent);
-            padding-bottom: 12px;
-            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -70,7 +70,7 @@
 
         .slide-header h2 {
             color: var(--primary);
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 700;
         }
 
@@ -90,7 +90,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .cover-slide {
@@ -134,34 +134,34 @@
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 16px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
         }
 
         .card {
             background: #ffffff;
             border: 1px solid #cbd5e1;
             border-left: 4px solid var(--accent);
-            padding: 18px 20px;
+            padding: 16px 18px;
             border-radius: 6px;
         }
 
         .card h4 {
             color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 1.05rem;
             font-weight: 600;
         }
 
         .card p, .card ul {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             color: #475569;
-            line-height: 1.5;
+            line-height: 1.45;
         }
 
         .card ul {
@@ -172,7 +172,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 12px 25px;
             background: #f1f5f9;
             border-top: 1px solid #cbd5e1;
         }
@@ -181,10 +181,10 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 9px 18px;
+            padding: 8px 16px;
             border-radius: 4px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
         }
 
@@ -200,13 +200,13 @@
         .page-indicator {
             font-weight: 600;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .metric-box {
             background: white;
             border-radius: 6px;
-            padding: 16px;
+            padding: 14px;
             border: 1px solid #cbd5e1;
         }
     </style>
@@ -232,150 +232,167 @@
             </div>
         </div>
 
-        <!-- Slide 2: Objetivos -->
+        <!-- Slide 2: Contextualización del Problema -->
         <div class="slide">
             <div class="slide-header">
-                <h2>1. Definición de Objetivos</h2>
-                <span class="badge">Propósito del Sistema</span>
+                <h2>1. Contextualización del Problema</h2>
+                <span class="badge">Motivación del Negocio</span>
             </div>
             <div class="slide-body grid-2">
-                <div class="card" style="border-left-color: #0284c7;">
-                    <h4>Objetivo Principal</h4>
-                    <p>Desarrollar un sistema de clasificación supervisada para clasificar transacciones en Legítimas (0) o Fraudulentas (1) en tiempo real, considerando la naturaleza dinámica de los datos en el tiempo (Concept Drift).</p>
-                </div>
                 <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Dimensión Temporal</h4>
-                    <p>Respetar la secuencia cronológica estricta a través de la marca de tiempo real <code>TransactionDT</code> para prevenir fuga de información del futuro hacia el pasado (data leakage).</p>
+                    <h4>Impacto del Fraude en E-Commerce</h4>
+                    <p>El crecimiento del comercio electrónico ha incrementado los ataques de fraude financiero, generando pérdidas monetarias directas y costos por fricción/rechazos arbitrarios a clientes legítimos (falsos positivos).</p>
+                </div>
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Variación Temporal (Concept Drift)</h4>
+                    <p>Las tácticas delictivas evolucionan continuamente en el tiempo. Los modelos estáticos pierden efectividad rápidamente al no considerar el cambio en la distribución de los datos.</p>
                 </div>
                 <div class="card" style="border-left-color: #475569; grid-column: span 2;">
-                    <h4>Objetivo de Adaptabilidad</h4>
-                    <p>Evaluar de manera continua la degradación del rendimiento del modelo a lo largo de bloques de tiempo y establecer estrategias de adaptación basadas en ventanas deslizantes.</p>
+                    <h4>Propuesta del Proyecto</h4>
+                    <p>Por estos motivos, se propone implementar un sistema inteligente adaptativo de detección de fraude en e-commerce, capaz de evaluar su degradación y mantener su rendimiento operacional mediante estrategias de adaptación temporal.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: Restricciones -->
+        <!-- Slide 3: Objetivos -->
         <div class="slide">
             <div class="slide-header">
-                <h2>2. Definición de Restricciones</h2>
-                <span class="badge">Limitaciones Técnicas y Operativas</span>
+                <h2>2. Definición de Objetivos</h2>
+                <span class="badge">General y Específicos</span>
             </div>
-            <div class="slide-body grid-2">
-                <div class="card">
-                    <h4>Latencia e Inferencia en Tiempo Real</h4>
-                    <p>El tiempo de predicción por transacción debe ser menor a 200 ms para no generar fricción en el proceso de pago del usuario.</p>
+            <div class="slide-body">
+                <div class="card" style="border-left-color: #0284c7; margin-bottom: 8px;">
+                    <h4>Objetivo General</h4>
+                    <p><strong>Implementar un sistema inteligente de detección de fraude transaccional para el sector e-commerce</strong>, capaz de evaluar el rendimiento en el tiempo y adaptarse a la variación no estacionaria de los datos (Concept Drift) para mantener la robustez del servicio a lo largo de su ciclo de vida.</p>
                 </div>
-                <div class="card">
-                    <h4>Desbalance Severo de Clases</h4>
-                    <p>Solo aproximadamente el 3.5% de las transacciones son fraudulentas. Las métricas convencionales como el Accuracy quedan descartadas.</p>
-                </div>
-                <div class="card">
-                    <h4>Calidad de Datos e Identidades</h4>
-                    <p>Gran volumen de valores nulos en atributos categóricos de dispositivos y conexiones. Requiere tratamiento sistemático de faltantes.</p>
-                </div>
-                <div class="card">
-                    <h4>Validación Temporal Estricta</h4>
-                    <p>No se puede aplicar validación cruzada aleatoria tradicional (K-Fold); la división de entrenamiento, validación y prueba debe ser puramente cronológica.</p>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Objetivos Específicos (Secuenciales)</h4>
+                    <ul style="font-size: 0.88rem; line-height: 1.45;">
+                        <li><strong>1. Exploración Temporal:</strong> Analizar la dimensión temporal del dataset para identificar patrones y variaciones no estacionarias.</li>
+                        <li><strong>2. Modelado Comparativo:</strong> Implementar y comparar modelos supervisados (2 tradicionales y 1 avanzado) en orden cronológico estricto.</li>
+                        <li><strong>3. Diseño de Arquitectura:</strong> Diseñar la arquitectura del sistema a nivel de componentes (integración, predicción, decisión, incertidumbre y acción).</li>
+                        <li><strong>4. Evaluación de Escenarios:</strong> Analizar escenarios de simulación temporal mediante políticas de olvido con ventanas deslizantes (30, 60 y 90 días).</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: Métricas de Éxito -->
+        <!-- Slide 4: Restricciones -->
         <div class="slide">
             <div class="slide-header">
-                <h2>3. Métricas de Éxito (3 Dimensiones)</h2>
-                <span class="badge">Evaluación Integral</span>
+                <h2>3. Definición de Restricciones</h2>
+                <span class="badge">Limitaciones Operativas de Negocio</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <h4>Latencia Operacional</h4>
+                    <p>Tiempo máximo de predicción e inferencia de <strong>200 ms por transacción</strong> para no interrumpir el flujo de compra en la pasarela de pagos.</p>
+                </div>
+                <div class="card">
+                    <h4>Estandarización de Fuentes</h4>
+                    <p>Procesamiento e integración de entradas heterogéneas provenientes de múltiples puntos de venta y dispositivos bajo un esquema estandarizado unificado.</p>
+                </div>
+                <div class="card">
+                    <h4>Evaluación Cronológica Estricta</h4>
+                    <p>Prohibición del uso de validación cruzada aleatoria (k-fold) para evitar la contaminación de información del futuro hacia el pasado (data leakage).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Métricas de Éxito -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>4. Métricas de Éxito (3 Dimensiones)</h2>
+                <span class="badge">Evaluación Compacta</span>
             </div>
             <div class="slide-body grid-3">
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 8px;">Técnicas</h4>
-                    <ul style="font-size: 0.9rem; line-height: 1.6;">
-                        <li><strong>F1-Score:</strong> Métrica principal dada la desproporción de clases.</li>
-                        <li><strong>ROC-AUC / PR-AUC:</strong> Capacidad discriminativa.</li>
+                    <ul style="font-size: 0.88rem; line-height: 1.5;">
+                        <li><strong>F1-Score & ROC-AUC:</strong> Métrica principal evaluada por bloque temporal bajo clases desbalanceadas.</li>
                         <li><strong>Latencia:</strong> Milisegundos por predicción.</li>
                     </ul>
                 </div>
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 8px;">Decisión / Negocio</h4>
-                    <ul style="font-size: 0.9rem; line-height: 1.6;">
-                        <li><strong>Costo por Error:</strong> Falsos Negativos (Fraude omitido) vs. Falsos Positivos (Fricción).</li>
-                        <li><strong>Tasa de Cobertura:</strong> Porcentaje de dinero riesgoso interceptado.</li>
+                    <ul style="font-size: 0.88rem; line-height: 1.5;">
+                        <li><strong>Costo Neto por Error:</strong> Balance entre Falsos Negativos (Fraude omitido) y Falsos Positivos (Fricción).</li>
+                        <li><strong>Tasa de Cobertura:</strong> % de volumen monetario riesgoso interceptado.</li>
                     </ul>
                 </div>
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 8px;">Sociales / Riesgo</h4>
-                    <ul style="font-size: 0.9rem; line-height: 1.6;">
-                        <li><strong>Equidad de Monto:</strong> Evitar sesgos en transacciones de bajo o alto valor.</li>
-                        <li><strong>Riesgo por Dispositivo:</strong> Sin tasa de rechazo injusta por sistema operativo o navegador.</li>
+                    <ul style="font-size: 0.88rem; line-height: 1.5;">
+                        <li><strong>Equidad de Monto:</strong> Evitar tasas desproporcionadas de falsos positivos en transacciones de bajo valor.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Modelos Mapeados -->
+        <!-- Slide 6: Modelos Mapeados -->
         <div class="slide">
             <div class="slide-header">
-                <h2>4. Modelos Mapeados</h2>
+                <h2>5. Modelos Mapeados</h2>
                 <span class="badge">Tradicional vs. Avanzado</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #64748b;">
                     <h4>Modelos Tradicionales (Línea Base)</h4>
                     <ul>
-                        <li><strong>Regresión Logística:</strong> Inferencia rápida, modelo interpretable de referencia inicial.</li>
-                        <li><strong>Random Forest Classifier:</strong> Captura interacciones no lineales entre características mediante ensamble (bagging).</li>
+                        <li><strong>Regresión Logística:</strong> Modelo lineal interprete para establecer la referencia inicial.</li>
+                        <li><strong>Random Forest Classifier:</strong> Modelo de ensamble por bagging para capturar no linealidades.</li>
                     </ul>
                 </div>
                 <div class="card" style="border-left-color: #0284c7;">
                     <h4>Modelo Avanzado</h4>
                     <ul>
                         <li><strong>LightGBM / XGBoost:</strong> Ensamble basado en Gradient Boosting optimizado para datos tabulares masivos.</li>
-                        <li>Manejo nativo de valores faltantes y velocidad superior de entrenamiento.</li>
+                        <li>Soporte nativo de valores faltantes y alta velocidad de entrenamiento.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: Estrategia de Monitoreo -->
+        <!-- Slide 7: Estrategia de Monitoreo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>5. Estrategia de Monitoreo: Ventanas Deslizantes Fijas</h2>
-                <span class="badge">Estrategia de Olvido (Prioridad PDF)</span>
+                <h2>6. Monitoreo por Escenarios de Olvido</h2>
+                <span class="badge">Ventanas Deslizantes</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #0284c7;">
-                    <h4>Evaluación por Ventanas Fijas Deslizantes</h4>
-                    <p>Priorización de estrategias basadas en el olvido mediante ventanas temporales fijas y deslizantes (ej. bloques de 30 días con desplazamiento).</p>
+                    <h4>Regla de Activación (Política)</h4>
+                    <p>Se evalúa el F1-Score en bloques fijos. Si se detecta una caída mayor al <strong>5%</strong> respecto al bloque base, se activa la alerta de reentrenamiento.</p>
                 </div>
-                <div class="card" style="border-left-color: #64748b;">
-                    <h4>Escenarios de Tamaño de Ventana</h4>
-                    <p>Evaluación del impacto del drift variando el tamaño de la ventana deslizante para comparar estabilidad vs. adaptabilidad.</p>
-                </div>
-                <div class="card" style="border-left-color: #0f172a; grid-column: span 2;">
-                    <h4>Umbral de Alerta y Reentrenamiento</h4>
-                    <p>Activación de reentrenamiento periódico al superar un umbral predefinido de caída en F1-Score (ejemplo: degradación mayor al 5%).</p>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Evaluación por Escenarios</h4>
+                    <ul>
+                        <li><strong>Escenario A (Ventana 30d):</strong> Olvido rápido de datos antiguos.</li>
+                        <li><strong>Escenario B (Ventana 60d):</strong> Balance entre estabilidad y frescura.</li>
+                        <li><strong>Escenario C (Time-Decay):</strong> Reentrenamiento con pesos por recencia.</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: Mini Plan de Trabajo -->
+        <!-- Slide 8: Mini Plan de Trabajo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>6. Mini Plan de Trabajo y Producto Final</h2>
-                <span class="badge">Hoja de Ruta</span>
+                <h2>7. Mini Plan de Trabajo y Cronograma</h2>
+                <span class="badge">Planificación</span>
             </div>
             <div class="slide-body">
-                <div class="card" style="margin-bottom: 10px; border-left-color: #0f172a;">
+                <div class="card" style="margin-bottom: 8px; border-left-color: #0f172a;">
                     <h4>Fase 1: Formulación y Diseño (Completado - Avance 2 Pts)</h4>
-                    <p>Definición del caso de uso, objetivos, restricciones, métricas y selección del dataset IEEE-CIS.</p>
+                    <p>Definición de problemática, objetivos reestructurados, restricciones de negocio, métricas y dataset IEEE-CIS.</p>
                 </div>
-                <div class="card" style="margin-bottom: 10px; border-left-color: #0284c7;">
+                <div class="card" style="margin-bottom: 8px; border-left-color: #0284c7;">
                     <h4>Fase 2: Exploración Temporal y Preprocesamiento</h4>
-                    <p>Análisis exploratorio temporal, ingeniería de características con ventanas deslizantes y división cronológica.</p>
+                    <p>EDA temporal, ingeniería de características con ventanas móviles y división cronológica.</p>
                 </div>
                 <div class="card" style="border-left-color: #64748b;">
-                    <h4>Fase 3 y 4: Modelado, Monitoreo e Informe Técnico (Máx. 8 Pág.)</h4>
-                    <p>Entrenamiento comparativo, evaluación en ventanas deslizantes e informe de hasta 8 páginas con infografía final.</p>
+                    <h4>Fase 3 y 4: Modelado, Evaluación de Escenarios e Informe (Máx. 8 Pág.)</h4>
+                    <p>Entrenamiento comparativo, simulación de escenarios de olvido e informe técnico final de máximo 8 páginas.</p>
                 </div>
             </div>
         </div>
@@ -383,7 +400,7 @@
         <!-- Controls Footer -->
         <div class="controls">
             <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
-            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 7</span>
+            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 8</span>
             <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
         </div>
 
