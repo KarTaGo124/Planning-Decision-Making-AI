@@ -214,13 +214,13 @@
 <body>
 
     <div class="presentation-container">
-        
+
         <!-- Slide 1: Portada -->
         <div class="slide cover-slide active">
             <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
             <h1>Avance Proyecto 1: Sistema Inteligente Adaptativo</h1>
             <h3>Planificación y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas & Mg. Robert Buleje</h3>
-            
+
             <div style="max-width: 650px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
                 <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Detección de Fraude Financiero en E-Commerce</p>
                 <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">Dataset: IEEE-CIS Fraud Detection (Kaggle)</p>
@@ -270,7 +270,7 @@
                     <ul style="font-size: 0.88rem; line-height: 1.45;">
                         <li><strong>1. Exploración Temporal:</strong> Analizar la dimensión temporal del dataset para identificar patrones y variaciones no estacionarias.</li>
                         <li><strong>2. Modelado Comparativo:</strong> Implementar y comparar modelos supervisados (2 tradicionales y 1 avanzado) en orden cronológico estricto.</li>
-                        <li><strong>3. Diseño de Arquitectura:</strong> Diseñar la arquitectura del sistema a nivel de componentes (integración, predicción, decisión, incertidumbre y acción).</li>
+                        <li><strong>3. Diseño de Arquitectura:</strong> Diseñar la arquitectura del sistema a nivel de componentes (integración, predicción, decisión, incertidumbre y acción) operando bajo inferencia en tiempo real para garantizar decisiones de baja latencia.</li>
                         <li><strong>4. Evaluación de Escenarios:</strong> Analizar escenarios de simulación temporal mediante políticas de olvido con ventanas deslizantes (30, 60 y 90 días).</li>
                     </ul>
                 </div>
@@ -285,8 +285,11 @@
             </div>
             <div class="slide-body grid-3">
                 <div class="card">
-                    <h4>Latencia Operacional</h4>
-                    <p>Tiempo máximo de predicción e inferencia de <strong>200 ms por transacción</strong> para no interrumpir el flujo de compra en la pasarela de pagos.</p>
+                    <h4>Latencia Operacional (≤ 200 ms)</h4>
+                    <p>Tiempo máximo de predicción e inferencia por transacción para no interrumpir el flujo de compra en la pasarela de pagos.</p>
+                    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 0.8rem; color: #64748b;">
+                        <em>Consideramos 200 ms como tiempo real bajo el marco de ML para detección de fraude de Borketey (2024) y el estándar de latencia para APIs críticas de Ben (oDown).</em>
+                    </div>
                 </div>
                 <div class="card">
                     <h4>Estandarización de Fuentes</h4>
@@ -393,6 +396,28 @@
                 <div class="card" style="border-left-color: #64748b;">
                     <h4>Fase 3 y 4: Modelado, Evaluación de Escenarios e Informe (Máx. 8 Pág.)</h4>
                     <p>Entrenamiento comparativo, simulación de escenarios de olvido e informe técnico final de máximo 8 páginas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Referencias -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>8. Referencias Bibliográficas</h2>
+                <span class="badge">Sustentación</span>
+            </div>
+            <div class="slide-body">
+                <div class="card" style="border-left-color: #0f172a; margin-bottom: 12px;">
+                    <h4>Modelado de Detección de Fraude en Tiempo Real</h4>
+                    <p style="padding-left: 20px; text-indent: -20px; font-size: 0.88rem; line-height: 1.6; color: #1e293b;">
+                        Borketey, B. (2024). Real-Time Fraud Detection Using Machine Learning. <em>Journal of Data Analysis and Information Processing</em>, 12(2), 185–204. https://doi.org/10.4236/jdaip.2024.122011
+                    </p>
+                </div>
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Estándar Industrial de Latencia en APIs</h4>
+                    <p style="padding-left: 20px; text-indent: -20px; font-size: 0.88rem; line-height: 1.6; color: #1e293b;">
+                        Ben, F. (s. f.). <em>API Response Time Standards: What’s Good, Bad, and Unacceptable</em>. oDown. https://odown.com/blog/api-response-time-standards/
+                    </p>
                 </div>
             </div>
         </div>
