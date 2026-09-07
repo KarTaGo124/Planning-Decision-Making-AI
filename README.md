@@ -6,19 +6,19 @@ Este repositorio contiene la propuesta y avances para los proyectos de la asigna
 
 ## Avance 1 (Checkpoint 1): Sistema Inteligente Adaptativo con Datos No Estacionarios
 
-En este primer avance se presenta la formulación contextualizada del problema, la selección del conjunto de datos, las metas reestructuradas del sistema y la estrategia de monitoreo temporal por escenarios para la **detección de fraude financiero en e-commerce**.
+En este primer avance se presenta la formulación contextualizada del problema, la selección del conjunto de datos, los objetivos depurados del sistema y la estrategia de monitoreo temporal por escenarios para la **detección de fraude financiero en e-commerce**.
 
 ### Contenido del Avance:
 * **Presentación Interactiva:** [`PRESENTACION_AVANCE_CHECKPOINT1.html`](PRESENTACION_AVANCE_CHECKPOINT1.html)
-* **Documento de Texto:** [`PRESENTACION_AVANCE_CHECKPOINT1.md`](PRESENTACION_AVANCE_CHECKPOINT1.md)
+* **Documento Técnico de Apoyo:** [`PRESENTACION_AVANCE_CHECKPOINT1.md`](PRESENTACION_AVANCE_CHECKPOINT1.md)
 * **Dataset Seleccionado:** IEEE-CIS Fraud Detection (Kaggle)
-* **Puntos Evaluados:**
-  1. Contextualización del Problema en E-Commerce y justificación de propuesta.
+* **Puntos Clave Desarrollados:**
+  1. Contextualización del Problema en E-Commerce respaldada con datos cuantitativos de la industria.
   2. Definición de Objetivos (General de Implementación + 4 Específicos Secuenciales).
-  3. Definición de Restricciones Operativas de Negocio (Latencia < 200 ms, estandarización de fuentes y división cronológica estricta).
-  4. Métricas de Éxito Compactas (Técnicas, Decisión/Negocio y Sociales/Riesgo).
-  5. Modelos Mapeados (Tradicionales: Regresión Logística, Random Forest vs. Avanzado: LightGBM / XGBoost).
-  6. Estrategia de Monitoreo por **Escenarios de Políticas de Olvido con Ventanas Deslizantes** (30, 60 y 90 días / time-decay).
+  3. Definición de Restricciones Operativas de Negocio (Latencia < 200 ms, Información mínima garantizada y Consistencia temporal estricta).
+  4. Métricas de Éxito Compactas (Técnicas, Negocio con fórmula y estimado cuantitativo, y Sociales).
+  5. Modelos Mapeados (4 modelos: Regresión Logística, Random Forest, LightGBM y XGBoost).
+  6. Estrategia de Monitoreo por **Escenarios de Políticas de Olvido con Ventanas Deslizantes** respaldada en literatura académica (*Gama et al., 2014; Dal Pozzolo et al., 2015*).
   7. Mini Plan de Trabajo y Cronograma de ejecución.
 
 ---

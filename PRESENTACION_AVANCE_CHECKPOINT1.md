@@ -10,66 +10,80 @@
 
 ## 1. Contextualización y Planteamiento del Problema
 
-En el sector de comercio electrónico (e-commerce), las transacciones digitales han experimentado un crecimiento acelerado, lo que ha incrementado los ataques de fraude financiero. El fraude representa pérdidas monetarias directas para los comercios, así como costos por fricción y pérdida de clientes legítimos debido a falsos bloqueos (falsos positivos).
+En el sector de comercio electrónico (e-commerce), el fraude transaccional representa una de las mayores amenazas operativas y financieras. Según estimaciones de la Federal Trade Commission (FTC) y reportes especializados del sector (como Merchant Savvy y Statista), las pérdidas por fraude en e-commerce superan los **$48 mil millones de dólares anuales a nivel global**, con un impacto superior a los **$10 mil millones en EE.UU.** Este impacto comprende tanto pérdidas directas de capital como costos operativos significativos por la investigación manual y el bloqueo erróneo de transacciones legítimas de usuarios reales.
 
-Dado que los patrones de fraude evolucionan constantemente a lo largo del tiempo por la aparición de nuevas tácticas delictivas (Concept Drift), los modelos estáticos pierden efectividad rápidamente al no considerar el cambio en la distribución de los datos. Por estos motivos, se propone el presente proyecto para desarrollar e implementar un sistema inteligente adaptativo de detección de fraude en e-commerce, capaz de evaluar su degradación y mantener su rendimiento operacional a lo largo del tiempo mediante estrategias de adaptación temporal.
+Asimismo, los patrones de compra y las tácticas fraudulentas presentan un continuo **cambio en el comportamiento de los datos** a lo largo del tiempo, impulsado por nuevas tecnologías de pago, estacionalidades comerciales y la rápida adaptación de los atacantes. Los modelos predictivos estáticos pierden efectividad a medida que transcurre el tiempo al no ajustarse a este dinamismo. Por todos estos motivos, **se propone implementar un sistema inteligente adaptativo de detección de fraude en e-commerce, capaz de evaluar su desempeño a lo largo del tiempo y preservar su robustez operacional mediante estrategias de adaptación temporal.**
 
 ---
 
 ## 2. Definición de Objetivos
 
 ### Objetivo General
-Implementar un sistema inteligente de detección de fraude transaccional para el sector e-commerce, capaz de evaluar el rendimiento en el tiempo y adaptarse a la variación no estacionaria de los datos (Concept Drift) para mantener la robustez del servicio a lo largo de su ciclo de vida.
+Implementar un sistema inteligente de detección de fraude transaccional para el sector e-commerce, capaz de evaluar su desempeño en el tiempo y adaptarse al cambio en el comportamiento de los datos para preservar la robustez del servicio a lo largo de su ciclo de vida.
 
 ### Objetivos Específicos (Secuenciales)
-1. **Analizar y explorar la dimensión temporal** del conjunto de datos transaccionales para identificar patrones de distribución, anomalías y variaciones no estacionarias a lo largo del tiempo.
-2. **Implementar y comparar modelos de clasificación supervisada** (evaluando dos enfoques tradicionales y uno avanzado) en estricto orden cronológico para establecer la línea base de rendimiento.
-3. **Diseñar la arquitectura del sistema a nivel de componentes**, definiendo la integración de datos, el módulo predictivo, el módulo de toma de decisiones, el manejo de incertidumbre y el componente de acción.
-4. **Analizar escenarios de simulación temporal** mediante políticas de olvido con ventanas deslizantes de diferente tamaño (30, 60 y 90 días) para evaluar la robustez y degradación del sistema ante variaciones en la distribución de los datos.
+1. **Exploración Temporal:** Analizar la dimensión temporal del conjunto de datos transaccionales para identificar patrones de distribución, anomalías y variaciones no estacionarias a lo largo del tiempo.
+2. **Modelado Comparativo:** Comparar el desempeño de dos modelos clásicos y modelos avanzados en la detección de fraude bajo un esquema de evaluación cronológico.
+3. **Arquitectura del Sistema:** Diseñar la arquitectura del sistema a nivel de componentes para articular el flujo de datos desde la ingesta hasta la acción preventiva.
+4. **Evaluación de Escenarios:** Analizar el comportamiento temporal del sistema bajo diferentes escenarios de políticas de olvido basadas en ventanas deslizantes para evaluar su capacidad de adaptación y robustez.
 
 ---
 
 ## 3. Definición de Restricciones (Operativas de Negocio)
 
-1. **Latencia Operacional:** El tiempo máximo de predicción e inferencia debe ser menor a 200 ms por transacción para garantizar que el proceso de pago no sufra interrupciones en la pasarela.
-2. **Estandarización de Fuentes de Datos:** El sistema debe procesar e integrar entradas heterogéneas provenientes de múltiples puntos de venta y dispositivos bajo un esquema estandarizado unificado.
-3. **Evaluación Cronológica Estricta:** Las pruebas del sistema prohíben el uso de validación cruzada aleatoria (k-fold) para evitar la contaminación de información del futuro hacia el pasado (data leakage).
+1. **Latencia Operacional:** El tiempo máximo de inferencia debe ser menor a **200 ms por transacción** para garantizar que el flujo de aprobación en la pasarela de pagos opere sin interrupciones perceptibles para el comprador.
+2. **Disponibilidad de Información Mínima:** El sistema debe tomar decisiones exclusivamente a partir del conjunto de atributos esenciales que suministran las pasarelas estándar, estando condicionado a operar con registros incompletos en tiempo real.
+3. **Consistencia Temporal Estricta:** Causalidad estricta en el flujo de información: las decisiones predictivas y el reentrenamiento solo disponen de datos previos al evento, restringiendo cualquier acceso a datos futuros o mezcla de ventanas no sincronizadas.
 
 ---
 
-## 4. Métricas de Éxito Compactas
+## 4. Métricas de Éxito
 
-* **Métrica Técnica:** F1-Score y ROC-AUC evaluados por bloque temporal para medir la capacidad discriminativa bajo desbalance de clases.
-* **Métrica de Decisión (Negocio):** Costo Neto por Error, equilibrando el costo del fraude omitido (Falso Negativo) frente al costo de fricción por revisión manual (Falso Positivo):
-  $$\text{Costo Total} = (\text{Falsos Negativos} \times \text{Monto del Fraude}) + (\text{Falsos Positivos} \times \text{Costo de Fricción})$$
-* **Métrica Social / Riesgo:** Equidad de Tasa de Falsos Positivos por Rango de Monto, asegurando que las transacciones legítimas de menor valor no sean rechazadas arbitrariamente.
+### A. Métrica Técnica
+* **F1-Score y ROC-AUC:** Evaluadas por bloques temporales para cuantificar la capacidad de discriminación bajo clases altamente desproporcionadas.
+  $$\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
+* **Latencia Promedio:** Tiempo de respuesta inferior a 200 ms por predicción.
+
+### B. Métrica de Decisión (Negocio)
+* **Costo Neto por Error:** Balance económico entre el costo del fraude omitido (Falso Negativo) y el costo operativo/fricción por revisión manual de compras legítimas (Falso Positivo):
+  $$\text{Costo Total} = (\text{FN} \times \text{Monto Promedio del Fraude}) + (\text{FP} \times \text{Costo de Fricción})$$
+* **Estimado Cuantitativo de Negocio:**
+  * En una pasarela que procesa 10,000 transacciones mensuales con una tasa de fraude del 3.5% (350 fraudes):
+  * Asumiendo un costo de \$15 por revisión/fricción de un Falso Positivo y una pérdida promedio de \$120 por cada Falso Negativo no detectado:
+  * Si un modelo no adaptado permite que los FN aumenten en 40 casos por mes, la pérdida económica directa asciende a \$4,800 mensuales solo por fraude omitido. Optimizar la adaptación y umbrales reduce simultáneamente la fricción y el capital perdido, generando ahorros proyectados de miles de dólares por ciclo de facturación.
+
+### C. Métrica Social / Riesgo
+* **Equidad en la Tasa de Falsos Positivos por Rango de Monto:** Garantizar que los usuarios con compras legítimas de bajo ticket no sufran tasas de bloqueo artificialmente elevadas respecto a transacciones corporativas o de montos elevados.
 
 ---
 
 ## 5. Modelos Mapeados
 
-* **Modelos Tradicionales (Línea Base):**
-  * **Regresión Logística:** Modelo lineal interprete para establecer la referencia inicial.
-  * **Random Forest Classifier:** Modelo de ensamble por bagging para capturar no linealidades.
-* **Modelo Avanzado:**
-  * **LightGBM / XGBoost:** Modelos basados en Gradient Boosting, optimizados para datos tabulares masivos, con manejo nativo de nulos y alta velocidad de entrenamiento.
+Para este proyecto se evaluarán 4 modelos complementarios organizados en dos categorías:
+
+* **Modelos Clásicos (Línea Base):**
+  * **Regresión Logística:** Modelo lineal interpretable de referencia inicial, de bajo costo computacional y evaluación directa.
+  * **Random Forest Classifier:** Ensamble por bagging que captura relaciones no lineales entre variables transaccionales.
+* **Modelos Avanzados:**
+  * **LightGBM:** Ensamble por Gradient Boosting de alta velocidad, optimizado para grandes volúmenes tabulares con partición por hojas (leaf-wise).
+  * **XGBoost:** Algoritmo de boosting con regularización robusta, alta precisión predictiva y soporte nativo para valores faltantes.
 
 ---
 
-## 6. Estrategia de Monitoreo: Evaluación por Escenarios de Olvido
+## 6. Monitoreo y Políticas de Olvido (Respaldos Teóricos y Escenarios)
 
-Siguiendo las indicaciones prioritarias del profesor Mg. Robert Buleje:
-* **Regla de Activación (Política):** Se monitorea el F1-Score en bloques fijos de tiempo. Si se detecta una caída mayor al 5% respecto al bloque base o baja de un umbral crítico, se activa la alerta de reentrenamiento.
-* **Evaluación de Escenarios de Ventana:**
-  * **Escenario A (Ventana corta - 30 días):** Reentrenar utilizando únicamente los últimos 30 días (olvido rápido de datos antiguos).
-  * **Escenario B (Ventana mediana - 60 días):** Reentrenar con los últimos 60 días (balance entre estabilidad y frescura).
-  * **Escenario C (Ventana Ponderada por Recencia):** Reentrenar asignando mayor peso probabilístico (time-decay) a los datos más recientes.
+Siguiendo las indicaciones de la cátedra y literatura especializada (*Gama et al., 2014; Dal Pozzolo et al., 2015*):
+* **Regla de Activación (Política):** Se evalúa el F1-Score en bloques temporales. Si se registra una degradación superior al **5%** respecto a la ventana base, se dispara la alerta de reentrenamiento.
+* **Exploración por Escenarios de Olvido:**
+  * **Escenario A (Olvido Abrupto):** Reentrenamiento estricto sobre ventanas recientes de amplitud variable para estudiar la velocidad de ajuste del modelo ante cambios de patrón.
+  * **Escenario B (Olvido Ponderado):** Asignación de pesos decrecientes en el tiempo (*time-decay weighting*) para retener conocimiento estructural histórico pero priorizando las transacciones recientes.
+  * **Análisis de Sensibilidad de Ventanas:** Contrastar múltiples tamaños de ventana para identificar experimentalmente el balance óptimo entre estabilidad del clasificador y costo computacional de reentrenamiento.
 
 ---
 
 ## 7. Mini Plan de Trabajo
 
-* **Fase 1 (Actual):** Formulación del problema, objetivos reestructurados, restricciones de negocio, métricas y dataset IEEE-CIS (Completado - Avance 2 Pts).
-* **Fase 2 (Próxima):** Exploración temporal (EDA) e ingeniería de características con ventanas deslizantes.
-* **Fase 3 (Desarrollo):** Entrenamiento comparativo de modelos tradicionales vs. avanzado.
-* **Fase 4 (Entrega Final):** Código del sistema, evaluación de escenarios de olvido e informe técnico de máximo 8 páginas.
+* **Fase 1 (Actual):** Formulación del problema, objetivos pulidos, restricciones operativas de negocio, métricas con fórmulas y dataset IEEE-CIS (Completado - Avance 2 Pts).
+* **Fase 2 (Próxima):** Exploración temporal (EDA), ingeniería de variables temporales agregadas y partición cronológica estricta.
+* **Fase 3 (Desarrollo):** Entrenamiento comparativo de los 4 modelos (LogReg, Random Forest, LightGBM, XGBoost).
+* **Fase 4 (Entrega Final):** Simulación de escenarios de políticas de olvido, análisis de degradación e informe técnico final (máximo 8 páginas).
