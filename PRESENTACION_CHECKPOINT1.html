@@ -268,7 +268,11 @@
                     <h4>Cambio en el Comportamiento de los Datos</h4>
                     <p>Los patrones de compra y los métodos de ataque no son estáticos; evolucionan continuamente debido a factores sociales, nuevas regulaciones y adaptación de los estafadores. Los modelos predictivos fijos pierden efectividad progresivamente al no ajustarse a este dinamismo.</p>
                 </div>
-                <div class="card" style="border-left-color: #475569; grid-column: span 2;">
+                <div class="card" style="border-left-color: #16a34a;">
+                    <h4>Justificación del Dataset</h4>
+                    <p>Se elige IEEE-CIS porque combina una evolución gradual de los hábitos de consumo con cambios más bruscos por nuevas campañas de fraude, y porque su alta cantidad de variables y el fuerte desbalance de clases (~3.5% fraude) lo hacen representativo de un problema real de este tipo.</p>
+                </div>
+                <div class="card" style="border-left-color: #475569;">
                     <h4>Propuesta del Proyecto</h4>
                     <p>Por todos estos motivos, se propone implementar un sistema inteligente adaptativo de detección de fraude en e-commerce, capaz de evaluar su desempeño a lo largo del tiempo y mantener su robustez operacional mediante estrategias de adaptación temporal.</p>
                 </div>
@@ -291,7 +295,7 @@
                     <ul style="font-size: 0.88rem; line-height: 1.45;">
                         <li><strong>1. Exploración Temporal:</strong> Analizar la dimensión temporal del conjunto de datos transaccionales para identificar patrones de distribución y variaciones no estacionarias.</li>
                         <li><strong>2. Modelado Comparativo:</strong> Comparar el desempeño de dos modelos clásicos y modelos avanzados en la detección de fraude bajo un esquema de evaluación cronológico.</li>
-                        <li><strong>3. Arquitectura del Sistema:</strong> Diseñar la arquitectura del sistema a nivel de componentes para articular el flujo de datos desde la ingesta hasta la acción preventiva.</li>
+                        <li><strong>3. Arquitectura del Sistema:</strong> Diseñar la arquitectura del sistema a nivel de componentes.</li>
                         <li><strong>4. Evaluación de Escenarios:</strong> Analizar el comportamiento temporal del sistema bajo diferentes escenarios de políticas de olvido basadas en ventanas deslizantes para evaluar su capacidad de adaptación y robustez.</li>
                     </ul>
                 </div>
@@ -311,19 +315,95 @@
                 </div>
                 <div class="card">
                     <h4>Información Mínima Garantizada</h4>
-                    <p>El sistema debe tomar decisiones exclusivamente a partir del conjunto de atributos esenciales que suministran las pasarelas estándar, tolerando registros incompletos.</p>
+                    <p>El sistema opera únicamente con el conjunto de atributos que habitualmente proveen las pasarelas de pago estándar, sin garantía de fuentes adicionales de verificación de identidad ni de registros siempre completos.</p>
                 </div>
                 <div class="card">
                     <h4>Consistencia Temporal Estricta</h4>
-                    <p>Causalidad estricta en el flujo de información: las decisiones y el reentrenamiento solo disponen de datos previos al evento, restringiendo cualquier acceso a datos futuros.</p>
+                    <p>Al incorporar nueva información, esta no debe mezclarse con datos de periodos posteriores ya conocidos: cada decisión y cada actualización del modelo solo puede usar información disponible hasta ese momento.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Métricas de Éxito -->
+        <!-- Slide 5: Diseño del Sistema de IA -->
         <div class="slide">
             <div class="slide-header">
-                <h2>4. Métricas de Éxito</h2>
+                <h2>4. Diseño del Sistema de IA</h2>
+                <span class="badge">Arquitectura de Componentes</span>
+            </div>
+            <div class="slide-body" style="gap: 10px;">
+                <svg viewBox="0 0 1000 235" width="100%" height="225" style="display:block;">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M0,0 L10,5 L0,10 z" fill="#0284c7"></path>
+                        </marker>
+                        <marker id="arrowDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M0,0 L10,5 L0,10 z" fill="#0f172a"></path>
+                        </marker>
+                    </defs>
+
+                    <rect x="10" y="25" width="120" height="60" rx="6" fill="#f8fafc" stroke="#64748b"></rect>
+                    <text x="70" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Fuentes de</text>
+                    <text x="70" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Datos</text>
+                    <text x="70" y="77" text-anchor="middle" font-size="9.5" fill="#64748b">(multimodales)</text>
+
+                    <line x1="130" y1="55" x2="168" y2="55" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"></line>
+
+                    <rect x="170" y="20" width="150" height="70" rx="6" fill="#e0f2fe" stroke="#0284c7"></rect>
+                    <text x="245" y="45" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">&#9312; Adquisición &amp;</text>
+                    <text x="245" y="58" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">Integración</text>
+                    <text x="245" y="75" text-anchor="middle" font-size="9.5" fill="#0369a1">Feature Store</text>
+
+                    <line x1="320" y1="55" x2="358" y2="55" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"></line>
+
+                    <rect x="360" y="20" width="150" height="70" rx="6" fill="#e0f2fe" stroke="#0284c7"></rect>
+                    <text x="435" y="45" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">&#9313; Módulo</text>
+                    <text x="435" y="58" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">Predictivo</text>
+                    <text x="435" y="75" text-anchor="middle" font-size="9.5" fill="#0369a1">4 modelos candidatos</text>
+
+                    <line x1="510" y1="55" x2="548" y2="55" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"></line>
+
+                    <rect x="550" y="20" width="150" height="70" rx="6" fill="#e0f2fe" stroke="#0284c7"></rect>
+                    <text x="625" y="45" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">&#9314; Manejo de</text>
+                    <text x="625" y="58" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">Incertidumbre</text>
+                    <text x="625" y="75" text-anchor="middle" font-size="9.5" fill="#0369a1">Calibración de score</text>
+
+                    <line x1="700" y1="55" x2="738" y2="55" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"></line>
+
+                    <rect x="740" y="20" width="140" height="70" rx="6" fill="#e0f2fe" stroke="#0284c7"></rect>
+                    <text x="810" y="45" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">&#9315; Módulo de</text>
+                    <text x="810" y="58" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">Decisión</text>
+                    <text x="810" y="75" text-anchor="middle" font-size="9.5" fill="#0369a1">Umbral costo-óptimo</text>
+
+                    <line x1="880" y1="55" x2="908" y2="55" stroke="#0f172a" stroke-width="2" marker-end="url(#arrowDark)"></line>
+
+                    <rect x="908" y="10" width="86" height="95" rx="6" fill="#0f172a" stroke="#0f172a"></rect>
+                    <text x="951" y="30" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">&#9316; Acción</text>
+                    <text x="951" y="52" text-anchor="middle" font-size="8.5" fill="#94a3b8">Aprobar</text>
+                    <text x="951" y="68" text-anchor="middle" font-size="8.5" fill="#94a3b8">Marcar para</text>
+                    <text x="951" y="82" text-anchor="middle" font-size="8.5" fill="#94a3b8">revisión</text>
+                    <text x="951" y="97" text-anchor="middle" font-size="7.5" fill="#94a3b8">(analista)</text>
+
+                    <rect x="360" y="160" width="340" height="45" rx="6" fill="#ffffff" stroke="#0f172a" stroke-dasharray="4 3"></rect>
+                    <text x="530" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Monitor de Drift</text>
+                    <text x="530" y="193" text-anchor="middle" font-size="9.5" fill="#475569">Ventanas deslizantes / degradación F1</text>
+
+                    <line x1="530" y1="160" x2="480" y2="92" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrowDark)"></line>
+                    <text x="605" y="150" text-anchor="middle" font-size="9" fill="#0f172a">dispara reentrenamiento</text>
+
+                    <path d="M 951 105 C 951 220, 70 220, 70 87" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrow)"></path>
+                    <text x="500" y="228" text-anchor="middle" font-size="9.5" fill="#64748b">Feedback: etiquetas reales para reentrenamiento</text>
+                </svg>
+
+                <div class="card" style="border-left-color: #0284c7;">
+                    <p style="font-size: 0.87rem; line-height: 1.5;">Las <strong>fuentes de datos</strong> (transaccionales, de dispositivo/email y de comportamiento del comprador) se integran en una capa de features unificada. El <strong>módulo predictivo</strong> genera un score de fraude que pasa por una etapa de <strong>manejo de incertidumbre</strong>: los casos de alta confianza se resuelven automáticamente y los ambiguos se marcan para revisión. El <strong>módulo de decisión</strong> aplica el umbral costo-óptimo (Slide 5) y el <strong>componente de acción</strong> ejecuta la respuesta (aprobar o derivar a un analista), retroalimentando etiquetas reales que, junto al monitor de drift, disparan el reentrenamiento.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Métricas de Éxito -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>5. Métricas de Éxito</h2>
                 <span class="badge">Evaluación Cuantitativa y de Negocio</span>
             </div>
             <div class="slide-body grid-3">
@@ -349,10 +429,10 @@
             </div>
         </div>
 
-        <!-- Slide 6: Modelos Mapeados -->
+        <!-- Slide 7: Modelos Mapeados -->
         <div class="slide">
             <div class="slide-header">
-                <h2>5. Modelos Mapeados</h2>
+                <h2>6. Modelos Mapeados</h2>
                 <span class="badge">4 Modelos: Tradicional vs. Avanzado</span>
             </div>
             <div class="slide-body grid-2">
@@ -373,10 +453,10 @@
             </div>
         </div>
 
-        <!-- Slide 7: Estrategia de Monitoreo -->
+        <!-- Slide 8: Estrategia de Monitoreo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>6. Monitoreo y Políticas de Olvido</h2>
+                <h2>7. Monitoreo y Políticas de Olvido</h2>
                 <span class="badge">Ventanas Deslizantes y Respaldos</span>
             </div>
             <div class="slide-body grid-2">
@@ -396,16 +476,16 @@
             </div>
         </div>
 
-        <!-- Slide 8: Mini Plan de Trabajo -->
+        <!-- Slide 9: Mini Plan de Trabajo -->
         <div class="slide">
             <div class="slide-header">
-                <h2>7. Mini Plan de Trabajo y Cronograma</h2>
+                <h2>8. Mini Plan de Trabajo y Cronograma</h2>
                 <span class="badge">Hoja de Ruta</span>
             </div>
             <div class="slide-body">
                 <div class="card" style="margin-bottom: 8px; border-left-color: #0f172a;">
                     <h4>Fase 1: Formulación y Diseño (Completado - Avance 2 Pts)</h4>
-                    <p>Contextualización con datos de negocio, objetivos depurados, restricciones operativas, métricas y selección de IEEE-CIS.</p>
+                    <p>Contextualización con datos de negocio, objetivos depurados, restricciones operativas, diseño de la arquitectura del sistema, métricas y selección de IEEE-CIS.</p>
                 </div>
                 <div class="card" style="margin-bottom: 8px; border-left-color: #0284c7;">
                     <h4>Fase 2: Exploración Temporal y Preprocesamiento</h4>
@@ -421,7 +501,7 @@
         <!-- Controls Footer -->
         <div class="controls">
             <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
-            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 8</span>
+            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 9</span>
             <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
         </div>
 
