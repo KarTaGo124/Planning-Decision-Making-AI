@@ -28,15 +28,24 @@ def business_cost(y_true, y_pred, fraud_amount: float = 120.0, friction_cost: fl
 
 def evaluate_by_time_block(
     df: pd.DataFrame, y_true_col: str, y_pred_col: str,
-    dt_col: str = "TransactionDT", n_blocks: int = 10,
+    y_proba_col: str = None, dt_col: str = "TransactionDT", n_blocks: int = 10,
 ) -> pd.DataFrame:
     """Divide en bloques cronológicos y calcula métricas por bloque, para
-    visualizar la degradación del modelo en el tiempo (PDF sección 3.3)."""
+    visualizar la degradación del modelo en el tiempo (PDF sección 3.3).
+
+    Si se pasa `y_proba_col`, también reporta ROC-AUC por bloque (métrica
+    independiente del umbral, útil para separar degradación del modelo de
+    un umbral desactualizado) y el rango de días cubierto por cada bloque."""
     df = df.sort_values(dt_col).copy()
     df["_block"] = pd.qcut(df[dt_col], q=n_blocks, labels=False, duplicates="drop")
     rows = []
     for block, group in df.groupby("_block"):
-        m = compute_metrics(group[y_true_col], group[y_pred_col])
+        y_proba = group[y_proba_col] if y_proba_col else None
+        m = compute_metrics(group[y_true_col], group[y_pred_col], y_proba)
         m["block"] = block
+        m["n"] = len(group)
+        if "day" in group.columns:
+            m["day_min"] = group["day"].min()
+            m["day_max"] = group["day"].max()
         rows.append(m)
     return pd.DataFrame(rows)
