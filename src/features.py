@@ -6,9 +6,14 @@ SECONDS_PER_DAY = 24 * 60 * 60
 
 def add_time_features(df: pd.DataFrame, dt_col: str = "TransactionDT") -> pd.DataFrame:
     """Deriva features tipo calendario a partir de TransactionDT (segundos
-    relativos a un punto de referencia, no un timestamp real)."""
+    relativos a un punto de referencia, no un timestamp real).
+
+    `day` se normaliza para empezar en 0 (día relativo al inicio del
+    dataset), evitando que quede un día suelto al final por el offset
+    original de TransactionDT."""
     df = df.copy()
-    df["day"] = (df[dt_col] // SECONDS_PER_DAY).astype(int)
+    day_raw = (df[dt_col] // SECONDS_PER_DAY).astype(int)
+    df["day"] = day_raw - day_raw.min()
     df["hour_of_day"] = (df[dt_col] % SECONDS_PER_DAY) // 3600
     df["day_of_week"] = df["day"] % 7
     return df
