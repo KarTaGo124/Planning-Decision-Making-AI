@@ -4,13 +4,13 @@ Este repositorio contiene la propuesta y avances para los proyectos de la asigna
 
 ---
 
-## Checkpoint 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
+## Proyecto 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
 
-En este checkpoint se presenta la formulación contextualizada del problema, la selección del conjunto de datos, los objetivos y restricciones del sistema, el diseño de su arquitectura y la estrategia de monitoreo temporal por escenarios para la **detección de fraude financiero en e-commerce**.
+Se presenta la formulación contextualizada del problema, la selección del conjunto de datos, los objetivos y restricciones del sistema, el diseño de su arquitectura y la estrategia de monitoreo temporal por escenarios para la **detección de fraude financiero en e-commerce**.
 
-### Contenido del Checkpoint:
-* **Presentación Interactiva:** [`PRESENTACION_CHECKPOINT1.html`](PRESENTACION_CHECKPOINT1.html)
-* **Documento Técnico de Apoyo:** [`PRESENTACION_CHECKPOINT1.md`](PRESENTACION_CHECKPOINT1.md)
+### Contenido:
+* **Presentación Interactiva:** [`PRESENTACION_PROYECTO1.html`](PRESENTACION_PROYECTO1.html)
+* **Documento Técnico de Apoyo:** [`PRESENTACION_PROYECTO1.md`](PRESENTACION_PROYECTO1.md)
 * **Dataset Seleccionado:** IEEE-CIS Fraud Detection (Kaggle)
 * **Puntos Clave Desarrollados:**
   1. Contextualización del Problema en E-Commerce respaldada con datos cuantitativos de la industria.
@@ -25,4 +25,4 @@ En este checkpoint se presenta la formulación contextualizada del problema, la 
 ---
 
 ## Documentación Principal
-Para consultar la presentación completa para la clase, abre el archivo [`PRESENTACION_CHECKPOINT1.html`](PRESENTACION_CHECKPOINT1.html) en tu navegador web.
+Para consultar la presentación completa para la clase, abre el archivo [`PRESENTACION_PROYECTO1.html`](PRESENTACION_PROYECTO1.html) en tu navegador web.

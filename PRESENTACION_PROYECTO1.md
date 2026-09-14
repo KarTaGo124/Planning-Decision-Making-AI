@@ -1,4 +1,4 @@
-# Avance Proyecto 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
+# Proyecto 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
 
 **Curso:** Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
 **Profesores:** Dra. Aurea Soriano-Vargas & Mg. Robert Buleje  
