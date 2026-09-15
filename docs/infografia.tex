@@ -1,0 +1,123 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,landscape,margin=8mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, decorations.pathmorphing, calc, shadows}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\pagestyle{empty}
+
+\definecolor{primary}{HTML}{0F172A}
+\definecolor{accent}{HTML}{0284C7}
+\definecolor{accentlight}{HTML}{E0F2FE}
+\definecolor{green}{HTML}{16A34A}
+\definecolor{amber}{HTML}{CA8A04}
+\definecolor{red}{HTML}{B91C1C}
+\definecolor{slate}{HTML}{64748B}
+\definecolor{bggray}{HTML}{F8FAFC}
+
+\begin{document}
+\begin{tikzpicture}[remember picture, overlay]
+\fill[bggray] (current page.south west) rectangle (current page.north east);
+\end{tikzpicture}
+
+\vspace*{\fill}
+\begin{center}
+{\color{primary}\LARGE\bfseries Sistema Inteligente Adaptativo: Ciclo de Vida del Proyecto}\\[2pt]
+{\color{slate}\normalsize Detección de Fraude Financiero en E-Commerce --- IEEE-CIS Fraud Detection --- Grupo 7}
+\end{center}
+
+\vspace{4pt}
+
+% ---------- barra de cifras clave ----------
+\begin{center}
+\begin{tikzpicture}
+\def\statbox#1#2#3{
+  \node[fill=#3, rounded corners=2pt, minimum width=3.5cm, minimum height=1.15cm, align=center, text=white] {
+    {\LARGE\bfseries #1}\\[-2pt] {\scriptsize #2}
+  };
+}
+\node[fill=primary, rounded corners=2pt, minimum width=3.6cm, minimum height=1.15cm, align=center, text=white] (s1) {\LARGE\bfseries 590{,}540\\[-2pt]{\scriptsize transacciones analizadas}};
+\node[fill=accent, rounded corners=2pt, minimum width=3.6cm, minimum height=1.15cm, align=center, text=white, right=4mm of s1] (s2) {\LARGE\bfseries 3.499\%\\[-2pt]{\scriptsize tasa de fraude (no estacionaria)}};
+\node[fill=green, rounded corners=2pt, minimum width=3.6cm, minimum height=1.15cm, align=center, text=white, right=4mm of s2] (s3) {\LARGE\bfseries 0.921\\[-2pt]{\scriptsize ROC-AUC (XGBoost, mejor modelo)}};
+\node[fill=amber, rounded corners=2pt, minimum width=3.6cm, minimum height=1.15cm, align=center, text=white, right=4mm of s3] (s4) {\LARGE\bfseries 28.3\%\\[-2pt]{\scriptsize ahorro con umbral costo-óptimo}};
+\node[fill=red, rounded corners=2pt, minimum width=3.6cm, minimum height=1.15cm, align=center, text=white, right=4mm of s4] (s5) {\LARGE\bfseries -18\%\\[-2pt]{\scriptsize F1 val$\to$test: drift real detectado}};
+\end{tikzpicture}
+\end{center}
+
+\vspace{6pt}
+
+% ---------- flujo de 5 etapas ----------
+\begin{center}
+\begin{tikzpicture}[
+  stage/.style={draw=none, fill=white, rounded corners=4pt, minimum width=4.9cm, minimum height=5.0cm, align=left, drop shadow},
+  arr/.style={-{Latex[length=3mm, width=2.2mm]}, line width=1.2pt, accent},
+  title/.style={font=\bfseries\footnotesize, text=primary},
+  item/.style={font=\scriptsize, text=black!75}
+]
+
+\node[stage, top color=accentlight, bottom color=white] (n1) at (0,0) {};
+\node[title, below=3mm of n1.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{1}}\ \ Formulación \& Diseño};
+\node[item, align=left, text width=4.3cm, below=8mm of n1.north] {
+  \textbullet\ Objetivo: minimizar pérdida económica y riesgo operacional\\[2pt]
+  \textbullet\ Restricciones: latencia $<$200\,ms, info. mínima, consistencia temporal\\[2pt]
+  \textbullet\ Arquitectura de 5 componentes + monitor de drift\\[2pt]
+  \textbullet\ Métricas: técnica, negocio (costo) y social (equidad)
+};
+
+\node[stage, top color=accentlight, bottom color=white, right=7mm of n1] (n2) {};
+\node[title, below=3mm of n2.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{2}}\ \ Análisis de Datos};
+\node[item, align=left, text width=4.3cm, below=8mm of n2.north] {
+  \textbullet\ EDA temporal: fraude oscila 2.07\%-5.07\% semanal\\[2pt]
+  \textbullet\ Drift real: mezcla de \texttt{ProductCD} 70\%$\to$80\%\\[2pt]
+  \textbullet\ Cobertura de \texttt{identity} inestable (15\%-54\%)\\[2pt]
+  \textbullet\ Preprocesamiento sin fuga + split cronológico 60/20/20
+};
+
+\node[stage, top color=accentlight, bottom color=white, right=7mm of n2] (n3) {};
+\node[title, below=3mm of n3.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{3}}\ \ Modelado \& Evaluación};
+\node[item, align=left, text width=4.3cm, below=8mm of n3.north] {
+  \textbullet\ 4 modelos: LogReg, Random Forest, LightGBM, XGBoost\\[2pt]
+  \textbullet\ XGBoost gana por ROC-AUC (0.921) y F1 (0.515)\\[2pt]
+  \textbullet\ Umbral costo-óptimo 0.07 (no 0.5): -28.3\% de costo\\[2pt]
+  \textbullet\ Evaluación temporal: -18\% F1 val$\to$test (real, no monótono)
+};
+
+\node[stage, top color=accentlight, bottom color=white, right=7mm of n3] (n4) {};
+\node[title, below=3mm of n4.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{4}}\ \ Despliegue (propuesta)};
+\node[item, align=left, text width=4.3cm, below=8mm of n4.north] {
+  \textbullet\ Microservicio de inferencia + feature store ($<$200\,ms)\\[2pt]
+  \textbullet\ Acción: aprobar o derivar a analista humano\\[2pt]
+  \textbullet\ Sin bloqueo automático definitivo (restricción de decisión)\\[2pt]
+  \textbullet\ Validación previa (shadow deployment) antes de producción
+};
+
+\node[stage, top color=accentlight, bottom color=white, right=7mm of n4] (n5) {};
+\node[title, below=3mm of n5.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{5}}\ \ Adaptación al Drift};
+\node[item, align=left, text width=4.3cm, below=8mm of n5.north] {
+  \textbullet\ 5 estrategias comparadas en 2 cortes temporales\\[2pt]
+  \textbullet\ ``Sin olvido'' nunca es la mejor opción\\[2pt]
+  \textbullet\ Ventana óptima varía: no hay tamaño fijo ideal\\[2pt]
+  \textbullet\ Monitoreo continuo dispara el reentrenamiento
+};
+
+\draw[arr] (n1.east) -- (n2.west);
+\draw[arr] (n2.east) -- (n3.west);
+\draw[arr] (n3.east) -- (n4.west);
+\draw[arr] (n4.east) -- (n5.west);
+
+% ciclo de retroalimentacion: de la etapa 5 de vuelta a la 2 (reentrenamiento con datos nuevos)
+\draw[-{Latex[length=3mm, width=2.2mm]}, line width=1.1pt, primary, dashed]
+  (n5.south) -- ++(0,-9mm) -| node[below, font=\scriptsize\itshape, pos=0.5, text=primary] {ciclo continuo: reentrenamiento con etiquetas reales} ($(n2.south)+(0,-9mm)$) -- (n2.south);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{7mm}
+\begin{center}
+{\scriptsize\color{slate} Planificación y Toma de Decisiones en IA (CS5363) --- UTEC 2026-2 --- Proyecto 1, Grupo 7}
+\end{center}
+\vspace*{\fill}
+
+\end{document}
