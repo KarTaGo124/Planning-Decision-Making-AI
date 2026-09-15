@@ -1,6 +1,6 @@
 # Proyecto 1: Sistema Inteligente Adaptativo con Datos No Estacionarios
 
-**Curso:** Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
+**Curso:** Planificación y Toma de Decisiones en IA, UTEC (2026-2)  
 **Profesores:** Dra. Aurea Soriano-Vargas & Mg. Robert Buleje  
 **Caso de Uso Elegido:** Detección de Fraude Financiero en E-Commerce (IEEE-CIS Fraud Detection)  
 **Modalidad de Presentación:** Documento / PPT (10 - 15 minutos)  
@@ -59,7 +59,7 @@ El sistema se diseña como un pipeline de 5 componentes explícitos, con un moni
 2. **Módulo predictivo:** los 4 modelos candidatos (sección 6) generan un score de probabilidad de fraude por transacción.
 3. **Manejo de incertidumbre:** las predicciones de alta confianza se resuelven automáticamente y las de score ambiguo se marcan para revisión.
 4. **Módulo de toma de decisiones:** aplica el umbral costo-óptimo (ver métricas de decisión, sección 6) sobre el score para decidir la acción a ejecutar.
-5. **Componente de acción:** ejecuta la respuesta final — aprobar la transacción o derivarla a un analista de fraude para revisión.
+5. **Componente de acción:** ejecuta la respuesta final, que es aprobar la transacción o derivarla a un analista de fraude para revisión.
 
 El **monitor de drift** (ventanas deslizantes sobre el F1-Score, sección 8) dispara el reentrenamiento del módulo predictivo, y las etiquetas reales resultantes de la acción (fraude confirmado o no) retroalimentan la capa de adquisición de datos, cerrando el ciclo de adaptación continua.
 

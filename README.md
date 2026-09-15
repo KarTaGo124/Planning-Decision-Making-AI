@@ -1,4 +1,4 @@
-# Planificación y Toma de Decisiones en IA — UTEC (2026-2)
+# Planificación y Toma de Decisiones en IA, UTEC (2026-2)
 
 Este repositorio contiene la propuesta y avances para los proyectos de la asignatura **Planificación y Toma de Decisiones en IA** en la Universidad de Ingeniería y Tecnología (UTEC), dictada por la **Dra. Aurea Soriano-Vargas** y el **Mg. Robert Buleje**.
 
@@ -25,7 +25,7 @@ Se presenta la formulación contextualizada del problema, la selección del conj
 
 ### Código:
 ```
-data/          # dataset IEEE-CIS (raw/ y processed/, no versionados — ver data/README.md)
+data/          # dataset IEEE-CIS (raw/ y processed/, no versionados, ver data/README.md)
 notebooks/     # 01 EDA temporal · 02 preprocesamiento/features · 03 modelado
                # 04 evaluación temporal · 05 escenarios de concept drift
 src/           # módulos reutilizables: data.py, features.py, models.py,
