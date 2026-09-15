@@ -6,7 +6,7 @@ import pandas as pd
 
 def sliding_window_split(df: pd.DataFrame, dt_col: str, window_size: int, step_size: int):
     """Genera pares sucesivos (ventana_train, ventana_eval) de tamaño fijo,
-    avanzando en el tiempo — Escenario A (olvido abrupto)."""
+    avanzando en el tiempo. Corresponde al escenario A (olvido abrupto)."""
     df = df.sort_values(dt_col).reset_index(drop=True)
     n = len(df)
     start = 0
@@ -19,7 +19,7 @@ def sliding_window_split(df: pd.DataFrame, dt_col: str, window_size: int, step_s
 
 def time_decay_weights(dt_values: pd.Series, half_life: float) -> np.ndarray:
     """Pesos de muestra con decaimiento exponencial según antigüedad, para
-    reentrenamiento ponderado — Escenario B (olvido ponderado)."""
+    reentrenamiento ponderado. Corresponde al escenario B (olvido ponderado)."""
     t_max = dt_values.max()
     age = t_max - dt_values.to_numpy()
     return 0.5 ** (age / half_life)

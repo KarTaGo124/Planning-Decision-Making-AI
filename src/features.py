@@ -27,8 +27,8 @@ def add_rolling_user_features(
     window_seconds: int = SECONDS_PER_DAY,
 ) -> pd.DataFrame:
     """Agrega conteo y monto promedio de transacciones pasadas por entidad
-    (ej. card1, dispositivo, email) en una ventana temporal — variables
-    rezagadas/agregadas por periodo (PDF sección 3.2)."""
+    (ej. card1, dispositivo, email) en una ventana temporal. Son las
+    variables rezagadas o agregadas por periodo que pide el PDF (sección 3.2)."""
     df = df.sort_values(dt_col).copy()
     df["_dt"] = pd.to_datetime(df[dt_col], unit="s")
     df = df.set_index("_dt")
