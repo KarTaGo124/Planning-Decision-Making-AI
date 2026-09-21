@@ -34,7 +34,8 @@ figures/       # gráficos exportados para el informe y la infografía
 ```
 
 **Para ejecutar:**
-1. `pip install -r requirements.txt`
+(Este proyecto es manejado con *uv*)
+1. `uv sync`
 2. Descargar el dataset de [Kaggle - IEEE-CIS Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection/data) y colocar los CSV en `data/raw/` (ver [`data/README.md`](data/README.md)).
 3. Correr los notebooks de `notebooks/` en orden (01 → 05).
 
