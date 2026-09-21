@@ -55,7 +55,7 @@ De ahí se desprenden los objetivos específicos:
 
 \section{Restricciones}
 \begin{itemize}
-  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos.
+  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real (Borketey, 2024) y en estándares industriales de latencia para APIs críticas.
   \item El sistema solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos.
   \item Ninguna decisión ni reentrenamiento puede usar información de periodos posteriores al evento que se está evaluando.
 \end{itemize}
@@ -189,6 +189,8 @@ Con datos reales, y no solo con hipótesis, el proyecto confirma varias cosas. E
 
 \vspace{2pt}
 {\small Referencias: Gama, J. et al. (2014). \emph{A survey on concept drift adaptation}. ACM Computing Surveys.\\
-Dal Pozzolo, A. et al. (2015). \emph{Credit card fraud detection: a realistic modeling and a novel learning strategy}. IEEE TNNLS.}
+Dal Pozzolo, A. et al. (2015). \emph{Credit card fraud detection: a realistic modeling and a novel learning strategy}. IEEE TNNLS.\\
+Borketey, B. (2024). \emph{Real-Time Fraud Detection Using Machine Learning}. Journal of Data Analysis and Information Processing, 12(2), 185--204.\\
+Ben, F. (s.\,f.). \emph{API Response Time Standards: What's Good, Bad, and Unacceptable}. oDown.}
 
 \end{document}
