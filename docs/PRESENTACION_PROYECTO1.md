@@ -34,7 +34,7 @@ Implementar un sistema inteligente de detección de fraude transaccional para el
 
 ## 3. Definición de Restricciones (Operativas de Negocio)
 
-1. **Latencia Operacional:** El tiempo máximo de inferencia debe ser menor a **200 ms por transacción** para garantizar que el flujo de aprobación en la pasarela de pagos opere sin interrupciones perceptibles para el comprador.
+1. **Latencia Operacional:** El tiempo máximo de inferencia debe ser menor a **200 ms por transacción** para garantizar que el flujo de aprobación en la pasarela de pagos opere sin interrupciones perceptibles para el comprador. Respaldado en literatura: Borketey (2024) sobre tiempos de respuesta en detección de fraude en tiempo real, y estándares industriales de latencia para APIs críticas.
 2. **Disponibilidad de Información Mínima:** El sistema opera únicamente con el conjunto de atributos que habitualmente proveen las pasarelas de pago estándar, sin garantía de fuentes adicionales de verificación de identidad ni de registros siempre completos.
 3. **Consistencia Temporal Estricta:** Al incorporar nueva información, esta no debe mezclarse con datos de periodos posteriores ya conocidos: cada decisión y cada actualización del modelo solo puede usar información disponible hasta ese momento.
 
