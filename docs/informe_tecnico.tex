@@ -64,7 +64,7 @@ De ahí se desprenden los objetivos específicos:
 \label{sec:diseno}
 El sistema se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo definido en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
 
-Un monitor de drift, basado en ventanas deslizantes sobre el F1, dispara el reentrenamiento cuando hace falta, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
+Un monitor de drift, basado en ventanas deslizantes sobre el F1, activa una alerta para evaluar el reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
 
 \begin{figure}[H]
 \centering
@@ -152,7 +152,7 @@ La importancia de variables está dominada por columnas anonimizadas del dataset
 
 \section{Evaluación temporal}
 \label{sec:evaltemporal}
-Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el desempeño cae respecto a validación. El F1 baja de 0.495 a 0.406 (una caída de 18\%), el ROC-AUC baja de 0.921 a 0.886, y el costo sube de \$254{,}190 a \$278{,}910. Esta caída supera el umbral de alerta del 5\% que definimos para disparar el reentrenamiento (sección~\ref{sec:drift}). Sin embargo, al dividir \texttt{test} en 8 bloques temporales (Figura~\ref{fig:degradacion}) no se ve una degradación monótona. El rendimiento sube y baja, y se recupera hacia el final. Es decir, la caída real ocurre entre periodos, de val a test, y no como un colapso progresivo dentro de la ventana de test.
+Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el desempeño cae respecto a validación. El F1 baja de 0.495 a 0.406 (una caída de 18\%), el ROC-AUC baja de 0.921 a 0.886, y el costo sube de \$254{,}190 a \$278{,}910. Esta caída supera el umbral operativo inicial de alerta del 5\% de caída relativa que proponemos para evaluar el reentrenamiento (sección~\ref{sec:drift}). Sin embargo, al dividir \texttt{test} en 8 bloques temporales (Figura~\ref{fig:degradacion}) no se ve una degradación monótona. El rendimiento sube y baja, y se recupera hacia el final. Es decir, la caída real ocurre entre periodos, de val a test, y no como un colapso progresivo dentro de la ventana de test.
 
 \begin{figure}[H]
 \centering
@@ -163,6 +163,8 @@ Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el de
 
 \section{Detección y adaptación al concept drift}
 \label{sec:drift}
+Se propone una caída relativa del F1 superior al 5\% como umbral operativo inicial de alerta para evaluar el reentrenamiento. Este valor es una decisión de diseño, no un estándar establecido por la literatura. Su adecuación debe validarse mediante experimentos temporales que consideren falsas alarmas, costo de los errores y costo de reentrenamiento.
+
 Se simularon 5 estrategias de reentrenamiento en 2 cortes temporales, día 120 y día 150 sobre la línea de tiempo completa, evaluando cada una sobre el mismo bloque futuro de 20 días: sin olvido (todo el historial), ventanas deslizantes de 30, 60 y 90 días (escenario A), y time-decay con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia sin olvido nunca es la mejor, y en el corte 150 es directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Pero ninguna ventana gana en los dos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo.
 
 \begin{figure}[H]
@@ -179,7 +181,7 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
 \begin{itemize}
   \item Arquitectura de implementación: el módulo predictivo se empaqueta como un microservicio de inferencia (API REST) detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en una feature store de baja latencia, para cumplir con el límite de 200\,ms.
   \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en el histórico.
-  \item Frecuencia de actualización: el reentrenamiento se dispara cuando el monitor de drift detecta una caída de F1 mayor a 5\% respecto a la ventana base, el mismo umbral que ya vimos que es realista en la sección~\ref{sec:evaltemporal}.
+  \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando el monitor de drift detecte una caída relativa del F1 superior al 5\% respecto a la ventana base. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
   \item Autonomía: el sistema decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
   \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, y validar cada nueva versión del modelo, por ejemplo con shadow deployment, antes de reemplazar la que está en producción.
 \end{itemize}
