@@ -38,33 +38,34 @@
 \vspace{-2.2em}
 
 \section{Introducción y problema}
-El fraude transaccional en e-commerce genera pérdidas superiores a \$48 mil millones anuales a nivel global y más de \$10 mil millones en EE.UU. (FTC, Merchant Savvy). Esto incluye tanto las pérdidas directas de capital como la fricción operativa que se genera cuando se bloquean por error compras legítimas. El problema de fondo es que los patrones de fraude cambian todo el tiempo, así que un modelo entrenado una sola vez pierde efectividad poco a poco.
+El fraude transaccional en e-commerce genera pérdidas superiores a \$48 mil millones anuales a nivel global y más de \$10 mil millones en EE.UU. (FTC, Merchant Savvy). Esto incluye tanto las pérdidas directas de capital como la fricción operativa que se genera cuando se bloquean por error compras legítimas. El problema de fondo es que los patrones de fraude cambian todo el tiempo: aparecen nuevas tecnologías de pago, el comportamiento de los usuarios cambia con las estaciones y los propios estafadores se adaptan constantemente para evadir los controles vigentes. Esto obliga a replantear continuamente las estrategias de detección, porque un modelo entrenado una sola vez, sin ningún mecanismo de adaptación, pierde efectividad poco a poco frente a este escenario cambiante.
 
-Por eso proponemos un sistema inteligente adaptativo de detección de fraude, usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina un drift mixto (hábitos de consumo que cambian de a poco, junto con cambios bruscos cuando aparecen campañas de fraude nuevas) con una complejidad real de datos: alta dimensionalidad y clases muy desbalanceadas.
+Por eso proponemos el Sistema Inteligente Adaptativo de Detección de Fraude (\textbf{SIADEF}), usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina cambios graduales en los hábitos de consumo con cambios bruscos cuando aparecen campañas de fraude nuevas, sobre un dataset con muchas variables y clases muy desbalanceadas.
 
 \section{Objetivos}
-El objetivo general es implementar un sistema inteligente de detección de fraude transaccional para e-commerce, que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
+\subsection*{Objetivo general}
+Implementar SIADEF, un sistema de detección de fraude transaccional para e-commerce que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
 
-De ahí se desprenden los objetivos específicos:
+\subsection*{Objetivos específicos}
 \begin{itemize}
-  \item Analizar la dimensión temporal del dataset.
-  \item Comparar modelos clásicos y avanzados bajo un esquema de evaluación cronológico.
+  \item Analizar la dimensión temporal del dataset, buscando patrones de distribución no estacionarios, cambios abruptos en variables clave y anomalías en los datos.
+  \item Comparar el rendimiento, medido en F1 y ROC-AUC, de dos modelos clásicos y dos modelos avanzados, bajo un esquema de evaluación cronológico.
   \item Diseñar la arquitectura del sistema a nivel de componentes.
   \item Analizar el comportamiento del sistema bajo distintos escenarios de políticas de olvido.
 \end{itemize}
 
 \section{Restricciones}
 \begin{itemize}
-  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real (Borketey, 2024) y en estándares industriales de latencia para APIs críticas.
-  \item El sistema solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos.
+  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real [1] y en estándares industriales de latencia para APIs críticas [2].
+  \item SIADEF solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos. El dataset usado ya viene anonimizado por Kaggle, sin PII directa (nombres, números de tarjeta completos, direcciones).
   \item Ninguna decisión ni reentrenamiento puede usar información de periodos posteriores al evento que se está evaluando.
 \end{itemize}
 
 \section{Diseño del sistema}
 \label{sec:diseno}
-El sistema se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo definido en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
+SIADEF se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo, calculado a partir de la métrica de decisión de negocio definida en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
 
-Un monitor de drift, basado en ventanas deslizantes sobre el F1, activa una alerta para evaluar el reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
+Un monitor de drift, basado en ventanas deslizantes sobre el F1, evalúa el rendimiento del modelo por periodos y activa una alerta cuando detecta una caída relativa superior al 5\% respecto a la ventana base (el detalle completo de esta política está en la sección~\ref{sec:drift}). Esa alerta dispara la evaluación del reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
 
 \begin{figure}[H]
 \centering
@@ -101,29 +102,61 @@ Un monitor de drift, basado en ventanas deslizantes sobre el F1, activa una aler
 \section{Métricas de éxito}
 \label{sec:metricas}
 \begin{itemize}
-  \item Técnica: F1-Score y ROC-AUC, evaluados por bloque temporal (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), además de la latencia, que no debe pasar de 200\,ms.
+  \item Técnica: F1-Score y ROC-AUC como métricas principales (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), acompañadas de precisión y recall para interpretar mejor el comportamiento de cada modelo. Consideramos que un modelo rinde bien para este contexto si su ROC-AUC es igual o mayor a 0.90, el umbral que la literatura de la industria sugiere para justificar decisiones de bloqueo automatizadas en detección de fraude [3].
+  \item Latencia: inferencia inferior a 200\,ms por transacción, ya justificada en la sección de Restricciones.
   \item De negocio: el costo se calcula como FN $\times\ \$120$ más FP $\times\ \$15$, es decir, el monto promedio de un fraude y el costo de revisar manualmente un falso positivo.
-  \item Social: equidad en la tasa de falsos positivos por rango de monto, para evitar que se bloqueen de forma desproporcionada las compras legítimas de bajo ticket.
+  \item Social: equidad en la tasa de falsos positivos por rango de monto, para detectar si el modelo bloquea de forma desproporcionada algún rango de monto de transacción en particular.
 \end{itemize}
+
+Como ejemplo de la métrica de negocio: en una pasarela que procesa 10,000 transacciones mensuales con 3.5\% de fraude (350 casos), asumiendo \$15 de costo por revisar un falso positivo y \$120 de pérdida por cada fraude no detectado, si el modelo evita que 40 fraudes se conviertan en pérdida total, el ahorro directo es de \$4,800 mensuales solo por ese concepto, sin contar la fricción evitada en falsos positivos.
 
 \section{Modelos}
 \label{sec:modelado}
 Se comparan cuatro modelos: Regresión Logística y Random Forest como línea base clásica, y LightGBM junto con XGBoost como los modelos más avanzados, basados en boosting.
 
 \section{Análisis y preparación de datos}
-El EDA temporal (Figura~\ref{fig:eda}) muestra que la tasa de fraude no es estacionaria. Oscila entre 2.07\% y 5.07\% semanal, y tiende a subir hacia el final del periodo. También aparece un patrón horario bastante marcado, con un pico de 10.6\% de fraude entre las 5 y las 9 de la mañana, y un cambio real en la distribución de \texttt{ProductCD} entre la primera y la segunda mitad del periodo (la categoría ``W'' pasa de 70\% a 80\%). La cobertura de datos de \texttt{identity} cae de forma abrupta después de la semana 3, de 54\% a un rango de 15\%-26\%, lo que refuerza la restricción de información mínima planteada antes.
+El EDA temporal (Figura~\ref{fig:eda}) muestra que la tasa de fraude no es estacionaria. Oscila entre 2.07\% y 5.07\% semanal, y tiende a subir hacia el final del periodo.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\linewidth]{../figures/01_weekly_volume_fraud_rate.png}
+\includegraphics[width=0.85\linewidth]{../figures/01_weekly_volume_fraud_rate.png}
 \caption{Volumen y tasa de fraude por semana. La no estacionariedad queda confirmada con datos reales.}
 \label{fig:eda}
+\end{figure}
+
+También aparece un patrón horario bastante marcado (Figura~\ref{fig:hora}): la tasa de fraude sube fuerte entre las 5 y las 9 de la mañana, con un pico de 10.6\%, mientras que la variación por día de la semana es mucho más leve.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{../figures/02_seasonality_dow_hour.png}
+\caption{Tasa de fraude por día de la semana y por hora del día. El patrón horario (5am-9am) es el más marcado.}
+\label{fig:hora}
+\end{figure}
+
+El monto de las transacciones se mantiene relativamente estable en el tiempo (Figura~\ref{fig:monto}), lo que sugiere que el drift de la tasa de fraude no viene simplemente de que las transacciones se vuelvan más grandes o más chicas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/03_amount_over_time.png}
+\caption{Media y mediana de \texttt{TransactionAmt} por semana: se mantienen relativamente estables.}
+\label{fig:monto}
+\end{figure}
+
+También hay un cambio real en la distribución de \texttt{ProductCD} entre la primera y la segunda mitad del periodo (la categoría ``W'' pasa de 70\% a 80\%), y la cobertura de datos de \texttt{identity} cae de forma abrupta después de la semana 3, de 54\% a un rango de 15\%-26\% (Figura~\ref{fig:identity}), lo que refuerza la restricción de información mínima planteada antes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/04_identity_coverage_over_time.png}
+\caption{Porcentaje de transacciones con datos de \texttt{identity} disponibles, por semana.}
+\label{fig:identity}
 \end{figure}
 
 Para el preprocesamiento se descartaron las 40 columnas individuales de \texttt{identity}, dejando en su lugar un flag \texttt{has\_identity}. Los nulos numéricos se imputaron con $-999$, una constante que no depende del split y por lo tanto no genera fuga de información. Las variables categóricas se codificaron como enteros y \texttt{TransactionAmt} se winsorizó al percentil 99.5. También se agregaron variables de ventana de 24 horas por tarjeta (\texttt{card1}). El split train/val/test quedó en 60/20/20, respetando siempre el orden cronológico.
 
 \section{Modelado y evaluación}
-La Tabla~\ref{tab:modelos} resume el desempeño de los cuatro modelos en validación, con el umbral por defecto de 0.5. XGBoost es el que gana en F1 y en ROC-AUC, pero con ese umbral su costo de negocio termina siendo peor que el de LightGBM. Esto pasa porque XGBoost tiene mucha precisión pero poco recall, y cada fraude que se deja pasar cuesta ocho veces más que una fricción con un cliente legítimo. Por eso se optimizó el umbral por separado, ya con el modelo ganador elegido (Figura~\ref{fig:umbral}). El umbral óptimo resultó ser 0.07 y no 0.5, lo que representa un ahorro del 28.3\% en el costo de negocio sobre el set de validación.
+Antes de ver los resultados, recordamos las métricas declaradas en la sección~\ref{sec:metricas} (F1, ROC-AUC, precisión y recall como métricas técnicas, y el costo de negocio) y los periodos exactos del split cronológico: entrenamos con los días 0 a 100, validamos con los días 100 a 140, y dejamos los días 140 a 181 como test, sin tocarlos hasta la evaluación final (sección~\ref{sec:evaltemporal}).
+
+La Tabla~\ref{tab:modelos} resume el desempeño de los cuatro modelos en validación, con el umbral por defecto de 0.5. Elegimos al modelo ganador por ROC-AUC, porque es una métrica que no depende del umbral de decisión y mide qué tan bien separa el modelo los casos de fraude de los legítimos en general; el costo de negocio, en cambio, sí depende del umbral elegido, así que no es un criterio justo para comparar modelos con el umbral por defecto. Por ROC-AUC, XGBoost es el mejor (0.921), seguido de LightGBM (0.917). Sin embargo, con el umbral de 0.5 su costo de negocio termina siendo peor que el de LightGBM: XGBoost tiene mucha precisión (0.87) pero poco recall (0.37), y cada fraude que se deja pasar cuesta ocho veces más que una fricción con un cliente legítimo. Por eso, una vez elegido XGBoost como el modelo con mejor capacidad de separación, se optimiza su umbral por separado (Figura~\ref{fig:umbral}) en vez de usar el 0.5 por defecto. El umbral óptimo resultó ser 0.07, lo que representa un ahorro del 28.3\% en el costo de negocio sobre el set de validación.
 
 \begin{table}[H]
 \centering\small
@@ -150,6 +183,42 @@ XGBoost      & 0.515 & 0.921 & \$354{,}510 \\
 
 La importancia de variables está dominada por columnas anonimizadas del dataset original (\texttt{V*}, \texttt{C*}). Nuestras variables de ingeniería quedaron en posiciones bajas, entre el puesto 187 y el 377 de 397. Es un hallazgo que preferimos reportar tal cual salió: el poder predictivo principal viene de los datos que ya venían en el dataset, y no tanto de las features que armamos nosotros.
 
+La métrica social (tasa de falsos positivos por cuartil de \texttt{TransactionAmt}, con el umbral costo-óptimo de 0.07) no confirma la hipótesis inicial de que el riesgo estaría en las compras de bajo ticket. El cuartil más afectado es el de monto alto (Q4, sobre \$117), con 6.68\% de falsos positivos, muy por encima del 4.21\% global; el menos afectado es Q2 (entre \$43 y \$68), con 2.65\% (Tabla~\ref{tab:social}, notebook 03). Esto tiene sentido porque los montos de fraude confirmado tienden a ser más altos que el promedio, así que el modelo asocia monto alto con mayor probabilidad de fraude y termina penalizando también a las compras grandes legítimas.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lrr}
+\toprule
+Cuartil de monto & Rango (\$) & FPR \\
+\midrule
+Q1 bajo & 0.25 -- 42.95 & 4.21\% \\
+Q2 & 42.96 -- 67.95 & 2.65\% \\
+Q3 & 67.96 -- 117.00 & 3.40\% \\
+Q4 alto & 117.22 -- 1656.11 & 6.68\% \\
+\bottomrule
+\end{tabular}
+\caption{Tasa de falsos positivos por cuartil de \texttt{TransactionAmt} en validación, umbral 0.07. Global: 4.21\%.}
+\label{tab:social}
+\end{table}
+
+Para verificar si XGBoost se mantiene como el mejor modelo al mover el periodo de evaluación, se repitió la comparación de los 4 modelos en 4 cortes adicionales de la línea de tiempo completa (día 60, 90, 120 y 150, cada uno con un bloque de evaluación de 20 días, notebook 06). El resultado es más parejo de lo que sugería el corte único de la sección 8: XGBoost gana por ROC-AUC en 2 de los 4 cortes (día 60 y 90) y LightGBM en los otros 2 (día 120 y 150), aunque siempre por márgenes chicos (Tabla~\ref{tab:multiperiodo}). La brecha entre los modelos de boosting (LightGBM, XGBoost) y la línea base clásica sí se mantiene grande y estable en los 4 periodos, sin excepción. Elegir XGBoost en la sección 8 no está mal, pero conviene dejar registrado que no domina de forma absoluta: en la mitad de los periodos evaluados, LightGBM habría sido la mejor opción.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Corte (día) & Reg. Log. & Random Forest & LightGBM & XGBoost \\
+\midrule
+60  & 0.840 & 0.879 & 0.905 & \textbf{0.919} \\
+90  & 0.827 & 0.867 & 0.898 & \textbf{0.901} \\
+120 & 0.845 & 0.884 & \textbf{0.925} & 0.921 \\
+150 & 0.826 & 0.874 & \textbf{0.910} & 0.908 \\
+\bottomrule
+\end{tabular}
+\caption{ROC-AUC de los 4 modelos en 4 cortes temporales distintos (notebook 06). Mejor de cada fila en negrita.}
+\label{tab:multiperiodo}
+\end{table}
+
 \section{Evaluación temporal}
 \label{sec:evaltemporal}
 Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el desempeño cae respecto a validación. El F1 baja de 0.495 a 0.406 (una caída de 18\%), el ROC-AUC baja de 0.921 a 0.886, y el costo sube de \$254{,}190 a \$278{,}910. Esta caída supera el umbral operativo inicial de alerta del 5\% de caída relativa que proponemos para evaluar el reentrenamiento (sección~\ref{sec:drift}). Sin embargo, al dividir \texttt{test} en 8 bloques temporales (Figura~\ref{fig:degradacion}) no se ve una degradación monótona. El rendimiento sube y baja, y se recupera hacia el final. Es decir, la caída real ocurre entre periodos, de val a test, y no como un colapso progresivo dentro de la ventana de test.
@@ -165,7 +234,9 @@ Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el de
 \label{sec:drift}
 Se propone una caída relativa del F1 superior al 5\% como umbral operativo inicial de alerta para evaluar el reentrenamiento. Este valor es una decisión de diseño, no un estándar establecido por la literatura. Su adecuación debe validarse mediante experimentos temporales que consideren falsas alarmas, costo de los errores y costo de reentrenamiento.
 
-Se simularon 5 estrategias de reentrenamiento en 2 cortes temporales, día 120 y día 150 sobre la línea de tiempo completa, evaluando cada una sobre el mismo bloque futuro de 20 días: sin olvido (todo el historial), ventanas deslizantes de 30, 60 y 90 días (escenario A), y time-decay con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia sin olvido nunca es la mejor, y en el corte 150 es directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Pero ninguna ventana gana en los dos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo.
+Las estrategias de ventana deslizante y de ponderación por decaimiento temporal que se prueban a continuación siguen la línea de trabajo de Gama et al. [4] sobre adaptación a concept drift y de Dal Pozzolo et al. [5] sobre estrategias de ventana móvil aplicadas específicamente a detección de fraude en entornos no estacionarios.
+
+Para poner esto a prueba, se simularon 5 estrategias de reentrenamiento en 2 puntos de corte de la línea de tiempo completa: día 120 y día 150. Cada estrategia se entrena solo con los datos disponibles hasta ese corte, y se evalúa sobre el mismo bloque futuro de 20 días. Las estrategias comparadas son: no olvidar nada (usar todo el historial disponible), ventanas deslizantes de 30, 60 y 90 días (escenario A), y una ponderación por decaimiento temporal con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia de no olvidar nunca es la mejor, y en el corte 150 resulta ser directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Sin embargo, ninguna ventana gana en ambos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo y no es algo que se pueda fijar de una vez para siempre.
 
 \begin{figure}[H]
 \centering
@@ -179,20 +250,30 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
 
 \section{Propuesta de despliegue}
 \begin{itemize}
-  \item Arquitectura de implementación: el módulo predictivo se empaqueta como un microservicio de inferencia (API REST) detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en una feature store de baja latencia, para cumplir con el límite de 200\,ms.
-  \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en el histórico.
-  \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando el monitor de drift detecte una caída relativa del F1 superior al 5\% respecto a la ventana base. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
-  \item Autonomía: el sistema decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
-  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, y validar cada nueva versión del modelo, por ejemplo con shadow deployment, antes de reemplazar la que está en producción.
+  \item Arquitectura de implementación: se propone sobre Google Cloud Platform (Figura~\ref{fig:despliegue}). El módulo predictivo se empaqueta como un microservicio de inferencia (API REST) en Cloud Run, detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en Bigtable/Memorystore como feature store de baja latencia, para cumplir con el límite de 200\,ms.
+  \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo servido en un Vertex AI Endpoint, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en BigQuery/GCS.
+  \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando Cloud Monitoring detecte, vía el monitor de drift, una caída relativa del F1 superior al 5\% respecto a la ventana base, lo que dispara un pipeline de reentrenamiento en Vertex AI Pipelines a través de Eventarc. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
+  \item Autonomía: SIADEF decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
+  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, validar cada nueva versión del modelo desplegando un segundo Vertex AI Endpoint en modo shadow antes de reemplazar el que está en producción, y tokenizar los campos sensibles (tarjeta, identidad) bajo estándares como PCI-DSS antes de que lleguen al sistema, en un despliegue con datos reales.
 \end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../figures/diagrama_gcp.png}
+\caption{Arquitectura de despliegue propuesta sobre GCP, con el monitor de drift y el ciclo de reentrenamiento.}
+\label{fig:despliegue}
+\end{figure}
 
 \section{Conclusiones}
 Con datos reales, y no solo con hipótesis, el proyecto confirma varias cosas. El dataset de fraude es genuinamente no estacionario. Elegir el modelo por una métrica que no depende del umbral, como el ROC-AUC, y recién después optimizar el umbral según el costo de negocio, genera ahorros medibles, en este caso un 28.3\%. La degradación temporal es real y se puede detectar con monitoreo continuo. Y alguna forma de olvido del pasado, ya sea por ventana o por decaimiento, supera de forma consistente a no olvidar nada, aunque el tamaño óptimo de esa ventana no es fijo, lo que exige monitoreo constante y no una política estática.
 
-\vspace{2pt}
-{\small Referencias: Gama, J. et al. (2014). \emph{A survey on concept drift adaptation}. ACM Computing Surveys.\\
-Dal Pozzolo, A. et al. (2015). \emph{Credit card fraud detection: a realistic modeling and a novel learning strategy}. IEEE TNNLS.\\
-Borketey, B. (2024). \emph{Real-Time Fraud Detection Using Machine Learning}. Journal of Data Analysis and Information Processing, 12(2), 185--204.\\
-Ben, F. (s.\,f.). \emph{API Response Time Standards: What's Good, Bad, and Unacceptable}. oDown.}
+\section{Referencias}
+\begin{enumerate}[leftmargin=18pt, itemsep=3pt, label={[\arabic*]}]
+  \item Borketey, B., \& Borketey, D. (2024). Real-time fraud detection using machine learning. \emph{Journal of Data Analysis and Information Processing}, 12(2), 189--209. \url{https://doi.org/10.4236/jdaip.2024.122011}
+  \item Ben, F. (2024). API response time standards: what's good, bad, and unacceptable. \emph{Odown}. \url{https://odown.com/blog/api-response-time-standards/}
+  \item Bronsdon, C. (2025). Master the AUC score to avoid shipping broken AI models. \emph{Galileo}. \url{https://galileo.ai/blog/auc-score}
+  \item Gama, J., Žliobaitė, I., Bifet, A., Pechenizkiy, M., \& Bouchachia, A. (2014). A survey on concept drift adaptation. \emph{ACM Computing Surveys}, 46(4), 1--37. \url{https://doi.org/10.1145/2523813}
+  \item Dal Pozzolo, A., Boracchi, G., Caelen, O., Alippi, C., \& Bontempi, G. (2018). Credit card fraud detection: a realistic modeling and a novel learning strategy. \emph{IEEE Transactions on Neural Networks and Learning Systems}, 29(8), 3784--3797. \url{https://doi.org/10.1109/TNNLS.2017.2736643}
+\end{enumerate}
 
 \end{document}
