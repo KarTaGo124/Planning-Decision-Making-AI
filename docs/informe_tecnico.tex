@@ -40,11 +40,11 @@
 \section{Introducción y problema}
 El fraude transaccional en e-commerce genera pérdidas superiores a \$48 mil millones anuales a nivel global y más de \$10 mil millones en EE.UU. (FTC, Merchant Savvy). Esto incluye tanto las pérdidas directas de capital como la fricción operativa que se genera cuando se bloquean por error compras legítimas. El problema de fondo es que los patrones de fraude cambian todo el tiempo: aparecen nuevas tecnologías de pago, el comportamiento de los usuarios cambia con las estaciones y los propios estafadores se adaptan constantemente para evadir los controles vigentes. Esto obliga a replantear continuamente las estrategias de detección, porque un modelo entrenado una sola vez, sin ningún mecanismo de adaptación, pierde efectividad poco a poco frente a este escenario cambiante.
 
-Por eso proponemos un sistema inteligente adaptativo de detección de fraude, usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina cambios graduales en los hábitos de consumo con cambios bruscos cuando aparecen campañas de fraude nuevas, sobre un dataset con muchas variables y clases muy desbalanceadas.
+Por eso proponemos el Sistema Inteligente Adaptativo de Detección de Fraude (\textbf{SIADEF}), usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina cambios graduales en los hábitos de consumo con cambios bruscos cuando aparecen campañas de fraude nuevas, sobre un dataset con muchas variables y clases muy desbalanceadas.
 
 \section{Objetivos}
 \subsection*{Objetivo general}
-Implementar un sistema inteligente de detección de fraude transaccional para e-commerce, que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
+Implementar SIADEF, un sistema de detección de fraude transaccional para e-commerce que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
 
 \subsection*{Objetivos específicos}
 \begin{itemize}
@@ -57,13 +57,13 @@ Implementar un sistema inteligente de detección de fraude transaccional para e-
 \section{Restricciones}
 \begin{itemize}
   \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real [1] y en estándares industriales de latencia para APIs críticas [2].
-  \item El sistema solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos.
+  \item SIADEF solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos. El dataset usado ya viene anonimizado por Kaggle, sin PII directa (nombres, números de tarjeta completos, direcciones).
   \item Ninguna decisión ni reentrenamiento puede usar información de periodos posteriores al evento que se está evaluando.
 \end{itemize}
 
 \section{Diseño del sistema}
 \label{sec:diseno}
-El sistema se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo, calculado a partir de la métrica de decisión de negocio definida en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
+SIADEF se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo, calculado a partir de la métrica de decisión de negocio definida en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
 
 Un monitor de drift, basado en ventanas deslizantes sobre el F1, evalúa el rendimiento del modelo por periodos y activa una alerta cuando detecta una caída relativa superior al 5\% respecto a la ventana base (el detalle completo de esta política está en la sección~\ref{sec:drift}). Esa alerta dispara la evaluación del reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
 
@@ -217,8 +217,8 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
   \item Arquitectura de implementación: el módulo predictivo se empaqueta como un microservicio de inferencia (API REST) detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en una feature store de baja latencia, para cumplir con el límite de 200\,ms.
   \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en el histórico.
   \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando el monitor de drift detecte una caída relativa del F1 superior al 5\% respecto a la ventana base. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
-  \item Autonomía: el sistema decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
-  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, y validar cada nueva versión del modelo, por ejemplo con shadow deployment, antes de reemplazar la que está en producción.
+  \item Autonomía: SIADEF decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
+  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, validar cada nueva versión del modelo, por ejemplo con shadow deployment, antes de reemplazar la que está en producción, y tokenizar los campos sensibles (tarjeta, identidad) bajo estándares como PCI-DSS antes de que lleguen al sistema, en un despliegue con datos reales.
 \end{itemize}
 
 \section{Conclusiones}
