@@ -38,17 +38,18 @@
 \vspace{-2.2em}
 
 \section{Introducción y problema}
-El fraude transaccional en e-commerce genera pérdidas superiores a \$48 mil millones anuales a nivel global y más de \$10 mil millones en EE.UU. (FTC, Merchant Savvy). Esto incluye tanto las pérdidas directas de capital como la fricción operativa que se genera cuando se bloquean por error compras legítimas. El problema de fondo es que los patrones de fraude cambian todo el tiempo, así que un modelo entrenado una sola vez pierde efectividad poco a poco.
+El fraude transaccional en e-commerce genera pérdidas superiores a \$48 mil millones anuales a nivel global y más de \$10 mil millones en EE.UU. (FTC, Merchant Savvy). Esto incluye tanto las pérdidas directas de capital como la fricción operativa que se genera cuando se bloquean por error compras legítimas. El problema de fondo es que los patrones de fraude cambian todo el tiempo: aparecen nuevas tecnologías de pago, el comportamiento de los usuarios cambia con las estaciones y los propios estafadores se adaptan constantemente para evadir los controles vigentes. Esto obliga a replantear continuamente las estrategias de detección, porque un modelo entrenado una sola vez, sin ningún mecanismo de adaptación, pierde efectividad poco a poco frente a este escenario cambiante.
 
-Por eso proponemos un sistema inteligente adaptativo de detección de fraude, usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina un drift mixto (hábitos de consumo que cambian de a poco, junto con cambios bruscos cuando aparecen campañas de fraude nuevas) con una complejidad real de datos: alta dimensionalidad y clases muy desbalanceadas.
+Por eso proponemos un sistema inteligente adaptativo de detección de fraude, usando el dataset \textbf{IEEE-CIS Fraud Detection} de Kaggle: 590{,}540 transacciones, 434 columnas, alrededor de 26 semanas y 3.499\% de fraude. Lo elegimos porque combina cambios graduales en los hábitos de consumo con cambios bruscos cuando aparecen campañas de fraude nuevas, sobre un dataset con muchas variables y clases muy desbalanceadas.
 
 \section{Objetivos}
-El objetivo general es implementar un sistema inteligente de detección de fraude transaccional para e-commerce, que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
+\subsection*{Objetivo general}
+Implementar un sistema inteligente de detección de fraude transaccional para e-commerce, que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.
 
-De ahí se desprenden los objetivos específicos:
+\subsection*{Objetivos específicos}
 \begin{itemize}
-  \item Analizar la dimensión temporal del dataset.
-  \item Comparar modelos clásicos y avanzados bajo un esquema de evaluación cronológico.
+  \item Analizar la dimensión temporal del dataset, buscando patrones de distribución no estacionarios, cambios abruptos en variables clave y anomalías en los datos.
+  \item Comparar el rendimiento, medido en F1 y ROC-AUC, de dos modelos clásicos y dos modelos avanzados, bajo un esquema de evaluación cronológico.
   \item Diseñar la arquitectura del sistema a nivel de componentes.
   \item Analizar el comportamiento del sistema bajo distintos escenarios de políticas de olvido.
 \end{itemize}
@@ -62,9 +63,9 @@ De ahí se desprenden los objetivos específicos:
 
 \section{Diseño del sistema}
 \label{sec:diseno}
-El sistema se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo definido en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
+El sistema se organiza en 5 partes que trabajan en conjunto, con un ciclo de retroalimentación que se muestra en la Figura~\ref{fig:arquitectura}. Primero está la adquisición e integración de datos, que junta las variables transaccionales, las de dispositivo o email, y las de comportamiento del comprador. Después viene el módulo predictivo, que corresponde a los 4 modelos candidatos de la sección~\ref{sec:modelado}. Le sigue el manejo de incertidumbre: las predicciones de baja confianza no se resuelven de forma automática, se marcan para que las revise una persona. El módulo de decisión aplica el umbral costo-óptimo, calculado a partir de la métrica de decisión de negocio definida en la sección~\ref{sec:metricas}. Por último, el componente de acción aprueba la transacción o la deriva a un analista humano, respetando la restricción de información mínima.
 
-Un monitor de drift, basado en ventanas deslizantes sobre el F1, activa una alerta para evaluar el reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
+Un monitor de drift, basado en ventanas deslizantes sobre el F1, evalúa el rendimiento del modelo por periodos y activa una alerta cuando detecta una caída relativa superior al 5\% respecto a la ventana base (el detalle completo de esta política está en la sección~\ref{sec:drift}). Esa alerta dispara la evaluación del reentrenamiento, y las etiquetas reales de fraude confirmado retroalimentan la etapa de adquisición de datos.
 
 \begin{figure}[H]
 \centering
@@ -101,29 +102,60 @@ Un monitor de drift, basado en ventanas deslizantes sobre el F1, activa una aler
 \section{Métricas de éxito}
 \label{sec:metricas}
 \begin{itemize}
-  \item Técnica: F1-Score y ROC-AUC, evaluados por bloque temporal (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), además de la latencia, que no debe pasar de 200\,ms.
+  \item Técnica: F1-Score y ROC-AUC como métricas principales (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), acompañadas de precisión y recall para interpretar mejor el comportamiento de cada modelo, además de la latencia, que no debe pasar de 200\,ms.
   \item De negocio: el costo se calcula como FN $\times\ \$120$ más FP $\times\ \$15$, es decir, el monto promedio de un fraude y el costo de revisar manualmente un falso positivo.
   \item Social: equidad en la tasa de falsos positivos por rango de monto, para evitar que se bloqueen de forma desproporcionada las compras legítimas de bajo ticket.
 \end{itemize}
+
+Como ejemplo de la métrica de negocio: en una pasarela que procesa 10,000 transacciones mensuales con 3.5\% de fraude (350 casos), asumiendo \$15 de costo por revisar un falso positivo y \$120 de pérdida por cada fraude no detectado, si el modelo evita que 40 fraudes se conviertan en pérdida total, el ahorro directo es de \$4,800 mensuales solo por ese concepto, sin contar la fricción evitada en falsos positivos.
 
 \section{Modelos}
 \label{sec:modelado}
 Se comparan cuatro modelos: Regresión Logística y Random Forest como línea base clásica, y LightGBM junto con XGBoost como los modelos más avanzados, basados en boosting.
 
 \section{Análisis y preparación de datos}
-El EDA temporal (Figura~\ref{fig:eda}) muestra que la tasa de fraude no es estacionaria. Oscila entre 2.07\% y 5.07\% semanal, y tiende a subir hacia el final del periodo. También aparece un patrón horario bastante marcado, con un pico de 10.6\% de fraude entre las 5 y las 9 de la mañana, y un cambio real en la distribución de \texttt{ProductCD} entre la primera y la segunda mitad del periodo (la categoría ``W'' pasa de 70\% a 80\%). La cobertura de datos de \texttt{identity} cae de forma abrupta después de la semana 3, de 54\% a un rango de 15\%-26\%, lo que refuerza la restricción de información mínima planteada antes.
+El EDA temporal (Figura~\ref{fig:eda}) muestra que la tasa de fraude no es estacionaria. Oscila entre 2.07\% y 5.07\% semanal, y tiende a subir hacia el final del periodo.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\linewidth]{../figures/01_weekly_volume_fraud_rate.png}
+\includegraphics[width=0.85\linewidth]{../figures/01_weekly_volume_fraud_rate.png}
 \caption{Volumen y tasa de fraude por semana. La no estacionariedad queda confirmada con datos reales.}
 \label{fig:eda}
+\end{figure}
+
+También aparece un patrón horario bastante marcado (Figura~\ref{fig:hora}): la tasa de fraude sube fuerte entre las 5 y las 9 de la mañana, con un pico de 10.6\%, mientras que la variación por día de la semana es mucho más leve.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{../figures/02_seasonality_dow_hour.png}
+\caption{Tasa de fraude por día de la semana y por hora del día. El patrón horario (5am-9am) es el más marcado.}
+\label{fig:hora}
+\end{figure}
+
+El monto de las transacciones se mantiene relativamente estable en el tiempo (Figura~\ref{fig:monto}), lo que sugiere que el drift de la tasa de fraude no viene simplemente de que las transacciones se vuelvan más grandes o más chicas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/03_amount_over_time.png}
+\caption{Media y mediana de \texttt{TransactionAmt} por semana: se mantienen relativamente estables.}
+\label{fig:monto}
+\end{figure}
+
+También hay un cambio real en la distribución de \texttt{ProductCD} entre la primera y la segunda mitad del periodo (la categoría ``W'' pasa de 70\% a 80\%), y la cobertura de datos de \texttt{identity} cae de forma abrupta después de la semana 3, de 54\% a un rango de 15\%-26\% (Figura~\ref{fig:identity}), lo que refuerza la restricción de información mínima planteada antes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/04_identity_coverage_over_time.png}
+\caption{Porcentaje de transacciones con datos de \texttt{identity} disponibles, por semana.}
+\label{fig:identity}
 \end{figure}
 
 Para el preprocesamiento se descartaron las 40 columnas individuales de \texttt{identity}, dejando en su lugar un flag \texttt{has\_identity}. Los nulos numéricos se imputaron con $-999$, una constante que no depende del split y por lo tanto no genera fuga de información. Las variables categóricas se codificaron como enteros y \texttt{TransactionAmt} se winsorizó al percentil 99.5. También se agregaron variables de ventana de 24 horas por tarjeta (\texttt{card1}). El split train/val/test quedó en 60/20/20, respetando siempre el orden cronológico.
 
 \section{Modelado y evaluación}
-La Tabla~\ref{tab:modelos} resume el desempeño de los cuatro modelos en validación, con el umbral por defecto de 0.5. XGBoost es el que gana en F1 y en ROC-AUC, pero con ese umbral su costo de negocio termina siendo peor que el de LightGBM. Esto pasa porque XGBoost tiene mucha precisión pero poco recall, y cada fraude que se deja pasar cuesta ocho veces más que una fricción con un cliente legítimo. Por eso se optimizó el umbral por separado, ya con el modelo ganador elegido (Figura~\ref{fig:umbral}). El umbral óptimo resultó ser 0.07 y no 0.5, lo que representa un ahorro del 28.3\% en el costo de negocio sobre el set de validación.
+Antes de ver los resultados, recordamos las métricas declaradas en la sección~\ref{sec:metricas} (F1, ROC-AUC, precisión y recall como métricas técnicas, y el costo de negocio) y los periodos exactos del split cronológico: entrenamos con los días 0 a 100, validamos con los días 100 a 140, y dejamos los días 140 a 181 como test, sin tocarlos hasta la evaluación final (sección~\ref{sec:evaltemporal}).
+
+La Tabla~\ref{tab:modelos} resume el desempeño de los cuatro modelos en validación, con el umbral por defecto de 0.5. Elegimos al modelo ganador por ROC-AUC, porque es una métrica que no depende del umbral de decisión y mide qué tan bien separa el modelo los casos de fraude de los legítimos en general; el costo de negocio, en cambio, sí depende del umbral elegido, así que no es un criterio justo para comparar modelos con el umbral por defecto. Por ROC-AUC, XGBoost es el mejor (0.921), seguido de LightGBM (0.917). Sin embargo, con el umbral de 0.5 su costo de negocio termina siendo peor que el de LightGBM: XGBoost tiene mucha precisión (0.87) pero poco recall (0.37), y cada fraude que se deja pasar cuesta ocho veces más que una fricción con un cliente legítimo. Por eso, una vez elegido XGBoost como el modelo con mejor capacidad de separación, se optimiza su umbral por separado (Figura~\ref{fig:umbral}) en vez de usar el 0.5 por defecto. El umbral óptimo resultó ser 0.07, lo que representa un ahorro del 28.3\% en el costo de negocio sobre el set de validación.
 
 \begin{table}[H]
 \centering\small
@@ -165,7 +197,7 @@ Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el de
 \label{sec:drift}
 Se propone una caída relativa del F1 superior al 5\% como umbral operativo inicial de alerta para evaluar el reentrenamiento. Este valor es una decisión de diseño, no un estándar establecido por la literatura. Su adecuación debe validarse mediante experimentos temporales que consideren falsas alarmas, costo de los errores y costo de reentrenamiento.
 
-Se simularon 5 estrategias de reentrenamiento en 2 cortes temporales, día 120 y día 150 sobre la línea de tiempo completa, evaluando cada una sobre el mismo bloque futuro de 20 días: sin olvido (todo el historial), ventanas deslizantes de 30, 60 y 90 días (escenario A), y time-decay con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia sin olvido nunca es la mejor, y en el corte 150 es directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Pero ninguna ventana gana en los dos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo.
+Para poner esto a prueba, se simularon 5 estrategias de reentrenamiento en 2 puntos de corte de la línea de tiempo completa: día 120 y día 150. Cada estrategia se entrena solo con los datos disponibles hasta ese corte, y se evalúa sobre el mismo bloque futuro de 20 días. Las estrategias comparadas son: no olvidar nada (usar todo el historial disponible), ventanas deslizantes de 30, 60 y 90 días (escenario A), y una ponderación por decaimiento temporal con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia de no olvidar nunca es la mejor, y en el corte 150 resulta ser directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Sin embargo, ninguna ventana gana en ambos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo y no es algo que se pueda fijar de una vez para siempre.
 
 \begin{figure}[H]
 \centering

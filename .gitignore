@@ -22,3 +22,6 @@ docs/*.out
 docs/*.toc
 docs/*.synctex.gz
 docs/page-*.png
+
+# Notas internas, solo local, no se comparten en el repo
+docs/FEEDBACK_INFORME_TECNICO.md
