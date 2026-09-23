@@ -56,7 +56,7 @@ Implementar un sistema inteligente de detección de fraude transaccional para e-
 
 \section{Restricciones}
 \begin{itemize}
-  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real (Borketey \& Borketey, 2024) y en estándares industriales de latencia para APIs críticas.
+  \item La inferencia tiene que tomar menos de 200\,ms por transacción, para no interrumpir el flujo de aprobación de la pasarela de pagos. Es un umbral respaldado en literatura sobre detección de fraude en tiempo real [1] y en estándares industriales de latencia para APIs críticas [2].
   \item El sistema solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos.
   \item Ninguna decisión ni reentrenamiento puede usar información de periodos posteriores al evento que se está evaluando.
 \end{itemize}
@@ -102,7 +102,7 @@ Un monitor de drift, basado en ventanas deslizantes sobre el F1, evalúa el rend
 \section{Métricas de éxito}
 \label{sec:metricas}
 \begin{itemize}
-  \item Técnica: F1-Score y ROC-AUC como métricas principales (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), acompañadas de precisión y recall para interpretar mejor el comportamiento de cada modelo. Consideramos que un modelo rinde bien para este contexto si su ROC-AUC es igual o mayor a 0.90, el umbral que la literatura de la industria sugiere para justificar decisiones de bloqueo automatizadas en detección de fraude (Bronsdon, 2025).
+  \item Técnica: F1-Score y ROC-AUC como métricas principales (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), acompañadas de precisión y recall para interpretar mejor el comportamiento de cada modelo. Consideramos que un modelo rinde bien para este contexto si su ROC-AUC es igual o mayor a 0.90, el umbral que la literatura de la industria sugiere para justificar decisiones de bloqueo automatizadas en detección de fraude [3].
   \item Latencia: inferencia inferior a 200\,ms por transacción, ya justificada en la sección de Restricciones.
   \item De negocio: el costo se calcula como FN $\times\ \$120$ más FP $\times\ \$15$, es decir, el monto promedio de un fraude y el costo de revisar manualmente un falso positivo.
   \item Social: equidad en la tasa de falsos positivos por rango de monto, para evitar que se bloqueen de forma desproporcionada las compras legítimas de bajo ticket.
@@ -198,7 +198,7 @@ Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el de
 \label{sec:drift}
 Se propone una caída relativa del F1 superior al 5\% como umbral operativo inicial de alerta para evaluar el reentrenamiento. Este valor es una decisión de diseño, no un estándar establecido por la literatura. Su adecuación debe validarse mediante experimentos temporales que consideren falsas alarmas, costo de los errores y costo de reentrenamiento.
 
-Las estrategias de ventana deslizante y de ponderación por decaimiento temporal que se prueban a continuación siguen la línea de trabajo de Gama et al. (2014) sobre adaptación a concept drift y de Dal Pozzolo et al. (2018) sobre estrategias de ventana móvil aplicadas específicamente a detección de fraude en entornos no estacionarios.
+Las estrategias de ventana deslizante y de ponderación por decaimiento temporal que se prueban a continuación siguen la línea de trabajo de Gama et al. [4] sobre adaptación a concept drift y de Dal Pozzolo et al. [5] sobre estrategias de ventana móvil aplicadas específicamente a detección de fraude en entornos no estacionarios.
 
 Para poner esto a prueba, se simularon 5 estrategias de reentrenamiento en 2 puntos de corte de la línea de tiempo completa: día 120 y día 150. Cada estrategia se entrena solo con los datos disponibles hasta ese corte, y se evalúa sobre el mismo bloque futuro de 20 días. Las estrategias comparadas son: no olvidar nada (usar todo el historial disponible), ventanas deslizantes de 30, 60 y 90 días (escenario A), y una ponderación por decaimiento temporal con vida media de 30 días (escenario B). La Figura~\ref{fig:drift} resume los resultados. En los dos cortes, la estrategia de no olvidar nunca es la mejor, y en el corte 150 resulta ser directamente la peor (\$123{,}090 contra \$117{,}735 de la ventana de 30 días). Sin embargo, ninguna ventana gana en ambos cortes a la vez, lo que sugiere que el tamaño óptimo de ventana también cambia con el tiempo y no es algo que se pueda fijar de una vez para siempre.
 
@@ -225,12 +225,12 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
 Con datos reales, y no solo con hipótesis, el proyecto confirma varias cosas. El dataset de fraude es genuinamente no estacionario. Elegir el modelo por una métrica que no depende del umbral, como el ROC-AUC, y recién después optimizar el umbral según el costo de negocio, genera ahorros medibles, en este caso un 28.3\%. La degradación temporal es real y se puede detectar con monitoreo continuo. Y alguna forma de olvido del pasado, ya sea por ventana o por decaimiento, supera de forma consistente a no olvidar nada, aunque el tamaño óptimo de esa ventana no es fijo, lo que exige monitoreo constante y no una política estática.
 
 \section{Referencias}
-\begin{itemize}[itemsep=3pt]
-  \item Gama, J., Žliobaitė, I., Bifet, A., Pechenizkiy, M., \& Bouchachia, A. (2014). A survey on concept drift adaptation. \emph{ACM Computing Surveys}, 46(4), 1--37. \url{https://doi.org/10.1145/2523813}
-  \item Dal Pozzolo, A., Boracchi, G., Caelen, O., Alippi, C., \& Bontempi, G. (2018). Credit card fraud detection: a realistic modeling and a novel learning strategy. \emph{IEEE Transactions on Neural Networks and Learning Systems}, 29(8), 3784--3797.
+\begin{enumerate}[leftmargin=18pt, itemsep=3pt, label={[\arabic*]}]
   \item Borketey, B., \& Borketey, D. (2024). Real-time fraud detection using machine learning. \emph{Journal of Data Analysis and Information Processing}, 12(2), 189--209. \url{https://doi.org/10.4236/jdaip.2024.122011}
   \item Ben, F. (2024). API response time standards: what's good, bad, and unacceptable. \emph{Odown}. \url{https://odown.com/blog/api-response-time-standards/}
   \item Bronsdon, C. (2025). Master the AUC score to avoid shipping broken AI models. \emph{Galileo}. \url{https://galileo.ai/blog/auc-score}
-\end{itemize}
+  \item Gama, J., Žliobaitė, I., Bifet, A., Pechenizkiy, M., \& Bouchachia, A. (2014). A survey on concept drift adaptation. \emph{ACM Computing Surveys}, 46(4), 1--37. \url{https://doi.org/10.1145/2523813}
+  \item Dal Pozzolo, A., Boracchi, G., Caelen, O., Alippi, C., \& Bontempi, G. (2018). Credit card fraud detection: a realistic modeling and a novel learning strategy. \emph{IEEE Transactions on Neural Networks and Learning Systems}, 29(8), 3784--3797.
+\end{enumerate}
 
 \end{document}
