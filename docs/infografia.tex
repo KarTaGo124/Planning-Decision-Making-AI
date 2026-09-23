@@ -24,8 +24,8 @@
 
 \vspace*{\fill}
 \begin{center}
-{\color{primary}\LARGE\bfseries Sistema Inteligente Adaptativo: Ciclo de Vida del Proyecto}\\[2pt]
-{\color{slate}\normalsize Detección de Fraude Financiero en E-Commerce, dataset IEEE-CIS Fraud Detection, Grupo 7}
+{\color{primary}\LARGE\bfseries SIADEF: Ciclo de Vida del Proyecto}\\[2pt]
+{\color{slate}\normalsize Sistema Inteligente Adaptativo de Detección de Fraude, dataset IEEE-CIS Fraud Detection, Grupo 7}
 \end{center}
 
 \vspace{4pt}
@@ -87,10 +87,10 @@
 \node[stage, top color=accentlight, bottom color=white, right=7mm of n3] (n4) {};
 \node[title, below=3mm of n4.north, xshift=2mm, text width=4.4cm, align=left] {\textcircled{\raisebox{-0.9pt}{4}}\ \ Despliegue (propuesta)};
 \node[item, align=left, text width=4.3cm, below=8mm of n4.north] {
-  \textbullet\ Microservicio de inferencia + feature store ($<$200\,ms)\\[2pt]
+  \textbullet\ Sobre GCP: Cloud Run + feature store en Bigtable ($<$200\,ms)\\[2pt]
   \textbullet\ Acción: aprobar o derivar a analista humano\\[2pt]
   \textbullet\ Sin bloqueo automático definitivo (restricción de decisión)\\[2pt]
-  \textbullet\ Validación previa (shadow deployment) antes de producción
+  \textbullet\ Validación previa en Vertex AI (shadow) antes de producción
 };
 
 \node[stage, top color=accentlight, bottom color=white, right=7mm of n4] (n5) {};

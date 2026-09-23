@@ -105,7 +105,7 @@ Un monitor de drift, basado en ventanas deslizantes sobre el F1, evalúa el rend
   \item Técnica: F1-Score y ROC-AUC como métricas principales (F1 $= 2\cdot\frac{P\cdot R}{P+R}$), acompañadas de precisión y recall para interpretar mejor el comportamiento de cada modelo. Consideramos que un modelo rinde bien para este contexto si su ROC-AUC es igual o mayor a 0.90, el umbral que la literatura de la industria sugiere para justificar decisiones de bloqueo automatizadas en detección de fraude [3].
   \item Latencia: inferencia inferior a 200\,ms por transacción, ya justificada en la sección de Restricciones.
   \item De negocio: el costo se calcula como FN $\times\ \$120$ más FP $\times\ \$15$, es decir, el monto promedio de un fraude y el costo de revisar manualmente un falso positivo.
-  \item Social: equidad en la tasa de falsos positivos por rango de monto, para evitar que se bloqueen de forma desproporcionada las compras legítimas de bajo ticket.
+  \item Social: equidad en la tasa de falsos positivos por rango de monto, para detectar si el modelo bloquea de forma desproporcionada algún rango de monto de transacción en particular.
 \end{itemize}
 
 Como ejemplo de la métrica de negocio: en una pasarela que procesa 10,000 transacciones mensuales con 3.5\% de fraude (350 casos), asumiendo \$15 de costo por revisar un falso positivo y \$120 de pérdida por cada fraude no detectado, si el modelo evita que 40 fraudes se conviertan en pérdida total, el ahorro directo es de \$4,800 mensuales solo por ese concepto, sin contar la fricción evitada en falsos positivos.
@@ -183,6 +183,42 @@ XGBoost      & 0.515 & 0.921 & \$354{,}510 \\
 
 La importancia de variables está dominada por columnas anonimizadas del dataset original (\texttt{V*}, \texttt{C*}). Nuestras variables de ingeniería quedaron en posiciones bajas, entre el puesto 187 y el 377 de 397. Es un hallazgo que preferimos reportar tal cual salió: el poder predictivo principal viene de los datos que ya venían en el dataset, y no tanto de las features que armamos nosotros.
 
+La métrica social (tasa de falsos positivos por cuartil de \texttt{TransactionAmt}, con el umbral costo-óptimo de 0.07) no confirma la hipótesis inicial de que el riesgo estaría en las compras de bajo ticket. El cuartil más afectado es el de monto alto (Q4, sobre \$117), con 6.68\% de falsos positivos, muy por encima del 4.21\% global; el menos afectado es Q2 (entre \$43 y \$68), con 2.65\% (Tabla~\ref{tab:social}, notebook 03). Esto tiene sentido porque los montos de fraude confirmado tienden a ser más altos que el promedio, así que el modelo asocia monto alto con mayor probabilidad de fraude y termina penalizando también a las compras grandes legítimas.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lrr}
+\toprule
+Cuartil de monto & Rango (\$) & FPR \\
+\midrule
+Q1 bajo & 0.25 -- 42.95 & 4.21\% \\
+Q2 & 42.96 -- 67.95 & 2.65\% \\
+Q3 & 67.96 -- 117.00 & 3.40\% \\
+Q4 alto & 117.22 -- 1656.11 & 6.68\% \\
+\bottomrule
+\end{tabular}
+\caption{Tasa de falsos positivos por cuartil de \texttt{TransactionAmt} en validación, umbral 0.07. Global: 4.21\%.}
+\label{tab:social}
+\end{table}
+
+Para verificar si XGBoost se mantiene como el mejor modelo al mover el periodo de evaluación, se repitió la comparación de los 4 modelos en 4 cortes adicionales de la línea de tiempo completa (día 60, 90, 120 y 150, cada uno con un bloque de evaluación de 20 días, notebook 06). El resultado es más parejo de lo que sugería el corte único de la sección 8: XGBoost gana por ROC-AUC en 2 de los 4 cortes (día 60 y 90) y LightGBM en los otros 2 (día 120 y 150), aunque siempre por márgenes chicos (Tabla~\ref{tab:multiperiodo}). La brecha entre los modelos de boosting (LightGBM, XGBoost) y la línea base clásica sí se mantiene grande y estable en los 4 periodos, sin excepción. Elegir XGBoost en la sección 8 no está mal, pero conviene dejar registrado que no domina de forma absoluta: en la mitad de los periodos evaluados, LightGBM habría sido la mejor opción.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Corte (día) & Reg. Log. & Random Forest & LightGBM & XGBoost \\
+\midrule
+60  & 0.840 & 0.879 & 0.905 & \textbf{0.919} \\
+90  & 0.827 & 0.867 & 0.898 & \textbf{0.901} \\
+120 & 0.845 & 0.884 & \textbf{0.925} & 0.921 \\
+150 & 0.826 & 0.874 & \textbf{0.910} & 0.908 \\
+\bottomrule
+\end{tabular}
+\caption{ROC-AUC de los 4 modelos en 4 cortes temporales distintos (notebook 06). Mejor de cada fila en negrita.}
+\label{tab:multiperiodo}
+\end{table}
+
 \section{Evaluación temporal}
 \label{sec:evaltemporal}
 Evaluando una sola vez sobre \texttt{test}, que no se había tocado antes, el desempeño cae respecto a validación. El F1 baja de 0.495 a 0.406 (una caída de 18\%), el ROC-AUC baja de 0.921 a 0.886, y el costo sube de \$254{,}190 a \$278{,}910. Esta caída supera el umbral operativo inicial de alerta del 5\% de caída relativa que proponemos para evaluar el reentrenamiento (sección~\ref{sec:drift}). Sin embargo, al dividir \texttt{test} en 8 bloques temporales (Figura~\ref{fig:degradacion}) no se ve una degradación monótona. El rendimiento sube y baja, y se recupera hacia el final. Es decir, la caída real ocurre entre periodos, de val a test, y no como un colapso progresivo dentro de la ventana de test.
@@ -223,32 +259,7 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-  node distance=6mm and 6mm,
-  box/.style={draw, rounded corners, minimum height=1.05cm, align=center, font=\scriptsize, fill=accent!12, draw=accent},
-  boxend/.style={draw, rounded corners, minimum height=1.15cm, align=center, font=\scriptsize, fill=primary, text=white, draw=primary},
-  boxsrc/.style={draw, rounded corners, minimum height=1.05cm, align=center, font=\scriptsize, fill=gray!10},
-  monitor/.style={draw, dashed, rounded corners, minimum height=0.9cm, align=center, font=\scriptsize, fill=white},
-  arr/.style={-{Latex[length=2mm]}, thick, accent}
-]
-\node[boxsrc, minimum width=1.7cm] (src) {Pasarela\\de pagos};
-\node[box, minimum width=2.0cm, right=of src] (run) {Cloud Run\\(inferencia)};
-\node[box, minimum width=2.0cm, right=of run] (feat) {Bigtable /\\Memorystore};
-\node[box, minimum width=2.1cm, right=of feat] (vertex) {Vertex AI\\Endpoint (+ shadow)};
-\node[box, minimum width=2.0cm, right=of vertex] (dec) {Módulo de\\decisión};
-\node[boxend, minimum width=1.9cm, right=of dec] (act) {Acción\\Aprobar / Revisar};
-
-\draw[arr] (src) -- (run);
-\draw[arr] (run) -- (feat);
-\draw[arr] (feat) -- (vertex);
-\draw[arr] (vertex) -- (dec);
-\draw[arr] (dec) -- (act);
-
-\node[monitor, below=8mm of vertex, xshift=8mm, minimum width=4.4cm] (mon) {Cloud Monitoring + Eventarc\\(dispara reentrenamiento en Vertex AI Pipelines)};
-\draw[-{Latex[length=2mm]}, thick, primary, dashed] (mon.north) -- ++(0,2mm) -| (dec.south);
-\draw[thick, gray, -{Latex[length=2mm]}] (act.south) |- ++(0,-22mm) -| (src.south);
-\node[below=24mm of act, xshift=-9.4cm, font=\tiny, text width=3.6cm, align=center] {feedback: BigQuery/GCS guarda histórico y etiquetas para reentrenar};
-\end{tikzpicture}
+\includegraphics[width=\linewidth]{../figures/diagrama_gcp.png}
 \caption{Arquitectura de despliegue propuesta sobre GCP, con el monitor de drift y el ciclo de reentrenamiento.}
 \label{fig:despliegue}
 \end{figure}
