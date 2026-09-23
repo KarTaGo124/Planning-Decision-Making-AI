@@ -100,7 +100,7 @@ Para este proyecto se evaluarán 4 modelos complementarios organizados en dos ca
 
 ## 7. Monitoreo y Políticas de Olvido (Respaldos Teóricos y Escenarios)
 
-Siguiendo las indicaciones de la cátedra y literatura especializada (*Gama et al., 2014; Dal Pozzolo et al., 2015*):
+Siguiendo las indicaciones de la cátedra y literatura especializada (*Gama et al., 2014; Dal Pozzolo et al., 2018*):
 * **Regla de Activación (Política):** Se evalúa el F1-Score en bloques temporales. Si se registra una degradación superior al **5%** respecto a la ventana base, se dispara la alerta de reentrenamiento.
 * **Exploración por Escenarios de Olvido:**
   * **Escenario A (Olvido Abrupto):** Reentrenamiento estricto sobre ventanas recientes de amplitud variable para estudiar la velocidad de ajuste del modelo ante cambios de patrón.
