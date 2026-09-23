@@ -214,12 +214,44 @@ Un sistema que fija un solo tamaño de ventana para siempre puede quedar mal cal
 
 \section{Propuesta de despliegue}
 \begin{itemize}
-  \item Arquitectura de implementación: el módulo predictivo se empaqueta como un microservicio de inferencia (API REST) detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en una feature store de baja latencia, para cumplir con el límite de 200\,ms.
-  \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en el histórico.
-  \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando el monitor de drift detecte una caída relativa del F1 superior al 5\% respecto a la ventana base. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
+  \item Arquitectura de implementación: se propone sobre Google Cloud Platform (Figura~\ref{fig:despliegue}). El módulo predictivo se empaqueta como un microservicio de inferencia (API REST) en Cloud Run, detrás de la pasarela de pagos, con las variables de ventana de 24h (sección~\ref{sec:modelado}) precalculadas en Bigtable/Memorystore como feature store de baja latencia, para cumplir con el límite de 200\,ms.
+  \item Flujo de datos: la transacción pasa por la feature store, luego por el modelo servido en un Vertex AI Endpoint, después por el módulo de decisión, y termina en la acción (aprobar o derivar a un analista); la etiqueta real, es decir si se confirma fraude o no, se guarda en BigQuery/GCS.
+  \item Frecuencia de actualización: se propone evaluar el reentrenamiento cuando Cloud Monitoring detecte, vía el monitor de drift, una caída relativa del F1 superior al 5\% respecto a la ventana base, lo que dispara un pipeline de reentrenamiento en Vertex AI Pipelines a través de Eventarc. Este umbral operativo inicial está pendiente de validación experimental (sección~\ref{sec:drift}).
   \item Autonomía: SIADEF decide por su cuenta solo en los extremos de confianza, cuando el riesgo es bajo. Los casos ambiguos siempre requieren revisión humana, nunca se bloquea una transacción de forma automática y definitiva.
-  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, validar cada nueva versión del modelo, por ejemplo con shadow deployment, antes de reemplazar la que está en producción, y tokenizar los campos sensibles (tarjeta, identidad) bajo estándares como PCI-DSS antes de que lleguen al sistema, en un despliegue con datos reales.
+  \item Desafíos: escalar el reentrenamiento sin degradar la latencia de inferencia en producción, controlar el costo computacional de reentrenar con la frecuencia necesaria, validar cada nueva versión del modelo desplegando un segundo Vertex AI Endpoint en modo shadow antes de reemplazar el que está en producción, y tokenizar los campos sensibles (tarjeta, identidad) bajo estándares como PCI-DSS antes de que lleguen al sistema, en un despliegue con datos reales.
 \end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=6mm and 6mm,
+  box/.style={draw, rounded corners, minimum height=1.05cm, align=center, font=\scriptsize, fill=accent!12, draw=accent},
+  boxend/.style={draw, rounded corners, minimum height=1.15cm, align=center, font=\scriptsize, fill=primary, text=white, draw=primary},
+  boxsrc/.style={draw, rounded corners, minimum height=1.05cm, align=center, font=\scriptsize, fill=gray!10},
+  monitor/.style={draw, dashed, rounded corners, minimum height=0.9cm, align=center, font=\scriptsize, fill=white},
+  arr/.style={-{Latex[length=2mm]}, thick, accent}
+]
+\node[boxsrc, minimum width=1.7cm] (src) {Pasarela\\de pagos};
+\node[box, minimum width=2.0cm, right=of src] (run) {Cloud Run\\(inferencia)};
+\node[box, minimum width=2.0cm, right=of run] (feat) {Bigtable /\\Memorystore};
+\node[box, minimum width=2.1cm, right=of feat] (vertex) {Vertex AI\\Endpoint (+ shadow)};
+\node[box, minimum width=2.0cm, right=of vertex] (dec) {Módulo de\\decisión};
+\node[boxend, minimum width=1.9cm, right=of dec] (act) {Acción\\Aprobar / Revisar};
+
+\draw[arr] (src) -- (run);
+\draw[arr] (run) -- (feat);
+\draw[arr] (feat) -- (vertex);
+\draw[arr] (vertex) -- (dec);
+\draw[arr] (dec) -- (act);
+
+\node[monitor, below=8mm of vertex, xshift=8mm, minimum width=4.4cm] (mon) {Cloud Monitoring + Eventarc\\(dispara reentrenamiento en Vertex AI Pipelines)};
+\draw[-{Latex[length=2mm]}, thick, primary, dashed] (mon.north) -- ++(0,2mm) -| (dec.south);
+\draw[thick, gray, -{Latex[length=2mm]}] (act.south) |- ++(0,-22mm) -| (src.south);
+\node[below=24mm of act, xshift=-9.4cm, font=\tiny, text width=3.6cm, align=center] {feedback: BigQuery/GCS guarda histórico y etiquetas para reentrenar};
+\end{tikzpicture}
+\caption{Arquitectura de despliegue propuesta sobre GCP, con el monitor de drift y el ciclo de reentrenamiento.}
+\label{fig:despliegue}
+\end{figure}
 
 \section{Conclusiones}
 Con datos reales, y no solo con hipótesis, el proyecto confirma varias cosas. El dataset de fraude es genuinamente no estacionario. Elegir el modelo por una métrica que no depende del umbral, como el ROC-AUC, y recién después optimizar el umbral según el costo de negocio, genera ahorros medibles, en este caso un 28.3\%. La degradación temporal es real y se puede detectar con monitoreo continuo. Y alguna forma de olvido del pasado, ya sea por ventana o por decaimiento, supera de forma consistente a no olvidar nada, aunque el tamaño óptimo de esa ventana no es fijo, lo que exige monitoreo constante y no una política estática.
@@ -230,7 +262,7 @@ Con datos reales, y no solo con hipótesis, el proyecto confirma varias cosas. E
   \item Ben, F. (2024). API response time standards: what's good, bad, and unacceptable. \emph{Odown}. \url{https://odown.com/blog/api-response-time-standards/}
   \item Bronsdon, C. (2025). Master the AUC score to avoid shipping broken AI models. \emph{Galileo}. \url{https://galileo.ai/blog/auc-score}
   \item Gama, J., Žliobaitė, I., Bifet, A., Pechenizkiy, M., \& Bouchachia, A. (2014). A survey on concept drift adaptation. \emph{ACM Computing Surveys}, 46(4), 1--37. \url{https://doi.org/10.1145/2523813}
-  \item Dal Pozzolo, A., Boracchi, G., Caelen, O., Alippi, C., \& Bontempi, G. (2018). Credit card fraud detection: a realistic modeling and a novel learning strategy. \emph{IEEE Transactions on Neural Networks and Learning Systems}, 29(8), 3784--3797.
+  \item Dal Pozzolo, A., Boracchi, G., Caelen, O., Alippi, C., \& Bontempi, G. (2018). Credit card fraud detection: a realistic modeling and a novel learning strategy. \emph{IEEE Transactions on Neural Networks and Learning Systems}, 29(8), 3784--3797. \url{https://doi.org/10.1109/TNNLS.2017.2736643}
 \end{enumerate}
 
 \end{document}
