@@ -12,6 +12,8 @@
             --text-dark: #334155;
             --bg-card: #ffffff;
             --bg-page: #f8fafc;
+            --green: #16a34a;
+            --red: #b91c1c;
         }
 
         * {
@@ -33,10 +35,10 @@
         }
 
         .presentation-container {
-            width: 90vw;
-            max-width: 1100px;
-            height: 84vh;
-            max-height: 720px;
+            width: 92vw;
+            max-width: 1180px;
+            height: 88vh;
+            max-height: 760px;
             position: relative;
             background: var(--bg-card);
             border-radius: 12px;
@@ -49,10 +51,11 @@
 
         .slide {
             display: none;
-            padding: 35px 45px;
+            padding: 30px 42px;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
+            overflow-y: auto;
         }
 
         .slide.active {
@@ -62,15 +65,16 @@
         .slide-header {
             border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .slide-header h2 {
             color: var(--primary);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
@@ -79,10 +83,16 @@
             color: var(--accent);
             padding: 4px 12px;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .badge.finding {
+            background: #fef9c3;
+            color: #854d0e;
         }
 
         .slide-body {
@@ -90,33 +100,33 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .cover-slide {
             text-align: center;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
             background: #0f172a;
             color: white;
-            padding: 60px 40px;
+            padding: 50px 40px;
         }
 
         .cover-slide h1 {
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .cover-slide h3 {
             font-weight: 400;
             color: #94a3b8;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .cover-meta {
-            margin-top: 25px;
+            margin-top: 20px;
             display: flex;
             gap: 20px;
             justify-content: center;
@@ -126,7 +136,7 @@
             background: rgba(255, 255, 255, 0.08);
             padding: 8px 16px;
             border-radius: 4px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #cbd5e1;
         }
@@ -135,33 +145,45 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+            align-items: start;
+            align-content: center;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 14px;
+            align-items: start;
+            align-content: center;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            align-items: start;
+            align-content: center;
         }
 
         .card {
             background: #ffffff;
             border: 1px solid #cbd5e1;
             border-left: 4px solid var(--accent);
-            padding: 16px 18px;
+            padding: 14px 16px;
             border-radius: 6px;
         }
 
         .card h4 {
             color: var(--primary);
             margin-bottom: 6px;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 600;
         }
 
         .card p, .card ul {
-            font-size: 0.91rem;
+            font-size: 0.88rem;
             color: #475569;
-            line-height: 1.45;
+            line-height: 1.42;
         }
 
         .card ul {
@@ -175,6 +197,7 @@
             padding: 12px 25px;
             background: #f1f5f9;
             border-top: 1px solid #cbd5e1;
+            flex-shrink: 0;
         }
 
         .btn {
@@ -216,7 +239,7 @@
             padding: 8px 12px;
             border-radius: 4px;
             font-family: 'Consolas', monospace;
-            font-size: 0.86rem;
+            font-size: 0.84rem;
             color: #0f172a;
             margin: 6px 0;
         }
@@ -225,31 +248,94 @@
             background: #f0fdf4;
             border-left: 3px solid #16a34a;
             padding: 6px 10px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: #166534;
             margin-top: 6px;
             border-radius: 2px;
+        }
+
+        .finding-box {
+            background: #fffbeb;
+            border-left: 3px solid #d97706;
+            padding: 8px 10px;
+            font-size: 0.82rem;
+            color: #78350f;
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+
+        .slide-img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .img-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .mini-table th, .mini-table td {
+            padding: 5px 8px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .mini-table th:first-child, .mini-table td:first-child {
+            text-align: left;
+        }
+
+        .mini-table th {
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .mini-table td.best {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .cite {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin-top: 6px;
         }
     </style>
 </head>
 <body>
 
     <div class="presentation-container">
-        
+
         <!-- Slide 1: Portada -->
         <div class="slide cover-slide active">
-            <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
-            <h1>Proyecto 1: Sistema Inteligente Adaptativo</h1>
-            <h3>Planificación y Toma de Decisiones en IA, Dra. Aurea Soriano-Vargas & Mg. Robert Buleje</h3>
-            
+            <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2 &middot; Proyecto 1</span>
+            <h1>SIADEF: Sistema Inteligente Adaptativo de Detección de Fraude</h1>
+            <h3>Planificación y Toma de Decisiones en IA (CS5363), Dra. Aurea Soriano-Vargas &amp; Mg. Robert Buleje</h3>
+
             <div style="max-width: 650px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
-                <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Detección de Fraude Financiero en E-Commerce</p>
-                <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">Dataset: IEEE-CIS Fraud Detection (Kaggle)</p>
+                <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de uso:</strong> detección de fraude financiero en e-commerce</p>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">Dataset: IEEE-CIS Fraud Detection (Kaggle) &middot; 590,540 transacciones &middot; 26 semanas</p>
             </div>
 
             <div class="cover-meta">
-                <div class="cover-pill">Duración: 10 - 15 min</div>
-                <div class="cover-pill">Evaluación: 2 Puntos en Rúbrica Final</div>
+                <div class="cover-pill">Grupo 7</div>
+                <div class="cover-pill">Gálvez Pacori &middot; Meneses Roncal &middot; Ore García</div>
             </div>
         </div>
 
@@ -262,19 +348,19 @@
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #0f172a;">
                     <h4>Impacto del Fraude en E-Commerce</h4>
-                    <p>El fraude en comercio electrónico genera pérdidas superiores a los <strong>$48 mil millones anuales a nivel global</strong> y más de <strong>$10 mil millones en EE.UU.</strong> (estimaciones FTC y reportes del sector). Abarca pérdidas directas de capital y costos por fricción operativa al bloquear compras legítimas.</p>
+                    <p>El fraude en comercio electrónico genera pérdidas superiores a <strong>$48 mil millones anuales a nivel global</strong> y más de <strong>$10 mil millones en EE.UU.</strong> (FTC, Merchant Savvy). Abarca pérdidas directas de capital y costos por fricción operativa al bloquear compras legítimas.</p>
                 </div>
                 <div class="card" style="border-left-color: #0284c7;">
                     <h4>Cambio en el Comportamiento de los Datos</h4>
-                    <p>Los patrones de compra y los métodos de ataque no son estáticos; evolucionan continuamente debido a factores sociales, nuevas regulaciones y adaptación de los estafadores. Los modelos predictivos fijos pierden efectividad progresivamente al no ajustarse a este dinamismo.</p>
+                    <p>Los patrones de compra y los métodos de ataque no son estáticos: aparecen nuevas tecnologías de pago, el comportamiento cambia con las estaciones y los estafadores se adaptan constantemente. Un modelo entrenado una sola vez pierde efectividad poco a poco.</p>
                 </div>
                 <div class="card" style="border-left-color: #16a34a;">
                     <h4>Justificación del Dataset</h4>
-                    <p>Se elige IEEE-CIS porque combina una evolución gradual de los hábitos de consumo con cambios más bruscos por nuevas campañas de fraude, y porque su alta cantidad de variables y el fuerte desbalance de clases (~3.5% fraude) lo hacen representativo de un problema real de este tipo.</p>
+                    <p>IEEE-CIS combina cambios graduales en los hábitos de consumo con cambios bruscos por campañas de fraude nuevas, sobre un dataset con muchas variables y clases muy desbalanceadas (3.499% de fraude).</p>
                 </div>
                 <div class="card" style="border-left-color: #475569;">
                     <h4>Propuesta del Proyecto</h4>
-                    <p>Por todos estos motivos, se propone implementar un sistema inteligente adaptativo de detección de fraude en e-commerce, capaz de evaluar su desempeño a lo largo del tiempo y mantener su robustez operacional mediante estrategias de adaptación temporal.</p>
+                    <p>Proponemos <strong>SIADEF</strong>, un sistema inteligente adaptativo de detección de fraude, capaz de evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.</p>
                 </div>
             </div>
         </div>
@@ -288,15 +374,15 @@
             <div class="slide-body">
                 <div class="card" style="border-left-color: #0284c7; margin-bottom: 8px;">
                     <h4>Objetivo General</h4>
-                    <p><strong>Implementar un sistema inteligente de detección de fraude transaccional para el sector e-commerce</strong>, capaz de evaluar su desempeño en el tiempo y adaptarse al cambio en el comportamiento de los datos para preservar la robustez del servicio a lo largo de su ciclo de vida.</p>
+                    <p>Implementar SIADEF, un sistema de detección de fraude transaccional para e-commerce que pueda evaluar su propio desempeño en el tiempo y adaptarse a los cambios en el comportamiento de los datos.</p>
                 </div>
                 <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Objetivos Específicos (Secuenciales)</h4>
-                    <ul style="font-size: 0.88rem; line-height: 1.45;">
-                        <li><strong>1. Exploración Temporal:</strong> Analizar la dimensión temporal del conjunto de datos transaccionales para identificar patrones de distribución y variaciones no estacionarias.</li>
-                        <li><strong>2. Modelado Comparativo:</strong> Comparar el desempeño de dos modelos clásicos y modelos avanzados en la detección de fraude bajo un esquema de evaluación cronológico.</li>
-                        <li><strong>3. Arquitectura del Sistema:</strong> Diseñar la arquitectura del sistema a nivel de componentes.</li>
-                        <li><strong>4. Evaluación de Escenarios:</strong> Analizar el comportamiento temporal del sistema bajo diferentes escenarios de políticas de olvido basadas en ventanas deslizantes para evaluar su capacidad de adaptación y robustez.</li>
+                    <h4>Objetivos Específicos</h4>
+                    <ul style="font-size: 0.87rem; line-height: 1.42;">
+                        <li><strong>1. Exploración temporal:</strong> analizar la dimensión temporal del dataset, buscando patrones de distribución no estacionarios, cambios abruptos en variables clave y anomalías.</li>
+                        <li><strong>2. Modelado comparativo:</strong> comparar el rendimiento, medido en F1 y ROC-AUC, de dos modelos clásicos y dos modelos avanzados, bajo un esquema de evaluación cronológico.</li>
+                        <li><strong>3. Arquitectura del sistema:</strong> diseñar la arquitectura de SIADEF a nivel de componentes.</li>
+                        <li><strong>4. Evaluación de escenarios:</strong> analizar el comportamiento del sistema bajo distintos escenarios de políticas de olvido.</li>
                     </ul>
                 </div>
             </div>
@@ -311,16 +397,16 @@
             <div class="slide-body grid-3">
                 <div class="card">
                     <h4>Latencia Operacional</h4>
-                    <p>Tiempo máximo de inferencia de <strong>200 ms por transacción</strong>, garantizando que el flujo de aprobación en la pasarela de pagos opere sin interrupciones perceptibles.</p>
-                    <p style="font-size: 0.82rem; color: #64748b; margin-top: 6px;"><em>Respaldado en literatura:</em> Borketey (2024) sobre tiempos de respuesta en detección de fraude en tiempo real, y estándares industriales de latencia para APIs críticas.</p>
+                    <p>Inferencia inferior a <strong>200 ms por transacción</strong>, para no interrumpir el flujo de aprobación de la pasarela de pagos.</p>
+                    <p class="cite">Respaldado en literatura sobre detección de fraude en tiempo real (Borketey &amp; Borketey, 2024) y estándares industriales de latencia para APIs críticas.</p>
                 </div>
                 <div class="card">
                     <h4>Información Mínima Garantizada</h4>
-                    <p>El sistema opera únicamente con el conjunto de atributos que habitualmente proveen las pasarelas de pago estándar, sin garantía de fuentes adicionales de verificación de identidad ni de registros siempre completos.</p>
+                    <p>SIADEF solo puede usar los atributos que entregan normalmente las pasarelas estándar, sin garantía de tener siempre datos de identidad completos. El dataset ya viene anonimizado por Kaggle, sin PII directa.</p>
                 </div>
                 <div class="card">
                     <h4>Consistencia Temporal Estricta</h4>
-                    <p>Al incorporar nueva información, esta no debe mezclarse con datos de periodos posteriores ya conocidos: cada decisión y cada actualización del modelo solo puede usar información disponible hasta ese momento.</p>
+                    <p>Ninguna decisión ni reentrenamiento puede usar información de periodos posteriores al evento que se está evaluando.</p>
                 </div>
             </div>
         </div>
@@ -328,11 +414,11 @@
         <!-- Slide 5: Diseño del Sistema de IA -->
         <div class="slide">
             <div class="slide-header">
-                <h2>4. Diseño del Sistema de IA</h2>
+                <h2>4. Diseño del Sistema</h2>
                 <span class="badge">Arquitectura de Componentes</span>
             </div>
             <div class="slide-body" style="gap: 10px;">
-                <svg viewBox="0 0 1000 235" width="100%" height="225" style="display:block;">
+                <svg viewBox="0 0 1000 235" width="100%" height="215" style="display:block;">
                     <defs>
                         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                             <path d="M0,0 L10,5 L0,10 z" fill="#0284c7"></path>
@@ -386,7 +472,7 @@
 
                     <rect x="360" y="160" width="340" height="45" rx="6" fill="#ffffff" stroke="#0f172a" stroke-dasharray="4 3"></rect>
                     <text x="530" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Monitor de Drift</text>
-                    <text x="530" y="193" text-anchor="middle" font-size="9.5" fill="#475569">Ventanas deslizantes / degradación F1</text>
+                    <text x="530" y="193" text-anchor="middle" font-size="9.5" fill="#475569">Ventanas deslizantes / degradación F1 &gt; 5%</text>
 
                     <line x1="530" y1="160" x2="480" y2="92" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrowDark)"></line>
                     <text x="605" y="150" text-anchor="middle" font-size="9" fill="#0f172a">dispara reentrenamiento</text>
@@ -396,7 +482,7 @@
                 </svg>
 
                 <div class="card" style="border-left-color: #0284c7;">
-                    <p style="font-size: 0.87rem; line-height: 1.5;">Las <strong>fuentes de datos</strong> (transaccionales, de dispositivo/email y de comportamiento del comprador) se integran en una capa de features unificada. El <strong>módulo predictivo</strong> genera un score de fraude que pasa por una etapa de <strong>manejo de incertidumbre</strong>: los casos de alta confianza se resuelven automáticamente y los ambiguos se marcan para revisión. El <strong>módulo de decisión</strong> aplica el umbral costo-óptimo (Slide 5) y el <strong>componente de acción</strong> ejecuta la respuesta (aprobar o derivar a un analista), retroalimentando etiquetas reales que, junto al monitor de drift, disparan el reentrenamiento.</p>
+                    <p style="font-size: 0.86rem; line-height: 1.48;">Las <strong>fuentes de datos</strong> (transaccionales, de dispositivo/email y de comportamiento del comprador) se integran en una capa de features unificada. El <strong>módulo predictivo</strong> genera un score de fraude que pasa por <strong>manejo de incertidumbre</strong>: los casos de alta confianza se resuelven automáticamente y los ambiguos se marcan para revisión humana. El <strong>módulo de decisión</strong> aplica el umbral costo-óptimo y el <strong>componente de acción</strong> ejecuta la respuesta, retroalimentando etiquetas reales que, junto al monitor de drift, disparan el reentrenamiento.</p>
                 </div>
             </div>
         </div>
@@ -410,22 +496,23 @@
             <div class="slide-body grid-3">
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 6px;">Técnica</h4>
-                    <p style="font-size: 0.85rem; color: #475569;"><strong>F1-Score & ROC-AUC</strong> evaluados por bloque temporal para medir discriminación con clases desproporcionadas.</p>
+                    <p style="font-size: 0.84rem; color: #475569;"><strong>F1-Score y ROC-AUC</strong> como métricas principales, acompañadas de precisión y recall.</p>
                     <div class="formula-box">F1 = 2 &middot; (P &middot; R) / (P + R)</div>
-                    <p style="font-size: 0.8rem; color: #64748b;">Latencia promedio: &lt; 200 ms</p>
+                    <p class="cite">Un modelo "rinde bien" si su ROC-AUC &ge; 0.90, umbral que la literatura de industria sugiere para bloqueo automatizado (Bronsdon, 2025). Latencia &lt; 200 ms como métrica aparte.</p>
                 </div>
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 6px;">Decisión / Negocio</h4>
-                    <p style="font-size: 0.85rem; color: #475569;">Balance económico entre pérdidas omitidas y costos de fricción manual.</p>
-                    <div class="formula-box">Costo = (FN &times; $Monto) + (FP &times; $Fricci&oacute;n)</div>
+                    <p style="font-size: 0.84rem; color: #475569;">Balance económico entre pérdidas omitidas y costos de fricción manual.</p>
+                    <div class="formula-box">Costo = (FN &times; $120) + (FP &times; $15)</div>
                     <div class="estimate-box">
-                        <strong>Estimado:</strong> En 10,000 transacciones ($15 costo FP, $120 monto fraude), optimizar el umbral proyecta ahorros de miles de USD por ciclo.
+                        <strong>Ejemplo:</strong> en 10,000 transacciones (3.5% fraude), evitar 40 fraudes genera un ahorro directo de $4,800 mensuales, sin contar la fricción evitada.
                     </div>
                 </div>
                 <div class="metric-box">
                     <h4 style="color: #0f172a; margin-bottom: 6px;">Social / Riesgo</h4>
-                    <p style="font-size: 0.85rem; color: #475569;"><strong>Equidad de Rechazos por Monto:</strong> Asegurar que las compras legítimas de bajo ticket no sufran tasas de bloqueo desproporcionadas.</p>
-                    <div class="formula-box">Paridad de FP entre cuantiles</div>
+                    <p style="font-size: 0.84rem; color: #475569;"><strong>Equidad de falsos positivos por rango de monto:</strong> detectar si el modelo bloquea de forma desproporcionada algún rango de monto en particular.</p>
+                    <div class="formula-box">Paridad de FP entre cuartiles</div>
+                    <p class="cite">Resultado real en Slide 10 — la hipótesis inicial no se confirmó.</p>
                 </div>
             </div>
         </div>
@@ -433,68 +520,209 @@
         <!-- Slide 7: Modelos Mapeados -->
         <div class="slide">
             <div class="slide-header">
-                <h2>6. Modelos Mapeados</h2>
-                <span class="badge">4 Modelos: Tradicional vs. Avanzado</span>
+                <h2>6. Modelos Candidatos</h2>
+                <span class="badge">4 Modelos: Clásicos vs. Avanzados</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #64748b;">
                     <h4>Modelos Clásicos (Línea Base)</h4>
                     <ul>
-                        <li><strong>Regresión Logística:</strong> Modelo lineal interpretable de referencia inicial, de bajo costo computacional y evaluación directa.</li>
-                        <li><strong>Random Forest Classifier:</strong> Ensamble por bagging que captura relaciones no lineales entre variables transaccionales.</li>
+                        <li><strong>Regresión Logística:</strong> modelo lineal interpretable, bajo costo computacional.</li>
+                        <li><strong>Random Forest:</strong> ensamble por bagging que captura relaciones no lineales.</li>
                     </ul>
                 </div>
                 <div class="card" style="border-left-color: #0284c7;">
                     <h4>Modelos Avanzados</h4>
                     <ul>
-                        <li><strong>LightGBM:</strong> Ensamble por Gradient Boosting de alta velocidad, optimizado para grandes volúmenes tabulares con partición por hojas (leaf-wise).</li>
-                        <li><strong>XGBoost:</strong> Algoritmo de boosting con regularización robusta, alta precisión predictiva y manejo nativo de nulos.</li>
+                        <li><strong>LightGBM:</strong> boosting por hojas (leaf-wise), rápido en datasets tabulares grandes.</li>
+                        <li><strong>XGBoost:</strong> boosting con regularización robusta y manejo nativo de nulos.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: Estrategia de Monitoreo -->
+        <!-- Slide 8: EDA -->
         <div class="slide">
             <div class="slide-header">
-                <h2>7. Monitoreo y Políticas de Olvido</h2>
-                <span class="badge">Ventanas Deslizantes y Respaldos</span>
+                <h2>7. Análisis de Datos (EDA Temporal)</h2>
+                <span class="badge">Evidencia de No Estacionariedad</span>
             </div>
-            <div class="slide-body grid-2">
+            <div class="slide-body grid-2" style="align-items: stretch;">
+                <div class="img-box">
+                    <img class="slide-img" src="../figures/01_weekly_volume_fraud_rate.png" alt="Volumen y tasa de fraude por semana">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="card" style="border-left-color: #0284c7;">
+                        <p style="font-size:0.85rem;">La tasa de fraude <strong>oscila entre 2.07% y 5.07%</strong> semanal, y tiende a subir hacia el final del periodo: no es estacionaria.</p>
+                    </div>
+                    <div class="card" style="border-left-color: #0f172a;">
+                        <p style="font-size:0.85rem;">Patrón horario marcado: la tasa de fraude sube fuerte <strong>entre las 5am y 9am</strong>, con pico de 10.6%.</p>
+                    </div>
+                    <div class="card" style="border-left-color: #16a34a;">
+                        <p style="font-size:0.85rem;"><code>ProductCD</code> cambia de mix (categoría "W": 70%&rarr;80%) y la cobertura de <code>identity</code> cae de 54% a 15-26% tras la semana 3.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Modelado y resultados -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>8. Modelado y Evaluación</h2>
+                <span class="badge">Comparación de los 4 Modelos</span>
+            </div>
+            <div class="slide-body grid-2" style="align-items: stretch;">
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div class="card">
+                        <h4>Comparación en validación (umbral 0.5)</h4>
+                        <table class="mini-table">
+                            <tr><th>Modelo</th><th>F1</th><th>ROC-AUC</th><th>Costo</th></tr>
+                            <tr><td>Regresión Log.</td><td>0.239</td><td>0.851</td><td>$452,265</td></tr>
+                            <tr><td>Random Forest</td><td>0.370</td><td>0.888</td><td>$317,595</td></tr>
+                            <tr><td>LightGBM</td><td>0.415</td><td>0.917</td><td>$275,100</td></tr>
+                            <tr><td>XGBoost</td><td class="best">0.515</td><td class="best">0.921</td><td>$354,510</td></tr>
+                        </table>
+                    </div>
+                    <div class="finding-box">XGBoost gana por ROC-AUC (métrica independiente del umbral), pero con umbral 0.5 su costo es peor que LightGBM: mucha precisión (0.87), poco recall (0.37).</div>
+                </div>
+                <div class="img-box">
+                    <img class="slide-img" src="../figures/06_cost_vs_threshold.png" alt="Costo de negocio vs umbral de decision">
+                </div>
+            </div>
+            <div class="estimate-box" style="margin-top:6px;"><strong>Umbral costo-óptimo: 0.07</strong> (no 0.5) &rarr; ahorro del <strong>28.3%</strong> en costo de negocio sobre validación.</div>
+        </div>
+
+        <!-- Slide 10: Métrica social -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>9. Métrica Social: Hallazgo Real</h2>
+                <span class="badge finding">Contradice la Hipótesis Inicial</span>
+            </div>
+            <div class="slide-body grid-2" style="align-items: center;">
+                <div class="card">
+                    <h4>Tasa de falsos positivos por cuartil de monto (umbral 0.07)</h4>
+                    <table class="mini-table">
+                        <tr><th>Cuartil</th><th>Rango ($)</th><th>FPR</th></tr>
+                        <tr><td>Q1 bajo</td><td>0.25 &ndash; 42.95</td><td>4.21%</td></tr>
+                        <tr><td>Q2</td><td>42.96 &ndash; 67.95</td><td>2.65%</td></tr>
+                        <tr><td>Q3</td><td>67.96 &ndash; 117.00</td><td>3.40%</td></tr>
+                        <tr><td>Q4 alto</td><td>117.22 &ndash; 1656.11</td><td class="best" style="color:#b91c1c;">6.68%</td></tr>
+                    </table>
+                    <p class="cite">FPR global: 4.21%</p>
+                </div>
+                <div class="finding-box" style="font-size:0.87rem;">
+                    El cuartil <strong>más afectado no es el de bajo ticket</strong> como se planteó originalmente, sino el de <strong>monto alto</strong> (6.68% vs. 4.21% global). Esto tiene sentido: los fraudes confirmados tienden a ser de mayor monto, así que el modelo asocia monto alto con mayor probabilidad de fraude, penalizando también a las compras grandes legítimas. Reportamos el hallazgo tal cual salió, aunque contradiga la hipótesis inicial.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Evaluación temporal -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>10. Evaluación Temporal</h2>
+                <span class="badge">Degradación Val &rarr; Test</span>
+            </div>
+            <div class="slide-body grid-2" style="align-items: stretch;">
+                <div class="img-box">
+                    <img class="slide-img" src="../figures/07_temporal_degradation.png" alt="F1 ROC-AUC y costo por bloque temporal">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="card" style="border-left-color: #b91c1c;">
+                        <p style="font-size:0.85rem;">Evaluando una sola vez sobre <code>test</code>: F1 baja de 0.495 a 0.406 (<strong>-18%</strong>), ROC-AUC de 0.921 a 0.886, costo sube de $254,190 a $278,910.</p>
+                    </div>
+                    <div class="card" style="border-left-color: #0284c7;">
+                        <p style="font-size:0.85rem;">Esa caída supera el umbral de alerta del 5% propuesto para el monitor de drift.</p>
+                    </div>
+                    <div class="card" style="border-left-color: #16a34a;">
+                        <p style="font-size:0.85rem;">Pero al dividir <code>test</code> en 8 bloques, <strong>no hay colapso monótono</strong>: sube y baja, se recupera al final. La caída ocurre entre periodos (val&rarr;test), no dentro de test.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Multi-periodo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>11. Robustez: Evaluación Multi-Periodo</h2>
+                <span class="badge finding">¿Sigue XGBoost Siendo el Mejor?</span>
+            </div>
+            <div class="slide-body grid-2" style="align-items: center;">
+                <div class="card">
+                    <h4>ROC-AUC de los 4 modelos en 4 cortes distintos</h4>
+                    <table class="mini-table">
+                        <tr><th>Corte (día)</th><th>Reg. Log.</th><th>Random Forest</th><th>LightGBM</th><th>XGBoost</th></tr>
+                        <tr><td>60</td><td>0.840</td><td>0.879</td><td>0.905</td><td class="best">0.919</td></tr>
+                        <tr><td>90</td><td>0.827</td><td>0.867</td><td>0.898</td><td class="best">0.901</td></tr>
+                        <tr><td>120</td><td>0.845</td><td>0.884</td><td class="best">0.925</td><td>0.921</td></tr>
+                        <tr><td>150</td><td>0.826</td><td>0.874</td><td class="best">0.910</td><td>0.908</td></tr>
+                    </table>
+                </div>
+                <div class="finding-box" style="font-size:0.87rem;">
+                    Repetimos la comparación en 4 cortes adicionales (día 60, 90, 120, 150) para responder: si movemos el periodo, ¿sigue XGBoost ganando? <strong>Resultado parejo: XGBoost gana en 2 de 4 cortes, LightGBM en los otros 2</strong>, siempre por márgenes chicos. La brecha con la línea base clásica sí se mantiene estable en los 4 periodos. Elegir XGBoost no está mal, pero no es un resultado absoluto.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Concept drift -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>12. Adaptación al Concept Drift</h2>
+                <span class="badge">Estrategias de Olvido</span>
+            </div>
+            <div class="slide-body grid-2" style="align-items: stretch;">
+                <div class="img-box">
+                    <img class="slide-img" src="../figures/08_drift_scenarios_comparison.png" alt="Costo y F1 por estrategia de olvido">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="card" style="border-left-color: #0284c7;">
+                        <p style="font-size:0.84rem;">5 estrategias en 2 cortes (día 120, 150): sin olvido, ventanas de 30/60/90 días, y time-decay (vida media 30d).</p>
+                        <p class="cite">Gama et al. (2014) y Dal Pozzolo et al. (2018) sobre ventana móvil en detección de fraude no estacionaria.</p>
+                    </div>
+                    <div class="finding-box" style="font-size:0.85rem;">
+                        "Sin olvido" <strong>nunca es la mejor</strong>, y en el corte 150 es directamente la peor ($123,090 vs. $117,735 de ventana 30d). Pero <strong>ninguna ventana gana en los dos cortes</strong>: el tamaño óptimo cambia con el tiempo, exige monitoreo continuo, no una política fija.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Despliegue -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>13. Propuesta de Despliegue</h2>
+                <span class="badge">Google Cloud Platform</span>
+            </div>
+            <div class="slide-body" style="gap:8px;">
+                <div class="img-box" style="flex:1;">
+                    <img class="slide-img" src="../figures/diagrama_gcp.png" alt="Arquitectura de despliegue sobre GCP" style="max-height: 340px;">
+                </div>
                 <div class="card" style="border-left-color: #0284c7;">
-                    <h4>Regla de Activación y Respaldos Teóricos</h4>
-                    <p>Se evalúa el F1-Score periódicamente. Al detectar una degradación superior al <strong>5%</strong> respecto a la ventana base, se activa la política de reentrenamiento.</p>
-                    <p style="font-size: 0.82rem; color: #64748b; margin-top: 6px;"><em>Respaldado en literatura:</em> Gama et al. (2014) y Dal Pozzolo et al. (2018) sobre estrategias de ventana móvil para detección de fraude en entornos no estacionarios.</p>
-                </div>
-                <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Exploración por Escenarios de Olvido</h4>
-                    <ul>
-                        <li><strong>Escenario A (Olvido Abrupto):</strong> Reentrenamiento estricto sobre ventanas recientes de amplitud variable para estudiar la velocidad de ajuste.</li>
-                        <li><strong>Escenario B (Olvido Ponderado):</strong> Asignación de pesos decrecientes en el tiempo (time-decay) para preservar patrones estables sin descuidar la novedad.</li>
-                        <li><strong>Análisis de Sensibilidad:</strong> Comparar múltiples tamaños de ventana para identificar el equilibrio óptimo entre estabilidad y costo.</li>
-                    </ul>
+                    <p style="font-size:0.83rem;">Microservicio de inferencia en <strong>Cloud Run</strong> + feature store en <strong>Bigtable/Memorystore</strong> (&lt;200ms) &middot; modelo en <strong>Vertex AI Endpoint</strong> con validación shadow antes de producción &middot; <strong>Cloud Monitoring + Eventarc</strong> disparan reentrenamiento en <strong>Vertex AI Pipelines</strong> &middot; datos reales requerirían tokenización PCI-DSS.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 9: Mini Plan de Trabajo -->
+        <!-- Slide 15: Conclusiones -->
         <div class="slide">
             <div class="slide-header">
-                <h2>8. Mini Plan de Trabajo y Cronograma</h2>
-                <span class="badge">Hoja de Ruta</span>
+                <h2>14. Conclusiones</h2>
+                <span class="badge">Cierre</span>
             </div>
             <div class="slide-body">
                 <div class="card" style="margin-bottom: 8px; border-left-color: #0f172a;">
-                    <h4>Fase 1: Formulación y Diseño (Completado - Avance 2 Pts)</h4>
-                    <p>Contextualización con datos de negocio, objetivos depurados, restricciones operativas, diseño de la arquitectura del sistema, métricas y selección de IEEE-CIS.</p>
+                    <h4>El dataset es genuinamente no estacionario</h4>
+                    <p>Confirmado con datos reales, no solo con hipótesis: tasa de fraude, mix de <code>ProductCD</code> y cobertura de <code>identity</code> cambian con el tiempo.</p>
                 </div>
                 <div class="card" style="margin-bottom: 8px; border-left-color: #0284c7;">
-                    <h4>Fase 2: Exploración Temporal y Preprocesamiento</h4>
-                    <p>Análisis exploratorio temporal, generación de variables temporales agregadas y división cronológica estricta.</p>
+                    <h4>Elegir por ROC-AUC y luego optimizar el umbral genera ahorros medibles</h4>
+                    <p>28.3% de ahorro en costo de negocio, evidencia concreta de por qué separar la selección de modelo del umbral de decisión.</p>
+                </div>
+                <div class="card" style="margin-bottom: 8px; border-left-color: #16a34a;">
+                    <h4>La degradación temporal es real, y el olvido ayuda &mdash; pero no de forma fija</h4>
+                    <p>Alguna forma de olvido siempre supera a no olvidar nada, aunque el tamaño óptimo de ventana cambia con el tiempo: exige monitoreo constante, no una política estática.</p>
                 </div>
                 <div class="card" style="border-left-color: #64748b;">
-                    <h4>Fase 3 y 4: Modelado, Simulación de Escenarios e Informe (Máx. 8 Pág.)</h4>
-                    <p>Entrenamiento comparativo de los 4 modelos, experimentación de políticas de olvido y redacción del informe técnico final.</p>
+                    <h4>La robustez se validó, no se asumió</h4>
+                    <p>Tanto la métrica social como la comparación multi-periodo dieron resultados distintos a la hipótesis inicial (riesgo en monto alto, empate técnico XGBoost/LightGBM). Reportamos ambos hallazgos tal cual salieron.</p>
                 </div>
             </div>
         </div>
@@ -502,7 +730,7 @@
         <!-- Controls Footer -->
         <div class="controls">
             <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
-            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 9</span>
+            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 15</span>
             <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
         </div>
 
