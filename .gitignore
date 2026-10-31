@@ -1,27 +1,37 @@
-# Dataset (descargar de Kaggle, no se sube al repo)
-data/raw/*
-data/processed/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
+# Datasets (no versionar archivos de datos pesados, solo .gitkeep)
+**/data/raw/*
+**/data/processed/*
+!**/data/raw/.gitkeep
+!**/data/processed/.gitkeep
+
+# Model weights & large media files
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.bin
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 .ipynb_checkpoints/
+*/.ipynb_checkpoints/*
 venv/
 .venv/
+env/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# LaTeX build artifacts (se compila localmente con pdflatex)
-docs/*.aux
-docs/*.log
-docs/*.out
-docs/*.toc
-docs/*.synctex.gz
-docs/page-*.png
+# LaTeX build artifacts
+**/docs/*.aux
+**/docs/*.log
+**/docs/*.out
+**/docs/*.toc
+**/docs/*.synctex.gz
+**/docs/page-*.png
 
-# Notas internas, solo local, no se comparten en el repo
-docs/FEEDBACK_INFORME_TECNICO.md
+# Notas internas locales
+**/docs/FEEDBACK_INFORME_TECNICO.md
