@@ -70,19 +70,14 @@
 
         .slide-header h2 {
             color: var(--primary);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
-        .badge {
-            background: var(--accent-light);
+        .slide-header .section-tag {
             color: var(--accent);
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .slide-body {
@@ -97,7 +92,7 @@
             text-align: center;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
             background: #0f172a;
             color: white;
             padding: 60px 40px;
@@ -106,7 +101,7 @@
         .cover-slide h1 {
             font-size: 2.1rem;
             color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.25;
         }
 
@@ -117,9 +112,9 @@
         }
 
         .cover-meta {
-            margin-top: 25px;
+            margin-top: 20px;
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
         }
 
@@ -204,22 +199,25 @@
             font-size: 0.85rem;
         }
 
-        .metric-box {
-            background: white;
-            border-radius: 6px;
-            padding: 14px;
+        .flow-step {
+            background: #f8fafc;
             border: 1px solid #cbd5e1;
+            border-left: 3px solid var(--accent);
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 8px;
         }
 
-        .formula-box {
-            background: #f8fafc;
-            border: 1px dashed #0284c7;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.84rem;
-            color: #0f172a;
-            margin: 6px 0;
+        .flow-step strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.92rem;
+        }
+
+        .flow-step span {
+            font-size: 0.85rem;
+            color: #475569;
         }
     </style>
 </head>
@@ -229,13 +227,13 @@
         
         <!-- Slide 1: Portada -->
         <div class="slide cover-slide active">
-            <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
-            <h1>Avance Proyecto 2: Sistema Generativo Interactivo con Feedback Humano y Explicacion mediante Agentes de IA</h1>
+            <div style="font-size: 0.9rem; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px;">UTEC &middot; 2026-2</div>
+            <h1>Proyecto 2: Sistema Generativo Interactivo para Variaciones Visuales con Feedback Humano y Explicacion mediante Agentes de IA</h1>
             <h3>Planificacion y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas & Mg. Robert Buleje</h3>
             
-            <div style="max-width: 700px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="max-width: 700px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
                 <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Asistente Interactivo de Edicion y Estilizado de Retratos Profesionales</p>
-                <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 5px;">Enfoque Tecnico: Nivel Intermedio (Stable Diffusion con img2img / ControlNet + Agente LLM)</p>
+                <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 5px;">Integracion de Generacion Visual Controlada, Feedback Humano y Explicabilidad con LLM</p>
             </div>
 
             <div class="cover-meta">
@@ -244,167 +242,187 @@
             </div>
         </div>
 
-        <!-- Slide 2: Contextualizacion del Problema -->
+        <!-- Slide 2: 3.1 Definición del Problema -->
         <div class="slide">
             <div class="slide-header">
-                <h2>1. Contextualizacion del Problema</h2>
-                <span class="badge">Motivacion y Enfoque</span>
+                <h2>3.1 Definicion del Problema y Caso de Uso</h2>
+                <span class="section-tag">Etapa 1 del Proyecto</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Limitacion de la Generacion Automatizada Pura</h4>
-                    <p>Los modelos generativos modernos producen contenido visual con alto realismo, pero operan de forma desacoplada del contexto, las intenciones y el criterio de valor del usuario. Sin intervencion humana, la seleccion de imagenes carece de alineacion con estandares profesionales y preferencias individuales.</p>
+                    <h4>Problema de la Generacion Automatizada Pura</h4>
+                    <p>Los modelos generativos sintetizan imagenes con gran detalle visual, pero carecen de contexto sobre las intenciones del usuario, normas institucionales y preferencias individuales. La generacion sin supervision humana suele producir resultados que no cumplen con los estandares deseados o distorsionan la identidad.</p>
                 </div>
                 <div class="card" style="border-left-color: #0284c7;">
-                    <h4>El Ser Humano en el Ciclo de Decision (Human-in-the-Loop)</h4>
-                    <p>La toma de decisiones asistida combina las fortalezas de la IA (exploracion rapida de alternativas visuales) con las del usuario (juicio estetico, contexto institucional y validacion etica). El sistema requiere mecanismos estructurados para capturar el feedback y transparentar las elecciones.</p>
+                    <h4>La Solucion: Human-in-the-Loop</h4>
+                    <p>El proyecto combina la capacidad de la IA para explorar un amplio espacio de variaciones visuales con el criterio del usuario, quien valida o descarta las opciones. La toma de decisiones asistida asegura que el resultado final sea util, etico y transparente.</p>
                 </div>
                 <div class="card" style="border-left-color: #475569; grid-column: span 2;">
-                    <h4>Propuesta del Proyecto</h4>
-                    <p>Se propone desarrollar un sistema generativo interactivo donde el usuario carga un retrato fotográfico, el sistema produce exactamente <strong>cinco variaciones visuales controladas</strong> (iluminacion, expresion, fondo, vestimenta y estilo), el usuario registra la aceptacion o rechazo de cada una, y un <strong>agente basado en LLM</strong> sintetiza y justifica formalmente las decisiones tomadas.</p>
+                    <h4>Caso de Uso Planteado</h4>
+                    <p><strong>Edicion y estilizado de retratos para perfiles profesionales</strong>. El usuario carga una fotografia base y el sistema genera 5 alternativas controladas (iluminacion, expresion, fondo, vestimenta y estilo estético) para que el usuario elija que elementos proyectan mejor su perfil.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: Objetivos -->
+        <!-- Slide 3: 3.1 Diseño General del Sistema -->
         <div class="slide">
             <div class="slide-header">
-                <h2>2. Definicion de Objetivos</h2>
-                <span class="badge">General y Especificos</span>
+                <h2>3.1 Diseno General del Sistema (Flujo de Decisiones)</h2>
+                <span class="section-tag">Arquitectura de Componentes</span>
             </div>
             <div class="slide-body">
-                <div class="card" style="border-left-color: #0284c7; margin-bottom: 8px;">
-                    <h4>Objetivo General</h4>
-                    <p><strong>Implementar un sistema generativo interactivo para la produccion controlada de variaciones visuales en retratos fotograficos</strong>, integrando retroalimentacion humana explicita a traves de una interfaz grafica y explicacion automatizada de decisiones mediante un agente basado en modelos de lenguaje.</p>
+                <div class="flow-step">
+                    <strong>1. Modulo de Entrada y Preprocesamiento</strong>
+                    <span>Carga de la imagen original del usuario, deteccion de rostro y normalizacion dimensional.</span>
                 </div>
-                <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Objetivos Especificos (Secuenciales)</h4>
-                    <ul style="font-size: 0.88rem; line-height: 1.45;">
-                        <li><strong>1. Preparacion de Datos y Referencia:</strong> Caracterizar el dominio de retratos (CelebA-HQ / fotografias controladas) definiendo los parametros de preprocesamiento y transformacion de atributos.</li>
-                        <li><strong>2. Implementacion Generativa Controlable:</strong> Desarrollar el modulo generativo de nivel intermedio (Stable Diffusion con img2img / ControlNet) capaz de sintetizar exactamente 5 variaciones preservando la identidad facial.</li>
-                        <li><strong>3. Interfaz de Interaccion y Registro:</strong> Construir la interfaz grafica para visualizar en paralelo las opciones y capturar decisiones binarias (Aceptar/Rechazar) de forma estructurada.</li>
-                        <li><strong>4. Agente Explicativo:</strong> Integrar un agente basado en LLM que procese el registro de decisiones y genere un resumen textual coherente, alineado y justificado del proceso de seleccion.</li>
-                        <li><strong>5. Evaluacion Integral:</strong> Evaluar el sistema mediante metricas de calidad visual, diversidad, fidelidad explicativa y usabilidad de la interfaz.</li>
-                    </ul>
+                <div class="flow-step">
+                    <strong>2. Modulo Generativo Controlable (2 Enfoques)</strong>
+                    <span>Sintesis de exactamente cinco variaciones visuales controladas a partir de la imagen y prompts condicionales.</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Slide 4: Restricciones -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2>3. Definicion de Restricciones</h2>
-                <span class="badge">Limitaciones Tecnicas y de Diseno</span>
-            </div>
-            <div class="slide-body grid-3">
-                <div class="card">
-                    <h4>Preservacion de Identidad</h4>
-                    <p>Las transformaciones deben limitar la alteracion de la geometria facial biometrica del sujeto, garantizando que permanezca plenamente reconocible tras modificar iluminacion, fondo o vestimenta.</p>
+                <div class="flow-step">
+                    <strong>3. Interfaz Grafica e Interaccion Humano–IA</strong>
+                    <span>Visualizacion comparativa de las cinco alternativas. El usuario registra la decision binaria (Aceptar o Rechazar) por cada opcion.</span>
                 </div>
-                <div class="card">
-                    <h4>Latencia y Recursos de Computo</h4>
-                    <p>El tiempo de sintesis para las cinco opciones debe mantenerse por debajo de 30 segundos utilizando aceleracion por GPU, operando dentro de los limites de memoria VRAM disponibles.</p>
+                <div class="flow-step">
+                    <strong>4. Registro Estructurado de Decisiones</strong>
+                    <span>Almacenamiento de metadatos de las variaciones y respuestas del usuario en un esquema estructurado (JSON).</span>
                 </div>
-                <div class="card">
-                    <h4>Estructura de Decision</h4>
-                    <p>El registro de retroalimentacion debe ser binario y estructurado por cada una de las 5 opciones generadas, asegurando consistencia deterministica para el consumo del agente LLM.</p>
+                <div class="flow-step">
+                    <strong>5. Agente Basado en LLMs para Explicabilidad</strong>
+                    <span>Procesamiento del registro JSON para emitir un resumen textual coherente que describe y justifica fielmente las opciones aceptadas y rechazadas.</span>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Metricas de Exito -->
+        <!-- Slide 4: 3.2 Selección y Preparación de Datos -->
         <div class="slide">
             <div class="slide-header">
-                <h2>4. Metricas de Exito</h2>
-                <span class="badge">Evaluacion Multicriterio</span>
-            </div>
-            <div class="slide-body grid-3">
-                <div class="metric-box">
-                    <h4 style="color: #0f172a; margin-bottom: 6px;">Tecnica (Generacion Visual)</h4>
-                    <p style="font-size: 0.85rem; color: #475569;">Evaluacion de calidad y separabilidad semantica.</p>
-                    <div class="formula-box">CLIP-Score &middot; Distancia LPIPS</div>
-                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Diversidad entre las 5 opciones para evitar resultados redundantes.</p>
-                </div>
-                <div class="metric-box">
-                    <h4 style="color: #0f172a; margin-bottom: 6px;">Interaccion y Decision</h4>
-                    <p style="font-size: 0.85rem; color: #475569;">Medicion de la eficacia del ciclo con el usuario.</p>
-                    <div class="formula-box">Tasa Aceptacion = Opciones Aceptadas / 5</div>
-                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Tiempo promedio de decision por sesion interactiva.</p>
-                </div>
-                <div class="metric-box">
-                    <h4 style="color: #0f172a; margin-bottom: 6px;">Explicabilidad y Usabilidad</h4>
-                    <p style="font-size: 0.85rem; color: #475569;">Fidelidad del agente LLM y claridad de la interfaz.</p>
-                    <div class="formula-box">Coherencia = 100% Alineacion Factual</div>
-                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Evaluacion de usabilidad funcional en escala tipo SUS.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Arquitectura del Sistema -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2>5. Arquitectura del Sistema</h2>
-                <span class="badge">Componentes e Integracion</span>
+                <h2>3.2 Seleccion y Preparacion de Datos</h2>
+                <span class="section-tag">Etapa 2 del Proyecto</span>
             </div>
             <div class="slide-body grid-2">
                 <div class="card" style="border-left-color: #0284c7;">
-                    <h4>Flujo de Componentes</h4>
+                    <h4>Dataset de Referencia: CelebA-HQ / Retratos</h4>
                     <ul>
-                        <li><strong>1. Ingestion y Preprocesamiento:</strong> Deteccion de rostro, normalizacion y enmascarado.</li>
-                        <li><strong>2. Modulo Generativo Controlable:</strong> Stable Diffusion con img2img y ControlNet para 5 variantes: (1) Iluminacion de estudio, (2) Expresion, (3) Fondo contextual, (4) Vestimenta, (5) Estilo editorial.</li>
-                        <li><strong>3. Interfaz Grafica:</strong> Panel comparativo con selectores de Aceptar / Rechazar.</li>
+                        <li><strong>Justificacion:</strong> Los retratos son el dominio ideal para evaluar transformaciones naturales de iluminacion, expresion, vestimenta y fondo sin perder la fisonomia base.</li>
+                        <li><strong>Evaluacion de Calidad:</strong> Permite contrastar los resultados sinteticos frente a imagenes de alta resolucion con atributos anotados.</li>
                     </ul>
                 </div>
                 <div class="card" style="border-left-color: #0f172a;">
-                    <h4>Integracion con Agente LLM</h4>
+                    <h4>Tecnicas de Preprocesamiento de Entrada</h4>
                     <ul>
-                        <li><strong>4. Registro Estructurado:</strong> Serializacion en formato JSON con metadatos de las 5 opciones y estado de seleccion del usuario.</li>
-                        <li><strong>5. Agente de Explicacion (LLM):</strong> Recepcion del JSON y sintesis automatica de un informe que detalla explicitamente cuales fueron aceptadas, cuales rechazadas y la justificacion asociada.</li>
+                        <li><strong>Alineacion y Recorte Facial:</strong> Enfoque sobre el sujeto para estandarizar la escala y orientacion del rostro.</li>
+                        <li><strong>Normalizacion y Redimensionamiento:</strong> Resolucion estandar (512x512 o 768x768) requerida por los modelos de difusion.</li>
+                        <li><strong>Extraccion de Mapas de Condicion:</strong> Deteccion de pose (OpenPose) y mapas de bordes (Canny) para fijar la estructura anatomica.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: Consideraciones Eticas -->
+        <!-- Slide 5: 3.3 Módulo Generativo (2 Enfoques) -->
         <div class="slide">
             <div class="slide-header">
-                <h2>6. Consideraciones Eticas y Uso Responsable</h2>
-                <span class="badge">Transparencia y Seguridad</span>
+                <h2>3.3 Modulo Generativo: 5 Variaciones (2 Enfoques)</h2>
+                <span class="section-tag">Etapa 3 del Proyecto</span>
             </div>
-            <div class="slide-body grid-3">
-                <div class="card">
-                    <h4>Privacidad y Consentimiento</h4>
-                    <p>Procesamiento efimero de las imagenes de los usuarios. Prohibicion estricta de almacenamiento persistente o reutilizacion no autorizada para entrenamiento.</p>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Los 2 Enfoques Tecnicos (Implementacion)</h4>
+                    <ul>
+                        <li><strong>Enfoque A (Nivel Intermedio - Principal):</strong> Stable Diffusion con <code>img2img</code> y ControlNet. Permite modificar atributos visuales preservando la identidad y geometria del rostro.</li>
+                        <li><strong>Enfoque B (Nivel Basico - Respaldo / Alternativa):</strong> Generacion mediante API preentrenada (SD API o DALL-E) como modo rapido o contingencia ante recursos limitados.</li>
+                    </ul>
                 </div>
-                <div class="card">
-                    <h4>Mitigacion de Sesgos</h4>
-                    <p>Auditoria de los modelos preentrenados para prevenir sesgos de representacion en tono de piel, genero o edad al generar atributos esteticos o profesionales.</p>
-                </div>
-                <div class="card">
-                    <h4>Prevencion de Suplantacion</h4>
-                    <p>Diseno acotado a edicion estetica y contextual, restringiendo la generacion de contenido difamatorio, no consentido o de suplantacion de identidad (deepfakes).</p>
+                <div class="card" style="border-left-color: #64748b;">
+                    <h4>Las 5 Variaciones Visuales Concretas</h4>
+                    <ul>
+                        <li><strong>Variacion 1:</strong> Iluminacion de estudio profesional.</li>
+                        <li><strong>Variacion 2:</strong> Expresion facial optimizada (sonrisa corporativa sutil).</li>
+                        <li><strong>Variacion 3:</strong> Fondo contextual (oficina ejecutiva moderna o neutro difuminado).</li>
+                        <li><strong>Variacion 4:</strong> Cambio de vestimenta (atuendo formal / corporativo).</li>
+                        <li><strong>Variacion 5:</strong> Renderizado artistico / ilustracion editorial.</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: Mini Plan de Trabajo -->
+        <!-- Slide 6: 3.4 Interfaz Gráfica e Interacción -->
         <div class="slide">
             <div class="slide-header">
-                <h2>7. Mini Plan de Trabajo y Cronograma</h2>
-                <span class="badge">Hoja de Ruta</span>
+                <h2>3.4 Interfaz Grafica e Interaccion Humano–IA</h2>
+                <span class="section-tag">Etapa 4 del Proyecto</span>
             </div>
-            <div class="slide-body">
-                <div class="card" style="margin-bottom: 8px; border-left-color: #0f172a;">
-                    <h4>Fase 1: Formulacion del Problema y Diseno Conceptual</h4>
-                    <p>Definicion del caso de uso, objetivos, restricciones tecnicas, diseno de arquitectura y seleccion de CelebA-HQ / retratos.</p>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <h4>Visualizacion Comparativa</h4>
+                    <p>La interfaz (desarrollada en Gradio o Streamlit) muestra en paralelo la fotografia original del usuario junto a las cinco opciones generadas de manera simultanea.</p>
                 </div>
-                <div class="card" style="margin-bottom: 8px; border-left-color: #0284c7;">
-                    <h4>Fase 2: Calibracion del Pipeline Generativo</h4>
-                    <p>Implementacion y ajuste de prompts/condiciones con Stable Diffusion img2img y ControlNet para las 5 variaciones visuales.</p>
+                <div class="card">
+                    <h4>Mecanismo de Decision</h4>
+                    <p>Cada imagen cuenta con controles directos e independientes de <strong>Aceptar</strong> y <strong>Rechazar</strong>, permitiendo al usuario emitir su juicio de forma sencilla.</p>
                 </div>
-                <div class="card" style="border-left-color: #64748b;">
-                    <h4>Fase 3 y 4: Desarrollo de UI, Agente LLM e Informe Final</h4>
-                    <p>Construccion de la interfaz interactiva, conexion con el agente explicativo, evaluacion de metricas y redaccion del informe tecnico (maximo 5 paginas).</p>
+                <div class="card">
+                    <h4>Registro Estructurado</h4>
+                    <p>Las decisiones y atributos de cada variacion se serializan en un formato JSON estructurado, alimentando directamente al modulo de explicabilidad.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 3.5 Agente LLM para Explicabilidad -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>3.5 Generacion de Explicaciones mediante Agente LLM</h2>
+                <span class="section-tag">Etapa 5 del Proyecto</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Rol y Funcion del Agente</h4>
+                    <ul>
+                        <li><strong>Entrada:</strong> El registro JSON que contiene que opciones fueron aceptadas y cuales rechazadas, junto con la descripcion del cambio aplicado.</li>
+                        <li><strong>Salida:</strong> Un resumen en lenguaje natural claro y estructurado que explica de manera fiel que opciones fueron aceptadas y cuales rechazadas.</li>
+                        <li><strong>Objetivo:</strong> Transparentar el proceso de toma de decisiones y sustentar el perfil de preferencias del usuario.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Comparacion de Modelos de Lenguaje</h4>
+                    <ul>
+                        <li>Se evaluaran <strong>dos modelos de lenguaje</strong> (por ejemplo: Gemini 1.5 Flash frente a GPT-4o-mini o Llama-3) para comparar la calidad y coherencia del reporte generado.</li>
+                        <li><strong>Criterio de Explicabilidad:</strong> 100% de alineacion factual (el agente no debe atribuir decisiones contrarias a las registradas por el usuario).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Evaluación, Ética y Entregables -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>2.6 - 2.7 Evaluacion, Consideraciones Eticas y Entregables</h2>
+                <span class="section-tag">Cierre del Sistema</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <h4>Metricas de Evaluacion</h4>
+                    <ul>
+                        <li><strong>Calidad y Diversidad:</strong> CLIP-Score y LPIPS para evaluar realismo y separabilidad entre opciones.</li>
+                        <li><strong>Interaccion:</strong> Tasa de aceptacion util por sesion.</li>
+                        <li><strong>Coherencia del Agente:</strong> Fidelidad factual entre el JSON y el texto.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Consideraciones Eticas</h4>
+                    <ul>
+                        <li><strong>Privacidad:</strong> Tratamiento efimero de fotos sin almacenamiento persistente.</li>
+                        <li><strong>Mitigacion de Sesgos:</strong> Auditoria en tono de piel, genero y edad.</li>
+                        <li><strong>Prevencion de Deepfakes:</strong> Restriccion estricta a estetica profesional.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Entregables del Proyecto</h4>
+                    <ul>
+                        <li><strong>Codigo del Sistema:</strong> Pipeline generativo + UI + Agente LLM.</li>
+                        <li><strong>Documento Tecnico:</strong> Informe de un maximo de 5 paginas.</li>
+                        <li><strong>Demostracion:</strong> Video o presentacion en vivo del flujo completo.</li>
+                    </ul>
                 </div>
             </div>
         </div>
