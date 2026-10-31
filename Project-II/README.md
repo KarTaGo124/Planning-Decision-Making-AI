@@ -43,7 +43,7 @@ Project-II/
 ├── README.md                      # Documentación técnica y guía de inicio del Proyecto 2
 ├── docs/
 │   ├── Evaluacion_Proyecto2.pdf   # Guía y rúbrica oficial de la cátedra
-│   ├── PRESENTACION_AVANCE_PROYECTO2.html # Presentación interactiva en diapositivas (Checkpoint 1)
+│   ├── PRESENTACION_AVANCE_PROYECTO2.html # Presentación interactiva en diapositivas
 │   └── PRESENTACION_AVANCE_PROYECTO2.md   # Documento técnico de apoyo del avance
 ├── data/
 │   ├── raw/                       # Imágenes base o dataset de referencia (CelebA-HQ)

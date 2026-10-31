@@ -1,10 +1,10 @@
 # Avance Proyecto 2: Sistema Generativo Interactivo con Feedback Humano y Explicación mediante Agentes de IA
 
-**Curso:** Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
+**Curso:** Planificación y Toma de Decisiones en IA (CS5363) — UTEC (2026-2)  
 **Profesores:** Dra. Aurea Soriano-Vargas & Mg. Robert Buleje  
-**Caso de Uso Elegido:** Asistente Interactivo de Edición y Estilizado de Retratos Profesionales  
-**Nivel Técnico Elegido:** Nivel Intermedio (Stable Diffusion con img2img / ControlNet + Agente LLM + Interfaz Gráfica)  
-**Modalidad de Presentación:** Documento / PPT (10 - 15 minutos)
+**Grupo 7:** Gálvez Pacori, José Guillermo | Meneses Roncal, Matías Alonso | Ore García, Alejandro Joel  
+**Caso de Uso:** Asistente Interactivo de Edición y Estilizado de Retratos Profesionales  
+**Nivel Técnico:** Nivel Intermedio (Stable Diffusion con img2img / ControlNet + Agente LLM)
 
 ---
 
@@ -88,7 +88,7 @@ El sistema se evaluará bajo tres familias complementarias de métricas:
 
 ## 7. Mini Plan de Trabajo
 
-* **Fase 1 (Actual - Checkpoint):** Formulación del problema, definición de objetivos, restricciones operativas, métricas y diseño de la arquitectura conceptual.
+* **Fase 1 (Etapa Inicial):** Formulación del problema, definición de objetivos, restricciones operativas, métricas y diseño de la arquitectura conceptual.
 * **Fase 2 (Próxima):** Calibración de los cinco pipelines de variación controlable (Stable Diffusion + ControlNet) en Jupyter Notebooks.
 * **Fase 3 (Desarrollo UI y Registro):** Construcción de la interfaz gráfica interactiva (Gradio / Streamlit) y almacenamiento de las decisiones del usuario en formato JSON.
 * **Fase 4 (Integración y Evaluación):** Conexión del agente LLM para la generación automática de reportes, evaluación de métricas de calidad y diversidad, redacción del informe técnico (máx. 5 páginas) y grabación de la demostración.
