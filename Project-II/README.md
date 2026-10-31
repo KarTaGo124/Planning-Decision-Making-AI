@@ -1,38 +1,38 @@
 # Proyecto 2: Sistema Generativo Interactivo para Variaciones Visuales con Feedback Humano y Explicación mediante Agentes de IA
 
 **Curso:** Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
-**Profesor:** Dra. Aurea Soriano-Vargas  
-**Documento Oficial:** [`docs/Evaluacion_Proyecto2.pdf`](docs/Evaluacion_Proyecto2.pdf)
+**Profesores:** Dra. Aurea Soriano-Vargas & Mg. Robert Buleje  
+**Caso de Uso Seleccionado:** Asistente Interactivo de Edición y Estilizado de Retratos Profesionales  
+**Nivel Técnico Elegido:** Nivel Intermedio (Stable Diffusion con *img2img* / ControlNet + Agente LLM + Interfaz Gráfica)  
 
 ---
 
-## 1. Descripción del Proyecto
+## 1. Documentación del Proyecto
+
+* **Presentación de Avance (Diapositivas HTML):** [`docs/PRESENTACION_AVANCE_PROYECTO2.html`](docs/PRESENTACION_AVANCE_PROYECTO2.html)
+* **Documento Técnico de Avance (Markdown):** [`docs/PRESENTACION_AVANCE_PROYECTO2.md`](docs/PRESENTACION_AVANCE_PROYECTO2.md)
+* **Guía Oficial de la Cátedra:** [`docs/Evaluacion_Proyecto2.pdf`](docs/Evaluacion_Proyecto2.pdf)
+
+---
+
+## 2. Descripción del Proyecto
 
 A diferencia de los enfoques tradicionales de inteligencia artificial centrados exclusivamente en la predicción estática, los sistemas generativos modernos plantean nuevos retos en control del proceso creativo, toma de decisiones y confiabilidad.
 
-Este proyecto aborda el diseño e implementación de un **sistema generativo interactivo con el ser humano en el ciclo de decisión (Human-in-the-Loop)**. El sistema produce variaciones visuales a partir de una imagen de entrada proporcionada por el usuario, integra explícitamente su retroalimentación mediante una interfaz gráfica y utiliza un **agente basado en modelos de lenguaje (LLM)** para sintetizar y explicar de forma coherente las decisiones de selección tomadas.
+Este proyecto aborda el diseño e implementación de un **sistema generativo interactivo con el ser humano en el ciclo de decisión (Human-in-the-Loop)**. A partir de una fotografía de retrato provista por el usuario, el sistema:
+1. Genera exactamente **cinco (5) variaciones visuales controladas** (iluminación de estudio, expresión, fondo contextual, vestimenta formal y estilo editorial) preservando la identidad facial.
+2. Permite al usuario evaluar visualmente las alternativas en una **interfaz gráfica** y registrar de manera estructurada su decisión (Aceptar o Rechazar cada opción).
+3. Utiliza un **agente basado en modelos de lenguaje (LLM)** para interpretar el registro de elecciones y generar automáticamente un resumen explicativo coherente, estructurado y transparente en lenguaje natural.
 
 ---
 
-## 2. Requisitos Principales del Sistema
+## 3. Requisitos Principales del Sistema
 
-1. **Módulo Generativo:** Producir exactamente **cinco (5) variaciones visuales** a partir de una imagen de entrada cargada por el usuario (e.g., modificando iluminación, expresión, estilo, atributos faciales o composición).
-2. **Interfaz Gráfica e Interacción Humano-IA:** Visualizar de forma clara las cinco opciones generadas y registrar estructuradamente la decisión del usuario (aceptar o rechazar cada alternativa).
-3. **Agente Explicativo (LLM):** Generar un resumen y explicación textual coherente que describa fielmente qué opciones fueron aceptadas y cuáles rechazadas, sustentando el proceso de selección.
-4. **Métricas y Evaluación:** Evaluar calidad visual, diversidad de variaciones, fidelidad/coherencia de las explicaciones del agente y usabilidad del sistema.
-5. **Consideraciones Éticas:** Análisis explícito sobre manipulación de identidad visual, presencia de sesgos y uso responsable de datos.
-
----
-
-## 3. Niveles de Implementación Técnica
-
-El proyecto contempla tres niveles de complejidad según el diseño del módulo generativo:
-
-| Nivel | Descripción y Tecnologías Sugeridas |
-| :--- | :--- |
-| **Básico** | Uso de modelos generativos preentrenados o APIs (e.g., Stable Diffusion vía API, DALL-E) para producir variaciones a partir de la imagen de entrada. |
-| **Intermedio** | Uso de modelos generativos controlables o técnicas de transformación de imágenes para modificar atributos específicos (e.g., Stable Diffusion con *img2img*, ControlNet, InstructPix2Pix). |
-| **Avanzado** | Implementación o adaptación de modelos generativos propios o arquitecturas de traducción imagen a imagen (e.g., variantes de GANs como DCGAN/StyleGAN, modelos de difusión propios, pix2pix, CycleGAN, ControlNet ajustado). |
+* **Módulo Generativo Controlable (Nivel Intermedio):** Stable Diffusion acondicionado con *img2img* y ControlNet para modificar atributos específicos garantizando la preservación biométrica del sujeto.
+* **Interfaz Gráfica e Interacción Humano-IA:** Visualización comparativa clara con controles binarios de decisión para cada alternativa y almacenamiento estructurado en formato JSON.
+* **Agente Explicativo (LLM):** Generación de explicaciones que sustentan de forma fiel qué opciones fueron aceptadas y cuáles rechazadas.
+* **Métricas Multicriterio:** Calidad semántica (CLIP-Score), diversidad visual (LPIPS), tasa de aceptación útil, latencia de inferencia y coherencia factual del agente.
+* **Consideraciones Éticas:** Tratamiento efímero y privado de imágenes personales, auditoría de sesgos algorítmicos y prevención de suplantación de identidad.
 
 ---
 
@@ -40,33 +40,26 @@ El proyecto contempla tres niveles de complejidad según el diseño del módulo 
 
 ```text
 Project-II/
-├── README.md              # Documentación técnica y guía de inicio del Proyecto 2
+├── README.md                      # Documentación técnica y guía de inicio del Proyecto 2
 ├── docs/
-│   └── Evaluacion_Proyecto2.pdf   # Guía y rúbrica oficial de la cátedra
+│   ├── Evaluacion_Proyecto2.pdf   # Guía y rúbrica oficial de la cátedra
+│   ├── PRESENTACION_AVANCE_PROYECTO2.html # Presentación interactiva en diapositivas (Checkpoint 1)
+│   └── PRESENTACION_AVANCE_PROYECTO2.md   # Documento técnico de apoyo del avance
 ├── data/
-│   ├── raw/               # Imágenes o datasets base de entrada (no versionados pesados)
-│   └── processed/         # Imágenes preprocesadas o generadas
-├── notebooks/             # Cuadernos de experimentación generativa y prototipado
-├── src/                   # Módulos Python reutilizables
+│   ├── raw/                       # Imágenes base o dataset de referencia (CelebA-HQ)
+│   └── processed/                 # Imágenes preprocesadas o generadas
+├── notebooks/                     # Cuadernos de experimentación generativa y prototipado
+├── src/                           # Módulos Python reutilizables
 │   ├── __init__.py
-│   ├── generator.py       # Módulo generativo de variaciones visuales (5 opciones)
-│   ├── agent.py           # Agente LLM para síntesis y explicación de decisiones
-│   └── evaluation.py      # Métricas de calidad, diversidad y coherencia
-└── ui/                    # Interfaz gráfica interactiva (Streamlit, Gradio o Web)
+│   ├── generator.py               # Módulo generativo de 5 variaciones (SD + ControlNet)
+│   ├── agent.py                   # Agente LLM para síntesis y explicación de decisiones
+│   └── evaluation.py              # Métricas de calidad, diversidad y coherencia
+└── ui/                            # Interfaz gráfica interactiva (Human-in-the-Loop)
 ```
 
 ---
 
-## 5. Productos Esperados y Entregables
-
-* **Código del Sistema:** Pipeline generativo completo, interfaz gráfica funcional, almacenamiento de decisiones y agente LLM.
-* **Documento Técnico:** Informe de un **máximo de 5 páginas** describiendo el problema, la arquitectura, el modelo generativo, la interfaz, los resultados y la reflexión ética.
-* **Elementos Visuales:** Diagramas de arquitectura, flujo de información/decisión y capturas de ejemplos e interacción.
-* **Demostración del Sistema:** Demostración en vivo o video evidenciando la generación de las 5 opciones, la interacción del usuario y la explicación automática del agente.
-
----
-
-## 6. Rúbrica de Evaluación (20 Puntos)
+## 5. Rúbrica de Evaluación Oficial (20 Puntos)
 
 | Criterio | Descripción | Puntos |
 | :--- | :--- | :---: |

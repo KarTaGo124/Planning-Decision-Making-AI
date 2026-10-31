@@ -28,7 +28,10 @@ Planning-Decision-Making-AI/
 │
 └── Project-II/                    # Proyecto 2: Sistema Generativo Interactivo con Feedback Humano y Agentes LLM
     ├── README.md                  # Documentación técnica, niveles y rúbrica de Proyecto 2
-    ├── docs/                      # Guía oficial del proyecto (Evaluacion_Proyecto2.pdf)
+    ├── docs/
+    │   ├── Evaluacion_Proyecto2.pdf           # Guía oficial de la cátedra
+    │   ├── PRESENTACION_AVANCE_PROYECTO2.html # Presentación interactiva en diapositivas (Avance)
+    │   └── PRESENTACION_AVANCE_PROYECTO2.md   # Documento técnico de apoyo del avance
     ├── data/                      # Datasets e imágenes de entrada (raw/ y processed/)
     ├── notebooks/                 # Prototipado generativo y experimentación
     ├── src/                       # Módulos del generador, agente LLM y métricas
@@ -55,17 +58,21 @@ Planning-Decision-Making-AI/
 ---
 
 ### 🎨 [Proyecto 2: Sistema Generativo Interactivo para Variaciones Visuales con Feedback Humano y Explicación mediante Agentes de IA](Project-II/)
-* **Caso de Uso:** Sistema generativo interactivo con el ser humano en el ciclo de decisión (*Human-in-the-Loop*).
-* **Guía Oficial:** [`Project-II/docs/Evaluacion_Proyecto2.pdf`](Project-II/docs/Evaluacion_Proyecto2.pdf).
+* **Caso de Uso:** Asistente interactivo de edición y estilizado de retratos profesionales (iluminación, expresión, fondo, vestimenta y estilo estético).
+* **Nivel Técnico:** Intermedio (Stable Diffusion con *img2img* / ControlNet + Agente LLM + Interfaz Gráfica).
+* **Documentación del Avance:**
+  * **Presentación Interactiva:** [`Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.html`](Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.html)
+  * **Documento Técnico de Apoyo:** [`Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.md`](Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.md)
+  * **Guía Oficial de la Cátedra:** [`Project-II/docs/Evaluacion_Proyecto2.pdf`](Project-II/docs/Evaluacion_Proyecto2.pdf)
 * **Aspectos Clave:**
-  * **Módulo Generativo:** Generación de exactamente **cinco (5) variaciones visuales** a partir de una imagen de entrada cargada por el usuario (e.g., modificando iluminación, expresión, estilo o composición).
-  * **Interfaz Gráfica y Feedback:** Visualización interactiva donde el usuario evalúa, acepta o rechaza individualmente cada variación, registrando las decisiones de manera estructurada.
+  * **Módulo Generativo Controlable:** Generación de exactamente **cinco (5) variaciones visuales** a partir de una fotografía cargada por el usuario preservando la identidad facial.
+  * **Interfaz Gráfica y Feedback:** Visualización interactiva donde el usuario evalúa, acepta o rechaza individualmente cada variación, registrando las decisiones de manera estructurada en JSON.
   * **Agente Basado en LLMs:** Generación automatizada de un resumen y explicación textual coherente que describe y justifica fielmente las opciones aceptadas y rechazadas.
-  * **Evaluación Multicriterio:** Calidad visual, diversidad de variaciones, coherencia explicativa del agente y usabilidad del sistema.
-  * **Reflexión Ética:** Análisis sobre manipulación de identidad visual, sesgos en datos/modelos y uso responsable.
+  * **Evaluación Multicriterio:** Calidad semántica (CLIP-Score), diversidad visual (LPIPS), tasa de aceptación útil, latencia de inferencia y coherencia factual del agente.
+  * **Reflexión Ética:** Tratamiento efímero y privado de imágenes personales, auditoría de sesgos algorítmicos y prevención de suplantación de identidad.
 * **Entregables:** Código fuente del sistema integrado (Generador + UI + Agente LLM), informe técnico de máximo 5 páginas, soporte visual y demostración en vivo o en video.
 
-👉 *Consulta los requisitos, niveles técnicos y rúbrica en el [README de Project-II](Project-II/README.md).*
+👉 *Consulta los requisitos, arquitectura y rúbrica en el [README de Project-II](Project-II/README.md).*
 
 ---
 

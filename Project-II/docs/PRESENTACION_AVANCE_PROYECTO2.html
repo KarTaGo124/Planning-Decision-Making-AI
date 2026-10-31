@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avance Proyecto 2 - Planificación y Toma de Decisiones en IA (UTEC)</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #0284c7;
+            --accent-light: #e0f2fe;
+            --text-dark: #334155;
+            --bg-card: #ffffff;
+            --bg-page: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 90vw;
+            max-width: 1100px;
+            height: 84vh;
+            max-height: 720px;
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+
+        .slide {
+            display: none;
+            padding: 35px 45px;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-header {
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-header h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .cover-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: #0f172a;
+            color: white;
+            padding: 60px 40px;
+        }
+
+        .cover-slide h1 {
+            font-size: 2.1rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .cover-slide h3 {
+            font-weight: 400;
+            color: #94a3b8;
+            font-size: 1.05rem;
+        }
+
+        .cover-meta {
+            margin-top: 25px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .cover-pill {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--accent);
+            padding: 16px 18px;
+            border-radius: 6px;
+        }
+
+        .card h4 {
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 1.02rem;
+            font-weight: 600;
+        }
+
+        .card p, .card ul {
+            font-size: 0.90rem;
+            color: #475569;
+            line-height: 1.45;
+        }
+
+        .card ul {
+            list-style-position: inside;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+            background: #f1f5f9;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1e293b;
+        }
+
+        .btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .metric-box {
+            background: white;
+            border-radius: 6px;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .formula-box {
+            background: #f8fafc;
+            border: 1px dashed #0284c7;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.84rem;
+            color: #0f172a;
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Portada -->
+        <div class="slide cover-slide active">
+            <span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #94a3b8;">UTEC 2026-2</span>
+            <h1>Avance Proyecto 2: Sistema Generativo Interactivo con Feedback Humano y Explicacion mediante Agentes de IA</h1>
+            <h3>Planificacion y Toma de Decisiones en IA — Dra. Aurea Soriano-Vargas & Mg. Robert Buleje</h3>
+            
+            <div style="max-width: 700px; margin: 10px auto; background: rgba(255,255,255,0.04); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 1rem; color: #f1f5f9;"><strong>Caso de Uso:</strong> Asistente Interactivo de Edicion y Estilizado de Retratos Profesionales</p>
+                <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 5px;">Enfoque Tecnico: Nivel Intermedio (Stable Diffusion con img2img / ControlNet + Agente LLM)</p>
+            </div>
+
+            <div class="cover-meta">
+                <div class="cover-pill">Duracion: 10 - 15 min</div>
+                <div class="cover-pill">Formato: Presentacion de Avance</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Contextualizacion del Problema -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>1. Contextualizacion del Problema</h2>
+                <span class="badge">Motivacion y Enfoque</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Limitacion de la Generacion Automatizada Pura</h4>
+                    <p>Los modelos generativos modernos producen contenido visual con alto realismo, pero operan de forma desacoplada del contexto, las intenciones y el criterio de valor del usuario. Sin intervencion humana, la seleccion de imagenes carece de alineacion con estandares profesionales y preferencias individuales.</p>
+                </div>
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>El Ser Humano en el Ciclo de Decision (Human-in-the-Loop)</h4>
+                    <p>La toma de decisiones asistida combina las fortalezas de la IA (exploracion rapida de alternativas visuales) con las del usuario (juicio estetico, contexto institucional y validacion etica). El sistema requiere mecanismos estructurados para capturar el feedback y transparentar las elecciones.</p>
+                </div>
+                <div class="card" style="border-left-color: #475569; grid-column: span 2;">
+                    <h4>Propuesta del Proyecto</h4>
+                    <p>Se propone desarrollar un sistema generativo interactivo donde el usuario carga un retrato fotográfico, el sistema produce exactamente <strong>cinco variaciones visuales controladas</strong> (iluminacion, expresion, fondo, vestimenta y estilo), el usuario registra la aceptacion o rechazo de cada una, y un <strong>agente basado en LLM</strong> sintetiza y justifica formalmente las decisiones tomadas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Objetivos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>2. Definicion de Objetivos</h2>
+                <span class="badge">General y Especificos</span>
+            </div>
+            <div class="slide-body">
+                <div class="card" style="border-left-color: #0284c7; margin-bottom: 8px;">
+                    <h4>Objetivo General</h4>
+                    <p><strong>Implementar un sistema generativo interactivo para la produccion controlada de variaciones visuales en retratos fotograficos</strong>, integrando retroalimentacion humana explicita a traves de una interfaz grafica y explicacion automatizada de decisiones mediante un agente basado en modelos de lenguaje.</p>
+                </div>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Objetivos Especificos (Secuenciales)</h4>
+                    <ul style="font-size: 0.88rem; line-height: 1.45;">
+                        <li><strong>1. Preparacion de Datos y Referencia:</strong> Caracterizar el dominio de retratos (CelebA-HQ / fotografias controladas) definiendo los parametros de preprocesamiento y transformacion de atributos.</li>
+                        <li><strong>2. Implementacion Generativa Controlable:</strong> Desarrollar el modulo generativo de nivel intermedio (Stable Diffusion con img2img / ControlNet) capaz de sintetizar exactamente 5 variaciones preservando la identidad facial.</li>
+                        <li><strong>3. Interfaz de Interaccion y Registro:</strong> Construir la interfaz grafica para visualizar en paralelo las opciones y capturar decisiones binarias (Aceptar/Rechazar) de forma estructurada.</li>
+                        <li><strong>4. Agente Explicativo:</strong> Integrar un agente basado en LLM que procese el registro de decisiones y genere un resumen textual coherente, alineado y justificado del proceso de seleccion.</li>
+                        <li><strong>5. Evaluacion Integral:</strong> Evaluar el sistema mediante metricas de calidad visual, diversidad, fidelidad explicativa y usabilidad de la interfaz.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Restricciones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>3. Definicion de Restricciones</h2>
+                <span class="badge">Limitaciones Tecnicas y de Diseno</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <h4>Preservacion de Identidad</h4>
+                    <p>Las transformaciones deben limitar la alteracion de la geometria facial biometrica del sujeto, garantizando que permanezca plenamente reconocible tras modificar iluminacion, fondo o vestimenta.</p>
+                </div>
+                <div class="card">
+                    <h4>Latencia y Recursos de Computo</h4>
+                    <p>El tiempo de sintesis para las cinco opciones debe mantenerse por debajo de 30 segundos utilizando aceleracion por GPU, operando dentro de los limites de memoria VRAM disponibles.</p>
+                </div>
+                <div class="card">
+                    <h4>Estructura de Decision</h4>
+                    <p>El registro de retroalimentacion debe ser binario y estructurado por cada una de las 5 opciones generadas, asegurando consistencia deterministica para el consumo del agente LLM.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Metricas de Exito -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>4. Metricas de Exito</h2>
+                <span class="badge">Evaluacion Multicriterio</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 6px;">Tecnica (Generacion Visual)</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">Evaluacion de calidad y separabilidad semantica.</p>
+                    <div class="formula-box">CLIP-Score &middot; Distancia LPIPS</div>
+                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Diversidad entre las 5 opciones para evitar resultados redundantes.</p>
+                </div>
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 6px;">Interaccion y Decision</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">Medicion de la eficacia del ciclo con el usuario.</p>
+                    <div class="formula-box">Tasa Aceptacion = Opciones Aceptadas / 5</div>
+                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Tiempo promedio de decision por sesion interactiva.</p>
+                </div>
+                <div class="metric-box">
+                    <h4 style="color: #0f172a; margin-bottom: 6px;">Explicabilidad y Usabilidad</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">Fidelidad del agente LLM y claridad de la interfaz.</p>
+                    <div class="formula-box">Coherencia = 100% Alineacion Factual</div>
+                    <p style="font-size: 0.80rem; color: #64748b; margin-top: 4px;">Evaluacion de usabilidad funcional en escala tipo SUS.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Arquitectura del Sistema -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>5. Arquitectura del Sistema</h2>
+                <span class="badge">Componentes e Integracion</span>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="border-left-color: #0284c7;">
+                    <h4>Flujo de Componentes</h4>
+                    <ul>
+                        <li><strong>1. Ingestion y Preprocesamiento:</strong> Deteccion de rostro, normalizacion y enmascarado.</li>
+                        <li><strong>2. Modulo Generativo Controlable:</strong> Stable Diffusion con img2img y ControlNet para 5 variantes: (1) Iluminacion de estudio, (2) Expresion, (3) Fondo contextual, (4) Vestimenta, (5) Estilo editorial.</li>
+                        <li><strong>3. Interfaz Grafica:</strong> Panel comparativo con selectores de Aceptar / Rechazar.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left-color: #0f172a;">
+                    <h4>Integracion con Agente LLM</h4>
+                    <ul>
+                        <li><strong>4. Registro Estructurado:</strong> Serializacion en formato JSON con metadatos de las 5 opciones y estado de seleccion del usuario.</li>
+                        <li><strong>5. Agente de Explicacion (LLM):</strong> Recepcion del JSON y sintesis automatica de un informe que detalla explicitamente cuales fueron aceptadas, cuales rechazadas y la justificacion asociada.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Consideraciones Eticas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>6. Consideraciones Eticas y Uso Responsable</h2>
+                <span class="badge">Transparencia y Seguridad</span>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <h4>Privacidad y Consentimiento</h4>
+                    <p>Procesamiento efimero de las imagenes de los usuarios. Prohibicion estricta de almacenamiento persistente o reutilizacion no autorizada para entrenamiento.</p>
+                </div>
+                <div class="card">
+                    <h4>Mitigacion de Sesgos</h4>
+                    <p>Auditoria de los modelos preentrenados para prevenir sesgos de representacion en tono de piel, genero o edad al generar atributos esteticos o profesionales.</p>
+                </div>
+                <div class="card">
+                    <h4>Prevencion de Suplantacion</h4>
+                    <p>Diseno acotado a edicion estetica y contextual, restringiendo la generacion de contenido difamatorio, no consentido o de suplantacion de identidad (deepfakes).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Mini Plan de Trabajo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>7. Mini Plan de Trabajo y Cronograma</h2>
+                <span class="badge">Hoja de Ruta</span>
+            </div>
+            <div class="slide-body">
+                <div class="card" style="margin-bottom: 8px; border-left-color: #0f172a;">
+                    <h4>Fase 1: Formulacion y Diseno Conceptual (Completado - Avance)</h4>
+                    <p>Definicion del caso de uso, objetivos, restricciones tecnicas, diseno de arquitectura y seleccion de CelebA-HQ / retratos.</p>
+                </div>
+                <div class="card" style="margin-bottom: 8px; border-left-color: #0284c7;">
+                    <h4>Fase 2: Calibracion del Pipeline Generativo</h4>
+                    <p>Implementacion y ajuste de prompts/condiciones con Stable Diffusion img2img y ControlNet para las 5 variaciones visuales.</p>
+                </div>
+                <div class="card" style="border-left-color: #64748b;">
+                    <h4>Fase 3 y 4: Desarrollo de UI, Agente LLM e Informe Final</h4>
+                    <p>Construccion de la interfaz interactiva, conexion con el agente explicativo, evaluacion de metricas y redaccion del informe tecnico (maximo 5 paginas).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Footer -->
+        <div class="controls">
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+            <span class="page-indicator" id="pageIndicator">Diapositiva 1 de 8</span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            pageIndicator.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
