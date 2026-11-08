@@ -33,5 +33,5 @@ Thumbs.db
 **/docs/*.synctex.gz
 **/docs/page-*.png
 
-# Notas internas locales
-**/docs/FEEDBACK_INFORME_TECNICO.md
+# Notas internas locales (no se versionan ni se pushean)
+**/docs/FEEDBACK_*.md
