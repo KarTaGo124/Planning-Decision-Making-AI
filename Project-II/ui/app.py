@@ -34,7 +34,7 @@ st.set_page_config(
 
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 DATA_PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-DECISIONS_FILEPATH = str(DATA_PROCESSED_DIR / "decisiones_usuario.json")
+DECISIONS_FILEPATH = str(DATA_PROCESSED_DIR / "user_decisions.json")
 
 
 def initialize_session_state() -> None:
@@ -380,7 +380,7 @@ with col_metrics:
     m3.metric("Calificación Promedio", f"{current_metrics.average_rating:.2f} / 5.0")
     m4.metric("Diversidad Visual", f"{current_metrics.visual_diversity_score:.2f}")
 
-    st.caption(f"📁 Persistencia en tiempo real: `data/processed/decisiones_usuario.json` ({len(all_decisions_list)} registros)")
+    st.caption(f"📁 Persistencia en tiempo real: `data/processed/user_decisions.json` ({len(all_decisions_list)} registros)")
 
     with open(DECISIONS_FILEPATH, "w", encoding="utf-8") as f:
         import json
@@ -390,9 +390,9 @@ with col_metrics:
         json_data = f.read()
 
     st.download_button(
-        label="📥 Descargar decisiones_usuario.json",
+        label="📥 Descargar user_decisions.json",
         data=json_data,
-        file_name="decisiones_usuario.json",
+        file_name="user_decisions.json",
         mime="application/json",
         use_container_width=True,
     )

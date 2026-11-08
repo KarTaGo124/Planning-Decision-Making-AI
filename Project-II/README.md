@@ -37,7 +37,7 @@ Project-II/
 ├── data/
 │   ├── raw/                       # Retratos base de entrada
 │   └── processed/
-│       └── decisiones_usuario.json # Registro de feedback humano estructurado
+│       └── user_decisions.json    # Registro de feedback humano estructurado
 │
 ├── docs/
 │   ├── guidelines/                # Enunciado y rúbrica oficial del curso
@@ -75,4 +75,4 @@ Project-II/
    - Opcionalmente agregue especificaciones en el *prompt libre*.
    - Haga clic en **Generar Variaciones Visuales**.
    - Evalúe cada alternativa generada presionando **Aceptar** o **Rechazar**, asignando puntajes (1-5 estrellas) y notas.
-   - Haga clic en **Generar Explicación con Agente IA** para obtener un reporte analítico del comportamiento y descargar el registro `decisiones_usuario.json`.
+   - Haga clic en **Generar Explicación con Agente IA** para obtener un reporte analítico del comportamiento y descargar el registro `user_decisions.json`.

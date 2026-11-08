@@ -28,7 +28,7 @@ Project-II/
 ├── data/
 │   ├── raw/                        # Imágenes de entrada proporcionadas por usuarios
 │   └── processed/
-│       └── decisiones_usuario.json # Registro persistente de feedback (Aceptar/Rechazar)
+│       └── user_decisions.json     # Registro persistente de feedback (Aceptar/Rechazar)
 │
 ├── docs/
 │   ├── guidelines/                 # Enunciado y rúbrica oficial del proyecto
@@ -110,7 +110,7 @@ Siguiendo la advertencia explícita del docente evaluador, se implementó un sis
 
 ---
 
-## 6. Captura de Decisiones Humanas (`decisiones_usuario.json`)
+## 6. Captura de Decisiones Humanas (`user_decisions.json`)
 
 Debajo de cada imagen generada en la interfaz, el usuario dispone de controles intuitivos para interactuar con el sistema:
 - **Botón Aceptar:** Marca la variación como aprobada para su perfil profesional.
@@ -118,7 +118,7 @@ Debajo de cada imagen generada en la interfaz, el usuario dispone de controles i
 - **Control Deslizante (Rating 1 a 5):** Permite cuantificar la satisfacción del usuario con la imagen.
 - **Campo de Notas:** Permite registrar comentarios libres sobre el resultado.
 
-Cada acción se serializa automáticamente en `Project-II/data/processed/decisiones_usuario.json` con la siguiente estructura:
+Cada acción se serializa automáticamente en `Project-II/data/processed/user_decisions.json` con la siguiente estructura:
 
 ```json
 [
@@ -143,7 +143,7 @@ Cada acción se serializa automáticamente en `Project-II/data/processed/decisio
 
 ## 7. Agente Explicador de Decisiones (`agent.py`)
 
-El agente analiza los registros en `decisiones_usuario.json` para interpretar el comportamiento del usuario y sintetizar explicaciones fundamentadas en lenguaje natural:
+El agente analiza los registros en `user_decisions.json` para interpretar el comportamiento del usuario y sintetizar explicaciones fundamentadas en lenguaje natural:
 
 ### 7.1 Comparación de Modelos de Lenguaje
 El sistema permite seleccionar entre tres motores de razonamiento:
