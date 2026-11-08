@@ -54,13 +54,13 @@ initialize_session_state()
 
 def create_sample_portrait() -> Image.Image:
     import numpy as np
+    import cv2
     canvas = np.zeros((512, 512, 3), dtype=np.uint8)
     for i in range(512):
         for j in range(512):
             canvas[i, j] = [min(255, 40 + i // 4), min(255, 50 + j // 4), min(255, 80 + (i + j) // 6)]
     cv2_circle = canvas.copy()
     center = (256, 230)
-    import cv2
     cv2.circle(cv2_circle, center, 120, (220, 190, 165), -1)
     cv2.ellipse(cv2_circle, (256, 450), (180, 130), 0, 0, 360, (35, 45, 65), -1)
     cv2.circle(cv2_circle, (215, 210), 12, (50, 40, 30), -1)
@@ -79,7 +79,7 @@ st.markdown(
             📸 Sistema Generativo de Retratos Profesionales con Feedback Humano
         </h1>
         <p style="color: #cbd5e1; margin: 0; font-size: 14px; line-height: 1.5;">
-            Generación controlada de fotos profesionales para redes (LinkedIn, WhatsApp, GitHub) mediante difusión y ControlNet, captura estructurada de decisiones humanas y síntesis explicativa mediante agentes LLM.
+            Generación interactiva de fotos profesionales para perfiles digitales (LinkedIn, WhatsApp corporativo, GitHub). Diseñado bajo el paradigma <b>Human-in-the-Loop</b>: la IA genera alternativas, usted evalúa con <b>Aceptar / Rechazar</b>, y un <b>Agente LLM</b> explica las razones de sus elecciones.
         </p>
         <div style="margin-top: 10px; font-size: 12px; color: #94a3b8;">
             <b>Grupo 7:</b> José Guillermo Gálvez Pacori · Matías Alonso Meneses Roncal · Alejandro Joel Ore García | <b>Docentes:</b> Dra. Aurea Soriano-Vargas & Mg. Robert Buleje
@@ -94,10 +94,10 @@ with st.sidebar:
     st.header("⚙️ Configuración del Sistema")
 
     engine_mode_choice = st.radio(
-        "Nivel Técnico del Modelo Generativo:",
+        "Nivel Técnico del Motor Generativo:",
         options=[EngineMode.INTERMEDIATE.value, EngineMode.BASIC.value],
         index=0,
-        help="El Nivel Intermedio aplica preprocesamiento facial y condicionamiento estructural tipo ControlNet/Canny. El Nivel Básico simula el uso directo de APIs preentrenadas.",
+        help="Nivel Intermedio: Detección facial + ControlNet Canny + síntesis de atributos. Nivel Básico: API o difusión directa.",
     )
     current_mode = EngineMode.INTERMEDIATE if "Intermedio" in engine_mode_choice else EngineMode.BASIC
     st.session_state.engine.mode = current_mode
@@ -154,16 +154,26 @@ with st.sidebar:
 
     st.divider()
 
-    st.subheader("🤖 Agente de Explicación")
+    st.subheader("🤖 Agente de Explicación (LLM)")
     selected_agent_model = st.selectbox(
-        "Modelo de Lenguaje para Explicaciones:",
+        "Modelo para Sintetizar Explicaciones:",
         options=[
             AgentModel.EXPERT_RULES.value,
             AgentModel.GEMINI_FLASH.value,
             AgentModel.OPENAI_MINI.value,
         ],
         index=0,
+        help="El modo Grupo 7 corre de forma local e inmediata sin requerir claves de API. Gemini y OpenAI utilizan sus endpoints respectivos.",
     )
+
+    with st.expander("🔑 Configuración de API Keys (Opcional)"):
+        st.caption("Solo necesarias si desea usar Gemini o OpenAI directamente en vez del Agente Local:")
+        gemini_key_input = st.text_input("Gemini API Key:", type="password", value=os.getenv("GEMINI_API_KEY", ""))
+        openai_key_input = st.text_input("OpenAI API Key:", type="password", value=os.getenv("OPENAI_API_KEY", ""))
+        if gemini_key_input:
+            os.environ["GEMINI_API_KEY"] = gemini_key_input
+        if openai_key_input:
+            os.environ["OPENAI_API_KEY"] = openai_key_input
 
 
 col_left, col_right = st.columns([1, 2], gap="large")
@@ -186,7 +196,7 @@ with col_left:
     if source_image:
         st.image(source_image, caption="Fotografía de entrada proporcionada", use_container_width=True)
         if current_mode == EngineMode.INTERMEDIATE:
-            with st.expander("🔍 Vista de Preprocesamiento y ControlNet Canny"):
+            with st.expander("🔍 Vista de Preprocesamiento y ControlNet Canny", expanded=False):
                 preprocessed = st.session_state.engine.preprocess_face(source_image)
                 edges = st.session_state.engine.extract_controlnet_edges(preprocessed)
                 col_c1, col_c2 = st.columns(2)
@@ -223,16 +233,19 @@ with col_left:
 
 
 with col_right:
-    st.subheader("2. Variaciones Generadas y Feedback Humano")
+    st.subheader("2. Variaciones Generadas y Feedback Humano (Human-in-the-Loop)")
 
     if not st.session_state.variations:
-        st.info("👈 Presione 'Generar Variaciones Visuales' para producir las fotos profesionales.")
+        st.info("👈 Presione el botón azul **'Generar Variaciones Visuales'** en el panel izquierdo para producir las opciones de fotos profesionales.")
     else:
-        st.caption(f"Mostrando {len(st.session_state.variations)} variaciones bajo el {current_mode.value}. Indique su decisión en cada una:")
+        st.caption(
+            f"Mostrando {len(st.session_state.variations)} variaciones bajo el **{current_mode.value}**. "
+            "Cada variación inicia en estado **Pendiente**. Haga clic en **Aceptar** o **Rechazar** para registrar su decisión humana:"
+        )
 
         for idx, var in enumerate(st.session_state.variations):
             with st.container(border=True):
-                c_img, c_meta, c_actions = st.columns([1.2, 1.8, 1.3], gap="medium")
+                c_img, c_meta, c_actions = st.columns([1.1, 1.7, 1.4], gap="medium")
 
                 with c_img:
                     st.image(var.image, caption=f"Var #{idx+1} · {var.title}", use_container_width=True)
@@ -253,15 +266,15 @@ with col_right:
                     is_accepted = curr_decision.get("accepted")
 
                     if is_accepted is True:
-                        st.success("✅ Aceptada")
+                        st.success("✅ Decisión: ACEPTADA")
                     elif is_accepted is False:
-                        st.error("❌ Rechazada")
+                        st.error("❌ Decisión: RECHAZADA")
                     else:
-                        st.warning("⏳ Pendiente")
+                        st.warning("⏳ Decisión: PENDIENTE")
 
-                    col_btn1, col_btn2 = st.columns(2)
-                    with col_btn1:
-                        if st.button("Aceptar", key=f"acc_{var.variation_id}", use_container_width=True):
+                    col_btn_acc, col_btn_rej = st.columns(2)
+                    with col_btn_acc:
+                        if st.button("Aceptar", key=f"acc_{var.variation_id}", type="primary", use_container_width=True):
                             st.session_state.decisions[var.variation_id] = {
                                 "variation_id": var.variation_id,
                                 "preset_id": var.preset_id,
@@ -279,7 +292,7 @@ with col_right:
                             save_decisions_json(list(st.session_state.decisions.values()), DECISIONS_FILEPATH)
                             st.rerun()
 
-                    with col_btn2:
+                    with col_btn_rej:
                         if st.button("Rechazar", key=f"rej_{var.variation_id}", use_container_width=True):
                             st.session_state.decisions[var.variation_id] = {
                                 "variation_id": var.variation_id,
@@ -299,14 +312,14 @@ with col_right:
                             st.rerun()
 
                     rating = st.slider(
-                        "Calificación:",
+                        "Calificación de estilo (1 a 5):",
                         min_value=1,
                         max_value=5,
                         value=int(curr_decision.get("rating", 4)),
                         key=f"rate_{var.variation_id}",
                     )
                     notes = st.text_input(
-                        "Nota de feedback:",
+                        "Comentario o motivo:",
                         value=str(curr_decision.get("user_notes", "")),
                         key=f"note_{var.variation_id}",
                         placeholder="Ej: Buena luz, pero fondo algo simple",
@@ -324,13 +337,13 @@ col_expl, col_metrics = st.columns([1.3, 1.0], gap="large")
 
 with col_expl:
     st.subheader("3. Agente Explicador de Decisiones (LLM)")
-    st.caption("Analiza las razones detrás de las elecciones del usuario y sintetiza patrones de preferencia.")
+    st.caption("El agente de lenguaje natural analiza el registro de decisiones y sintetiza por qué aceptó o rechazó cada foto.")
 
     all_decisions_list = list(st.session_state.decisions.values())
 
     if st.button("🧠 Generar Explicación con Agente IA", type="secondary", use_container_width=True):
         if not all_decisions_list:
-            st.warning("Primero debe calificar o aceptar/rechazar al menos una imagen generada.")
+            st.warning("Primero debe calificar o presionar 'Aceptar' / 'Rechazar' en al menos una imagen generada.")
         else:
             with st.spinner("El agente de IA está analizando los registros de decisiones..."):
                 agent_enum = AgentModel.EXPERT_RULES
@@ -346,14 +359,14 @@ with col_expl:
     if st.session_state.agent_explanation:
         res = st.session_state.agent_explanation
         st.markdown(f"**Modelo Utilizado:** `{res.model_name}`")
-        st.markdown(f"**Fidelidad Factual:** `{res.factual_consistency_score * 100:.1f}%`")
+        st.markdown(f"**Fidelidad Factual con JSON:** `{res.factual_consistency_score * 100:.1f}%`")
         st.info(res.summary)
         with st.expander("Ver informe explicativo completo", expanded=True):
             st.markdown(res.narrative)
 
 
 with col_metrics:
-    st.subheader("4. Métricas de Evaluación y Registro")
+    st.subheader("4. Métricas de Evaluación y Persistencia")
     current_metrics = compute_metrics(
         all_decisions_list,
         explanation_narrative=st.session_state.agent_explanation.narrative if st.session_state.agent_explanation else None,
@@ -367,7 +380,7 @@ with col_metrics:
     m3.metric("Calificación Promedio", f"{current_metrics.average_rating:.2f} / 5.0")
     m4.metric("Diversidad Visual", f"{current_metrics.visual_diversity_score:.2f}")
 
-    st.caption(f"📁 Registro persistente en: `data/processed/decisiones_usuario.json` ({len(all_decisions_list)} entradas)")
+    st.caption(f"📁 Persistencia en tiempo real: `data/processed/decisiones_usuario.json` ({len(all_decisions_list)} registros)")
 
     with open(DECISIONS_FILEPATH, "w", encoding="utf-8") as f:
         import json
