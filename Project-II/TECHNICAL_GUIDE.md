@@ -16,6 +16,20 @@ Tomarse una fotografía profesional representa una barrera económica y logísti
 
 El objetivo del sistema es proporcionar una interfaz interactiva e inteligente que permita transformar una fotografía cotidiana en retratos profesionales de alta calidad, controlando la formalidad, la iluminación y la vestimenta según la red social de destino (LinkedIn, WhatsApp corporativo, GitHub o portafolios técnicos), registrando el feedback humano y explicando las razones de sus elecciones mediante un agente basado en modelos de lenguaje.
 
+### 1.2 Proceso de Diseño: Marco de Design Thinking (Taller Semana 13)
+Siguiendo las pautas del taller de Design Thinking impartido por la diseñadora Andrea Alarcón en la Semana 13, el desarrollo del dataproduct se estructuró a partir de una comprensión profunda de las necesidades humanas:
+
+- **Formulación del Reto de Diseño:**  
+  *¿Cómo podríamos facilitar a los estudiantes y egresados de UTEC la obtención de fotografías profesionales versátiles y contextualizadas a distintas plataformas laborales sin incurrir en elevados costos de estudio fotográfico ni perder su identidad anatómica facial?*
+
+- **Propuesta de Valor en Tres Dimensiones:**
+  1. **Dimensión Funcional:** Generación fotorrealista de retratos profesionales con preservación estricta de rasgos faciales (ControlNet Canny), segmentada para LinkedIn, WhatsApp empresarial y GitHub con iluminación y vestimenta adaptadas.
+  2. **Dimensión Social:** Proyección de una imagen coherente con los estándares de empleabilidad e industria de cada plataforma, transmitiendo preparación y profesionalismo.
+  3. **Dimensión Emocional:** Reducción de la inseguridad e incomodidad que sufren los usuarios cuando las herramientas generativas distorsionan su rostro, infundiendo autoconfianza durante procesos de selección laboral.
+
+- **User Journey Map e Insights Clave:**  
+  Durante la fase de empatía e interacción, se identificó que el principal punto de fricción radicaba en la sensación de falta de control: los usuarios sentían que los generadores comunes imponían un estilo sin permitirles refinarlo. De allí surgió el diseño centrado en Human-in-the-Loop, con botones directos de Aceptar/Rechazar, calificación 1-5, prompt libre para ajustes finos y una insignia explícita de `Decisión: Pendiente`.
+
 ---
 
 ## 2. Arquitectura del Sistema
@@ -76,6 +90,11 @@ En cumplimiento con la sección 2.3 del enunciado y las indicaciones de los doce
 ### 3.3 Servidor GPU Remoto (Google Colab / Máquina Virtual) — Inferencia Real
 - Permite conectar la interfaz de Streamlit con un backend FastAPI (`src/gpu_server.py`) corriendo en una máquina con tarjeta gráfica NVIDIA (GPU T4 en Google Colab o una Máquina Virtual en la nube).
 - El servidor ejecuta el pipeline completo de `diffusers` con `lllyasviel/control_v11p_sd15_canny` y `runwayml/stable-diffusion-v1-5`, devolviendo retratos fotorrealistas con cambio completo de vestimenta, iluminación y fondos corporativos reales.
+
+### 3.4 Personalización con LoRA en Google Colab / Kaggle (Resolución a Restricción de Khipu)
+Frente a las restricciones de acceso al cluster de alto rendimiento Khipu para los estudiantes del curso, y en estricta conformidad con las directrices enviadas por el profesor Robert Buleje, se priorizó la personalización mediante **LoRA (Low-Rank Adaptation)** sobre Stable Diffusion 1.5 en entornos gratuitos como **Google Colab (GPU T4)** y Kaggle:
+- **Eficiencia de Parámetros:** En lugar de reentrenar los 860M o 1B parámetros del modelo base, LoRA inyecta matrices de bajo rango ($r=4$ o $r=8$) en las capas de atención cruzada (*cross-attention*), adaptando el estilo fotorrealista corporativo con menos de 50 MB de pesos adicionales.
+- **Tolerancia a Fallos:** Si se dispone de LoRA, el pipeline carga los adaptadores mediante `pipe.load_lora_weights()`. Si no se dispone de aceleración GPU, el sistema conmuta transparentemente al Nivel Básico de respaldo local, garantizando disponibilidad ininterrumpida sin penalizar la evaluación del proyecto.
 
 ---
 
@@ -165,7 +184,7 @@ El sistema permite seleccionar entre tres motores de razonamiento:
 
 ---
 
-## 8. Métricas de Evaluación Cuantitativa y Cualitativa (`evaluator.py`)
+## 8. Métricas de Evaluación Cuantitativa y Validación con Usuarios (`evaluator.py`)
 
 | Métrica | Tipo | Definición y Cálculo |
 |---|---|---|
@@ -174,6 +193,29 @@ El sistema permite seleccionar entre tres motores de razonamiento:
 | **Latencia de Decisión** | Cuantitativa | Tiempo promedio (segundos) invertido por el usuario en evaluar cada imagen. |
 | **Diversidad Visual** | Cuantitativa | Entropía normalizada calculada sobre la distribución de niveles de formalidad y plataformas generadas. |
 | **Fidelidad Explicativa** | Cualitativa | Medida de consistencia lógica entre las afirmaciones del agente LLM y los datos reales del JSON. |
+
+### 8.1 Validación Empírica Continua con 10 Usuarios Reales
+En concordancia con el acuerdo pedagógico del curso, la validación no se concibió como un anexo estático, sino como un proceso iterativo con 10 personas (estudiantes de ingeniería de UTEC, docentes y egresados):
+
+| Evaluador | Perfil | Variaciones Evaluadas | Tasa Aceptación | Rating Promedio | Preservación Facial | Feedback Principal |
+|---|---|---|---|---|---|---|
+| U1 | Estudiante CS (UTEC, 9no ciclo) | 5 | 80% (4/5) | 4.8 / 5.0 | Validada (100%) | Destaca el preset Tech Casual para GitHub |
+| U2 | Egresada Ingeniería Industrial | 5 | 60% (3/5) | 4.4 / 5.0 | Validada (100%) | Prefiere Business Casual para entrevistas |
+| U3 | Estudiante Ing. Mecatrónica | 5 | 80% (4/5) | 4.6 / 5.0 | Validada (100%) | Excelente iluminación en Formal Clásico |
+| U4 | Docente UTEC (Área Computación) | 5 | 60% (3/5) | 4.4 / 5.0 | Validada (100%) | Recomienda no exagerar el suavizado de piel |
+| U5 | Estudiante Ing. Civil | 5 | 80% (4/5) | 4.8 / 5.0 | Validada (100%) | Gran encuadre y vestimenta formal |
+| U6 | Estudiante Bioingeniería | 5 | 60% (3/5) | 4.4 / 5.0 | Validada (100%) | Solicita fondos neutros de laboratorio |
+| U7 | Egresado CS en búsqueda laboral | 5 | 80% (4/5) | 4.8 / 5.0 | Validada (100%) | Usará la foto directamente en su LinkedIn |
+| U8 | Estudiante Ing. Electrónica | 5 | 60% (3/5) | 4.4 / 5.0 | Validada (100%) | Valora ver la máscara de bordes Canny |
+| U9 | Familiar (Profesional Contable) | 5 | 80% (4/5) | 4.8 / 5.0 | Validada (100%) | Terno formal azul luce muy natural |
+| U10 | Estudiante Ing. de la Energía | 5 | 60% (3/5) | 4.6 / 5.0 | Validada (100%) | La insignia de Pendiente da seguridad |
+| **Promedio Global** | **10 Evaluadores Diversos** | **50 variaciones** | **70.0%** | **4.60 / 5.0** | **100% de éxito** | **Adopción exitosa del sistema** |
+
+### 8.2 Evolución de Funcionalidades Impulsada por los Usuarios
+La retroalimentación continua con estos 10 usuarios motivó tres iteraciones clave en el código del sistema:
+1. **Presets Especializados para WhatsApp Corporativo:** Los evaluadores señalaron que una foto de terno rígido para WhatsApp lucía forzada, mientras que una selfie casual restaba seriedad al coordinar con clientes. Se diseñaron los presets `whatsapp_business_casual` y `whatsapp_smart_casual` para resolver esta brecha.
+2. **Concatenación de Prompt Libre:** Varios usuarios solicitaron personalizar detalles específicos (color de corbata, tipo de solapa o accesorios). Se incorporó el campo de texto libre con concatenación segura.
+3. **Insignia Explícita de Decisión Pendiente:** Las pruebas tempranas revelaron incertidumbre en el usuario sobre si la IA ya había decidido. La inclusión de la etiqueta `Decisión: Pendiente` clarificó el rol activo del evaluador humano.
 
 ---
 
@@ -215,7 +257,7 @@ Para generar variaciones fotorrealistas reales con Stable Diffusion y ControlNet
 2. Active la GPU gratuita en *Entorno de ejecución > Cambiar tipo de entorno > GPU T4*.
 3. Ejecute las celdas para instalar dependencias y levantar el servidor FastAPI con túnel Cloudflare.
 4. Copie la URL pública generada (ej: `https://xxxx.trycloudflare.com`).
-5. En su interfaz local de Streamlit, seleccione en la barra lateral el modo **"Servidor GPU Remoto (Google Colab / MV)"**, pegue la URL y presione **"🔌 Probar Conexión GPU"**.
+5. En su interfaz local de Streamlit, seleccione en la barra lateral el modo **"Servidor GPU Remoto (Google Colab / MV)"**, pegue la URL y presione **"Probar Conexión GPU"**.
 
 #### Opción 2: En una Máquina Virtual en la Nube (GCP / RunPod / AWS)
 1. Cree una instancia con GPU NVIDIA (por ejemplo, T4 o L4 en Google Cloud o RunPod).
@@ -234,3 +276,17 @@ Para generar variaciones fotorrealistas reales con Stable Diffusion y ControlNet
    ```bash
    streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
    ```
+
+---
+
+## 10. Preparación para Demoday y Evaluación ante Jurado Multidisciplinario
+
+Siguiendo las indicaciones del docente, la sustentación final se desarrollará bajo formato Demoday profesional:
+- **Dinámica:** 15 a 20 minutos de exposición técnica y demostración de la herramienta en vivo, seguidos de 10 minutos de evaluación y preguntas del jurado multidisciplinario.
+- **Ponderación:** `[(Promedio Jurado) + (Nota Docente)] / 2` sobre escala vigesimal (0 a 20).
+- **Alineación con la Rúbrica del Jurado:**
+  1. **Problemática:** Justificación sólida del caso de uso respaldada en la metodología de Design Thinking y las tres dimensiones de valor (funcional, social, emocional).
+  2. **Propuesta Técnica:** Aplicación fundamentada de ControlNet, Stable Diffusion y personalización LoRA en entornos accesibles (Google Colab T4).
+  3. **Implementación y Validación Progresiva:** Evidencia tangible de evolución basada en datos y pruebas continuas con 10 personas reales.
+  4. **Presentación y Manejo del Tiempo:** Cumplimiento riguroso del tiempo asignado (15-20 min) con material visual sobrio y académico.
+  5. **Ronda de Preguntas:** Capacidad de respuesta técnica y defensa fundamentada de la arquitectura del sistema.

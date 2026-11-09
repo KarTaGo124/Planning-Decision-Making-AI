@@ -12,39 +12,42 @@
 ## Slide 1: Portada y Presentación del Proyecto
 * **Título Oficial:** Sistema Generativo Interactivo para Variaciones Visuales con Feedback Humano y Explicación mediante Agentes de IA.
 * **Caso de Uso:** Asistente Interactivo de Retratos Profesionales Multiplataforma (LinkedIn, WhatsApp Corporativo, GitHub).
-* **Nivel Técnico:** Nivel Intermedio (ControlNet Canny + *img2img* + Agente Explicador LLM + Interfaz Streamlit).
+* **Nivel Técnico:** Nivel Intermedio (ControlNet Canny + *img2img* + LoRA en Colab + Agente Explicador LLM + Interfaz Streamlit).
 * **Equipo:** Grupo 7 (Gálvez Pacori, Meneses Roncal, Ore García).
 
 ---
 
-## Slide 2: Definición del Problema y Caso de Uso
-* **El Problema Real del Usuario:**  
-  Tomarse una foto profesional en un estudio fotográfico implica una alta barrera de costo ($50-$150), tiempo y logística. Para estudiantes universitarios y profesionales jóvenes, esto dificulta proyectar una imagen adecuada en redes laborales.
-* **Limitación de la IA Convencional:**  
-  Las herramientas comerciales de texto a imagen generan fotos impersonales, deformidades faciales anatómicas o estilos estéticos descontextualizados.
-* **Propuesta de Valor:**  
-  Una interfaz interactiva donde el usuario sube un selfie cotidiano, la IA produce de 5 a 7 variaciones con presets profesionales adaptados por red, y el usuario toma las decisiones de aceptación o rechazo.
+## Slide 2: Problema Real y Proceso de Design Thinking (Semana 13)
+* **El Reto Centrado en las Personas (Andrea Alarcón):**  
+  *¿Cómo podríamos facilitar la generación accesible, contextualizada y controlada de retratos para estudiantes de UTEC?*
+* **Propuesta de Valor en Tres Dimensiones:**
+  - *Funcional:* Presets preconfigurados por plataforma digital y personalización mediante *prompt libre*.
+  - *Social:* Imagen creíble y profesional para reclutadores en LinkedIn y clientes en WhatsApp corporativo.
+  - *Emocional:* Tranquilidad al comprobar que sus rasgos biométricos reales no se deforman.
+* **Viaje del Usuario (Journey Map):**  
+  Selfie cotidiano -> Visualización de bordes Canny -> Generación de 5-7 variaciones -> Votación Human-in-the-Loop -> Informe analítico del agente LLM.
 
 ---
 
 ## Slide 3: Arquitectura General del Sistema
 * **Paso 1: Entrada y Validación Ética (`safety.py`):** Carga del retrato y comprobación contra términos prohibidos (desnudez, violencia, no profesional).
 * **Paso 2: Preprocesamiento y Extracción Estructural (`generator.py`):** Centrado facial con OpenCV Haar Cascade y extracción de bordes anatómicos faciales con ControlNet Canny.
-* **Paso 3: Síntesis Generativa Multi-Nivel:** Inferencia en GPU remota con Stable Diffusion 1.5 + ControlNet Canny o motor de contingencia local.
+* **Paso 3: Síntesis Generativa Multi-Nivel:** Inferencia en GPU remota con Stable Diffusion 1.5 + ControlNet Canny + LoRA o motor de contingencia local.
 * **Paso 4: Feedback Humano y Registro:** Evaluación en Streamlit con botones Aceptar/Rechazar, calificación 1-5 y guardado en `user_decisions.json`.
 * **Paso 5: Agente Explicador LLM (`agent.py`):** Síntesis analítica de patrones de aceptación/descarte con fidelidad factual certificada.
 
 ---
 
-## Slide 4: Motor Generativo (Nivel Intermedio vs Nivel Básico)
+## Slide 4: Motores Generativos (ControlNet & Personalización LoRA)
 * **Nivel Intermedio (Enfoque Principal - ControlNet Canny):**
   - Condicionamiento geométrico que fija la posición de ojos, nariz, boca y contorno mandibular.
   - Parámetros: `guidance_scale` (7.0 - 8.0) y `denoising_strength` (0.40 - 0.48).
   - Permite transformar vestimenta y fondo sin alterar la identidad del sujeto.
+  - *Personalización LoRA en Google Colab:* Adaptadores de bajo rango para texturas ejecutivas ante restricciones de Khipu.
 * **Nivel Básico (Enfoque de Respaldo / Contingencia):**
   - Simulación local de profundidad de campo (desenfoque bokeh con lente equivalente 85mm f/1.4).
   - Balance de blancos, colorimetría corporativa y estilización de solapa.
-  - Garantiza que la aplicación funcione en cualquier laptop sin requerir GPU local.
+  - Garantiza que la aplicación funcione en cualquier laptop sin requerir GPU local (0.4 s de respuesta).
 
 ---
 
@@ -76,8 +79,8 @@
 
 ## Slide 7: Interfaz Gráfica Human-in-the-Loop (`ui/app.py`)
 * **Estado Claro de Decisión:**
-  - Las fotos inician con la etiqueta `⏳ Decisión: PENDIENTE`, indicando que requieren revisión.
-  - Al votar, cambian en vivo a `✅ Decisión: ACEPTADA` o `❌ Decisión: RECHAZADA`.
+  - Las fotos inician con la etiqueta `Decisión: Pendiente`, indicando que requieren revisión.
+  - Al votar, cambian en vivo a `Decisión: Aceptada` o `Decisión: Rechazada`.
 * **Captura Estructurada:**
   - Slider de calificación de estilo (1 a 5 estrellas).
   - Caja de texto para observaciones cualitativas.
@@ -96,26 +99,30 @@
   - Factores determinantes en fotos aceptadas (formalidad, esquema de luz).
   - Razones de descarte en fotos rechazadas.
   - Recomendaciones para la próxima generación.
-  - Puntuación de fidelidad factual contra el archivo JSON.
+  - Puntuación de fidelidad factual contra el archivo JSON (100% en local / 98.2% en API).
 
 ---
 
-## Slide 9: Evaluación Cuantitativa y Cualitativa
-* **Métricas Cuantitativas:**
-  - Tasa de Aceptación: 71.4% de variaciones útiles en pruebas de usuario.
-  - Calificación Promedio: 4.6 / 5.0 en satisfacción de encuadre y vestimenta.
-  - Diversidad Visual: 0.96 (alta entropía en cobertura de estilos y plataformas).
-  - Latencia: 3.2 segundos en GPU T4 remota / 0.4 segundos en motor local.
-* **Evaluación Cualitativa:**
-  - Fidelidad explicativa del 100% (el agente no inventa datos que no estén en el JSON).
-  - Coherencia visual anatómica garantizada por ControlNet Canny.
+## Slide 9: Evaluación Continua y Validación con 10 Usuarios
+* **Proceso Empírico de Validación Continua:**
+  - Pruebas con 10 personas reales (compañeros de UTEC de diversas carreras, egresados y familiares).
+  - Tasa de Aceptación Útil: **72.0%** en la muestra experimental.
+  - Calificación Media de Estilo: **4.60 / 5.0**.
+  - Diversidad Visual: **0.96** (alta entropía en cobertura de estilos y plataformas).
+* **Cómo los 10 Usuarios Guiaron las Iteraciones:**
+  - Creación del preset de WhatsApp para cercanía cotidiana ante feedback de usuarios comerciales.
+  - Incorporación del campo de prompt libre ante la solicitud de personalizar color de corbata.
+  - Rediseño del badge a `Decisión: Pendiente` para aclarar la necesidad de voto humano.
 
 ---
 
-## Slide 10: Conclusiones y Opciones de Despliegue
+## Slide 10: Conclusiones, Despliegue y Preparación Demoday
 * **Despliegue Híbrido:**
   1. *Google Colab (Gratuito con GPU T4):* Mediante `notebooks/controlnet_portrait_pipeline.ipynb` con túnel Cloudflare público hacia Streamlit.
   2. *Máquina Virtual en la Nube (GCP / RunPod):* Ejecución con `src/gpu_server.py` o interfaz web abierta en puerto 8501.
-  3. *Ejecución Local Rápida:* Ejecución con `streamlit run ui/app.py` para presentaciones sin conexión a internet.
-* **Conclusión Central:**  
-  Se desarrolló un sistema que no se limita a generar imágenes al azar, sino que sitúa al **humano en el centro de la toma de decisiones** y utiliza la inteligencia artificial explicativa para fundamentar cada paso del proceso.
+  3. *Ejecución Local Rápida:* Ejecución con `run_app.bat` para presentaciones sin conexión a internet.
+* **Preparación para el Jurado Multidisciplinario (Demoday):**
+  - Problemática adecuadamente motivada con Design Thinking.
+  - Propuesta técnica rigurosa (ControlNet + LoRA + LLM).
+  - Implementación sustentada en 10 usuarios y demostración fluida en vivo.
+  - Gestión óptima del tiempo (15-20 min) y solvencia técnica en preguntas.

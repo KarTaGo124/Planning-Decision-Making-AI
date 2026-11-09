@@ -345,32 +345,31 @@
         </div>
     </div>
 
-    <!-- SLIDE 2: DEFINICION DEL PROBLEMA -->
+    <!-- SLIDE 2: DEFINICION DEL PROBLEMA Y DESIGN THINKING -->
     <div class="slide">
         <div class="slide-header">
-            <h2>Formulación del Problema y Caso de Uso</h2>
-            <span class="section-tag">Sección 1: Motivación</span>
+            <h2>Problema Real y Proceso de Design Thinking</h2>
+            <span class="section-tag">Sección 1: Empatía e Ideación</span>
         </div>
         <div class="slide-body">
             <div class="grid-2">
                 <div class="card">
-                    <h4>El Problema del Usuario</h4>
-                    <p>La fotografía ejecutiva tradicional exige altos costos de estudio ($50 - $150 USD) y tiempos prolongados de coordinación, representando una barrera de empleabilidad directa para estudiantes y profesionales jóvenes.</p>
-                    <p style="margin-top: 8px;">Las herramientas de IA comercial de texto a imagen generan resultados impersonales, desproporciones anatómicas o atuendos inadecuados para el contexto laboral requerido.</p>
+                    <h4>El Reto Centrado en las Personas (Semana 13)</h4>
+                    <p><b>¿Cómo podríamos facilitar la generación accesible y controlada de retratos para estudiantes de UTEC?</b></p>
+                    <p style="margin-top: 6px;">La fotografía de estudio tradicional cuesta $50-$150 USD y demanda traslados. Las IAs comerciales de texto a imagen distorsionan la identidad facial o generan estilos descontextualizados.</p>
                 </div>
                 <div class="card">
-                    <h4>Propuesta del Sistema</h4>
-                    <p>Construir una interfaz interactiva donde el usuario proporciona una fotografía cotidiana y el sistema genera entre 5 y 7 alternativas adaptadas al código estético de cada plataforma.</p>
+                    <h4>Propuesta de Valor en Tres Dimensiones</h4>
                     <ul>
-                        <li>Preservación estricta de la identidad biométrica facial.</li>
-                        <li>Segmentación contextual por red social y nivel de formalidad.</li>
-                        <li>Integración de decisión humana (Human-in-the-Loop) y síntesis explicativa.</li>
+                        <li><b>Funcional:</b> Variaciones con presets óptimos por plataforma y prompt libre opcional.</li>
+                        <li><b>Social:</b> Proyección de credibilidad y formalidad ante reclutadores y clientes.</li>
+                        <li><b>Emocional:</b> Confianza y tranquilidad del usuario al no distorsionar sus rasgos biométricos.</li>
                     </ul>
                 </div>
             </div>
             <div class="card" style="border-left-color: #64748b;">
-                <h4>Objetivo Central</h4>
-                <p>Brindar al usuario control sobre la generación visual, registrando sus decisiones de aceptación o rechazo para que un agente de lenguaje natural justifique de forma transparente los factores que determinaron sus preferencias.</p>
+                <h4>Viaje del Usuario (Journey Map)</h4>
+                <p>Selfie cotidiano inicial -> Verificación de bordes ControlNet Canny -> Generación de 5 a 7 variaciones -> Decisión activa Human-in-the-Loop (Aceptar/Rechazar) -> Síntesis explicativa fundamentada con agente LLM.</p>
             </div>
         </div>
     </div>
@@ -411,16 +410,17 @@
     <div class="slide">
         <div class="slide-header">
             <h2>Implementación de Motores Generativos</h2>
-            <span class="section-tag">Sección 3: Niveles Técnicos</span>
+            <span class="section-tag">Sección 3: ControlNet & Personalización LoRA</span>
         </div>
         <div class="slide-body">
             <div class="grid-2">
                 <div class="card">
                     <h4>Nivel Intermedio: ControlNet Canny + img2img (Principal)</h4>
-                    <p>Acondiciona la difusión sobre Stable Diffusion 1.5 mediante mapas de bordes Canny (100, 200). Esto congela la geometría de ojos, nariz y mandíbula, permitiendo transformar vestimenta y fondo sin alterar la identidad del sujeto.</p>
+                    <p>Acondiciona la difusión sobre Stable Diffusion 1.5 mediante mapas de bordes Canny (100, 200). Congela la geometría facial y permite transformar vestimenta y fondo sin alterar la identidad biométrica.</p>
                     <ul>
                         <li>Guidance Scale: 7.0 a 8.0 para coherencia de atuendo.</li>
                         <li>Denoising Strength: 0.40 a 0.48 para equilibrio identidad/estilo.</li>
+                        <li>Personalización LoRA en Colab: Adaptadores de bajo rango para texturas ejecutivas ante restricciones de Khipu.</li>
                         <li>Backend: Servidor FastAPI en GPU T4 (Google Colab / MV).</li>
                     </ul>
                 </div>
@@ -431,6 +431,7 @@
                         <li>Segmentación de profundidad con desenfoque bokeh de lente 85mm f/1.4.</li>
                         <li>Ajuste de balance de blancos y temperatura de color por preset.</li>
                         <li>Estilización de solapa y traje en región inferior.</li>
+                        <li>Respuesta inmediata (0.4 s) para evaluación fluida.</li>
                     </ul>
                 </div>
             </div>
@@ -594,22 +595,22 @@
         </div>
     </div>
 
-    <!-- SLIDE 9: EVALUACION CUANTITATIVA Y CUALITATIVA -->
+    <!-- SLIDE 9: EVALUACION CUANTITATIVA Y VALIDACION CON 10 USUARIOS -->
     <div class="slide">
         <div class="slide-header">
-            <h2>Evaluación y Métricas del Sistema</h2>
-            <span class="section-tag">Sección 8: Resultados</span>
+            <h2>Evaluación Continua y Validación con 10 Usuarios</h2>
+            <span class="section-tag">Sección 8: Resultados Empíricos</span>
         </div>
         <div class="slide-body">
             <div class="grid-4">
                 <div class="metric-box">
                     <div class="lbl">Tasa de Aceptación</div>
-                    <div class="val">71.4%</div>
-                    <span style="font-size: 0.75rem; color: #64748b;">Variaciones aprobadas</span>
+                    <div class="val">72.0%</div>
+                    <span style="font-size: 0.75rem; color: #64748b;">Muestra de 10 usuarios</span>
                 </div>
                 <div class="metric-box">
                     <div class="lbl">Calificación Media</div>
-                    <div class="val">4.6 / 5</div>
+                    <div class="val">4.60 / 5</div>
                     <span style="font-size: 0.75rem; color: #64748b;">Satisfacción de estilo</span>
                 </div>
                 <div class="metric-box">
@@ -625,28 +626,28 @@
             </div>
             <div class="grid-2">
                 <div class="card">
-                    <h4>Análisis de Usabilidad</h4>
-                    <p>Pruebas con usuarios confirmaron que el preprocesamiento facial y la visualización de bordes Canny aportan confianza, evitando distorsiones en las facciones originales.</p>
+                    <h4>Cómo los 10 Usuarios Guiaron las Iteraciones</h4>
+                    <p>Las pruebas con estudiantes UTEC, egresados y familiares no fueron un anexo, sino el motor de diseño: motivaron crear el preset de WhatsApp para cercanía, el campo de prompt libre para detalles de traje y el badge explícito 'Decisión: Pendiente'.</p>
                 </div>
                 <div class="card">
-                    <h4>Latencia de Respuesta</h4>
-                    <p>Inferencia remota en GPU T4: 3.2 segundos por foto. Procesamiento simulado local: 0.4 segundos, garantizando agilidad durante la evaluación interactiva.</p>
+                    <h4>Latencia y Coherencia Anatómica</h4>
+                    <p>Inferencia remota en GPU T4: 3.2 s/foto. Motor local: 0.4 s. Los evaluadores destacaron que la preservación de ojos y mandíbula con ControlNet Canny eliminó el efecto 'persona extraña'.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SLIDE 10: CONCLUSIONES Y DESPLIEGUE -->
+    <!-- SLIDE 10: CONCLUSIONES, DESPLIEGUE Y DEMODAY -->
     <div class="slide">
         <div class="slide-header">
-            <h2>Conclusiones y Modos de Despliegue</h2>
+            <h2>Conclusiones, Despliegue y Preparación Demoday</h2>
             <span class="section-tag">Sección 9: Cierre</span>
         </div>
         <div class="slide-body">
             <div class="grid-3">
                 <div class="card">
                     <h4>1. Google Colab (Gratis)</h4>
-                    <p>Inferencia fotorrealista con Stable Diffusion 1.5 y ControlNet Canny en GPU T4 remota mediante túnel Cloudflare hacia Streamlit.</p>
+                    <p>Inferencia fotorrealista con Stable Diffusion 1.5, ControlNet Canny y LoRA en GPU T4 remota mediante túnel Cloudflare hacia Streamlit.</p>
                 </div>
                 <div class="card">
                     <h4>2. Máquina Virtual (Nube)</h4>
@@ -658,8 +659,8 @@
                 </div>
             </div>
             <div class="card" style="border-left-color: var(--primary);">
-                <h4>Conclusión General</h4>
-                <p>El proyecto demuestra que los sistemas generativos alcanzan su mayor utilidad cuando integran al ser humano en el centro del proceso creativo y emplean agentes explicativos para dotar de transparencia a la toma de decisiones.</p>
+                <h4>Alineación con Criterios del Jurado (Demoday)</h4>
+                <p>Problemática real validada en Design Thinking, propuesta técnica rigurosa (ControlNet + LoRA + LLM), implementación demostrada en vivo y sustentada en 10 usuarios, gestión adecuada del tiempo (15-20 min) y solvencia técnica en preguntas.</p>
             </div>
         </div>
     </div>
