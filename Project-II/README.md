@@ -15,6 +15,9 @@
 
 ## 1. Documentación Central y Entregables Oficiales
 
+### 🚀 Guía de Ejecución Rápida
+* ⚡ **Guía Completa de Cómo Correr Todo:** Consulte [`HOW_TO_RUN.md`](HOW_TO_RUN.md) para el paso a paso detallado de ejecución en **Google Colab (GPU Gratis)**, **Windows con 1 clic (`run_app.bat`)**, o **Máquina Virtual (MV en la nube)**, además del guión para la sustentación frente al profesor.
+
 ### 🌟 Entregable Final (Sustentación del Proyecto)
 * 📊 **Diapositivas Interactivas de Sustentación:** [`docs/final_submission/presentation.html`](docs/final_submission/presentation.html) *(Diseño moderno en modo oscuro con navegación por teclado y soporte para impresión PDF).*
 * 🎙️ **Guión de Exposición Oral:** [`docs/final_submission/presentation_script.md`](docs/final_submission/presentation_script.md) *(Guión detallado diapositiva por diapositiva en tono natural de estudiante).*
@@ -34,6 +37,7 @@
 ```text
 Project-II/
 ├── README.md                      # Resumen ejecutivo y guía rápida
+├── HOW_TO_RUN.md                  # Guía paso a paso de ejecución (Colab, Local, VM)
 ├── TECHNICAL_GUIDE.md             # Guía técnica integral y centralizada
 ├── requirements.txt               # Dependencias Python
 ├── run_app.bat                    # Lanzador rápido con 1 clic para Windows
