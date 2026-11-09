@@ -15,20 +15,20 @@
 
 ## 1. Documentación Central y Entregables Oficiales
 
-### 🚀 Guía de Ejecución Rápida
-* ⚡ **Guía Completa de Cómo Correr Todo:** Consulte [`HOW_TO_RUN.md`](HOW_TO_RUN.md) para el paso a paso detallado de ejecución en **Google Colab (GPU Gratis)**, **Windows con 1 clic (`run_app.bat`)**, o **Máquina Virtual (MV en la nube)**, además del guión para la sustentación frente al profesor.
+### Guía de Ejecución Rápida
+* **Guía Completa de Cómo Correr Todo:** Consulte [`HOW_TO_RUN.md`](HOW_TO_RUN.md) para el paso a paso detallado de ejecución en **Google Colab (GPU Gratis)**, **Windows con 1 clic (`run_app.bat`)**, o **Máquina Virtual (MV en la nube)**, además del guión para la sustentación frente al profesor.
 
-### 🌟 Entregable Final (Sustentación del Proyecto)
-* 📊 **Diapositivas Interactivas de Sustentación:** [`docs/final_submission/presentation.html`](docs/final_submission/presentation.html) *(Diseño moderno en modo oscuro con navegación por teclado y soporte para impresión PDF).*
-* 🎙️ **Guión de Exposición Oral:** [`docs/final_submission/presentation_script.md`](docs/final_submission/presentation_script.md) *(Guión detallado diapositiva por diapositiva en tono natural de estudiante).*
-* 📝 **Informe Técnico Final (Rúbrica 20 Pts):** [`docs/final_submission/technical_report.md`](docs/final_submission/technical_report.md) *(Documento exhaustivo cubriendo los 6 criterios de evaluación).*
-* 📑 **Diapositivas en Formato Markdown:** [`docs/final_submission/presentation.md`](docs/final_submission/presentation.md)
+### Entregable Final (Sustentación del Proyecto)
+* **Diapositivas Interactivas de Sustentación:** [`docs/final_submission/presentation.html`](docs/final_submission/presentation.html) *(Diseño sobrio académico con navegación por teclado y soporte para impresión PDF).*
+* **Guión de Exposición Oral:** [`docs/final_submission/presentation_script.md`](docs/final_submission/presentation_script.md) *(Guión detallado diapositiva por diapositiva en tono natural de estudiante).*
+* **Informe Técnico Final (Rúbrica 20 Pts):** [`docs/final_submission/technical_report.md`](docs/final_submission/technical_report.md) *(Documento exhaustivo cubriendo los 6 criterios de evaluación).*
+* **Diapositivas en Formato Markdown:** [`docs/final_submission/presentation.md`](docs/final_submission/presentation.md)
 
-### 📖 Guías Técnicas y Materiales del Curso
-* 📘 **Guía Técnica Integral:** [`TECHNICAL_GUIDE.md`](TECHNICAL_GUIDE.md) *(Documentación exhaustiva de arquitectura, catálogo de presets, seguridad y métricas).*
-* 📋 **Enunciado Oficial:** [`docs/guidelines/project_2_statement.pdf`](docs/guidelines/project_2_statement.pdf)
-* 📊 **Rúbrica Oficial de Evaluación:** [`docs/guidelines/project_2_rubric.pdf`](docs/guidelines/project_2_rubric.pdf)
-* 📦 **Historial de Avance 1:** [`docs/submission_1/`](docs/submission_1/)
+### Guías Técnicas y Materiales del Curso
+* **Guía Técnica Integral:** [`TECHNICAL_GUIDE.md`](TECHNICAL_GUIDE.md) *(Documentación exhaustiva de arquitectura, catálogo de presets, seguridad y métricas).*
+* **Enunciado Oficial:** [`docs/guidelines/project_2_statement.pdf`](docs/guidelines/project_2_statement.pdf)
+* **Rúbrica Oficial de Evaluación:** [`docs/guidelines/project_2_rubric.pdf`](docs/guidelines/project_2_rubric.pdf)
+* **Historial de Avance 1:** [`docs/submission_1/`](docs/submission_1/)
 
 ---
 
@@ -77,7 +77,7 @@ Project-II/
 ## 3. Instrucciones de Ejecución
 
 ### Opción A: Ejecución Rápida con 1 Clic (Windows)
-Simplemente haga doble clic en el archivo [`run_app.bat`](run_app.bat).
+Haga doble clic en el archivo [`run_app.bat`](run_app.bat).
 
 ### Opción B: Ejecución en Terminal
 ```bash
@@ -86,9 +86,9 @@ pip install -r requirements.txt
 streamlit run ui/app.py
 ```
 
-### Opción C: Inferencia Fotorrealista con GPU T4 Gratuita en Google Colab
-1. Abra [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) en **Google Colab**.
-2. Active la GPU gratuita en *Entorno de ejecución > Cambiar tipo de entorno > T4 GPU*.
+### Opción C: Inferencia con GPU T4 Gratuita en Google Colab
+1. Abra [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) en Google Colab.
+2. Active la GPU gratuita en Entorno de ejecución > Cambiar tipo de entorno > T4 GPU.
 3. Ejecute la Celda 3 para iniciar el servidor FastAPI y el túnel Cloudflare.
-4. En su aplicación local de Streamlit, seleccione en la barra lateral el modo **"Servidor GPU Remoto (Google Colab / MV)"**, pegue la URL generada y presione **"🔌 Probar Conexión GPU"**.
-5. ¡Listo! La generación fotorrealista correrá en la GPU de Google Colab en 3 segundos por foto.
+4. En su aplicación local de Streamlit, seleccione en la barra lateral el modo "Servidor GPU Remoto (Google Colab / MV)", pegue la URL generada y presione "Probar Conexión GPU".
+5. Presione "Generar Variaciones Visuales".

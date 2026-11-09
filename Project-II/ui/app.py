@@ -28,7 +28,6 @@ from src.safety import check_prompt_safety
 
 st.set_page_config(
     page_title="Retratos Pro IA - UTEC Grupo 7",
-    page_icon="📸",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -82,11 +81,11 @@ st.markdown(
         <div style="font-size: 13px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">
             UTEC · CS5363 Planificación y Toma de Decisiones en IA (2026-2) · Proyecto 2
         </div>
-        <h1 style="color: #ffffff; margin: 0 0 10px 0; font-size: 26px; font-weight: 800;">
-            📸 Sistema Generativo de Retratos Profesionales con Feedback Humano
+        <h1 style="color: #ffffff; margin: 0 0 10px 0; font-size: 24px; font-weight: 800;">
+            Sistema Generativo de Retratos Profesionales con Feedback Humano
         </h1>
         <p style="color: #cbd5e1; margin: 0; font-size: 14px; line-height: 1.5;">
-            Generación interactiva de fotos profesionales para perfiles digitales (LinkedIn, WhatsApp corporativo, GitHub). Diseñado bajo el paradigma <b>Human-in-the-Loop</b>: la IA genera alternativas, usted evalúa con <b>Aceptar / Rechazar</b>, y un <b>Agente LLM</b> explica las razones de sus elecciones.
+            Generación interactiva de fotos profesionales para perfiles digitales (LinkedIn, WhatsApp corporativo, GitHub). Diseñado bajo el paradigma <b>Human-in-the-Loop</b>: la IA genera alternativas, el usuario evalúa con <b>Aceptar / Rechazar</b>, y un <b>Agente LLM</b> explica las razones de sus elecciones.
         </p>
         <div style="margin-top: 10px; font-size: 12px; color: #94a3b8;">
             <b>Grupo 7:</b> José Guillermo Gálvez Pacori · Matías Alonso Meneses Roncal · Alejandro Joel Ore García | <b>Docentes:</b> Dra. Aurea Soriano-Vargas & Mg. Robert Buleje
@@ -98,7 +97,7 @@ st.markdown(
 
 
 with st.sidebar:
-    st.header("⚙️ Configuración del Sistema")
+    st.header("Configuración del Sistema")
 
     engine_mode_choice = st.radio(
         "Nivel Técnico del Motor Generativo:",
@@ -118,14 +117,14 @@ with st.sidebar:
             value=st.session_state.gpu_backend_url,
             help="Ejemplo: https://xyz.trycloudflare.com o http://123.45.67.89:8000",
         )
-        if st.button("🔌 Probar Conexión GPU", use_container_width=True):
+        if st.button("Probar Conexión GPU", use_container_width=True):
             try:
                 resp = requests.get(f"{st.session_state.gpu_backend_url.rstrip('/')}/health", timeout=6)
                 if resp.status_code == 200:
                     data = resp.json()
                     st.session_state.gpu_connected = True
                     st.session_state.gpu_device_name = data.get("device_name", "GPU Conectada")
-                    st.success(f"🟢 Conectado: {st.session_state.gpu_device_name}")
+                    st.success(f"Conectado: {st.session_state.gpu_device_name}")
                 else:
                     st.session_state.gpu_connected = False
                     st.error("Servidor no disponible.")
@@ -141,7 +140,7 @@ with st.sidebar:
 
     st.divider()
 
-    st.subheader("🎯 Catálogo y Paquetes de Estilo")
+    st.subheader("Catálogo y Paquetes de Estilo")
     selection_strategy = st.radio(
         "Modo de selección de variaciones:",
         options=["Por Paquete Temático", "Selección Personalizada"],
@@ -158,7 +157,7 @@ with st.sidebar:
         )
         chosen_pkg = get_package(selected_pkg_id)
         if chosen_pkg:
-            st.caption(f"ℹ️ {chosen_pkg.description}")
+            st.caption(chosen_pkg.description)
             selected_preset_ids = chosen_pkg.preset_ids
     else:
         st.write("Seleccione los estilos deseados (recomendado: 5 a 7):")
@@ -174,7 +173,7 @@ with st.sidebar:
 
     st.divider()
 
-    st.subheader("✍️ Personalización (Prompt Libre)")
+    st.subheader("Personalización (Prompt Libre)")
     custom_prompt_input = st.text_input(
         "Ajustes de vestimenta o accesorios (opcional):",
         value="",
@@ -185,13 +184,13 @@ with st.sidebar:
     if custom_prompt_input.strip():
         safety_check = check_prompt_safety(custom_prompt_input)
         if safety_check.is_safe:
-            st.success("✅ Filtro ético: Solicitud aprobada.")
+            st.success("Filtro ético: Solicitud aprobada.")
         else:
-            st.error(f"🚫 {safety_check.warning_message}")
+            st.error(safety_check.warning_message)
 
     st.divider()
 
-    st.subheader("🤖 Agente de Explicación (LLM)")
+    st.subheader("Agente de Explicación (LLM)")
     selected_agent_model = st.selectbox(
         "Modelo para Sintetizar Explicaciones:",
         options=[
@@ -203,7 +202,7 @@ with st.sidebar:
         help="El modo Grupo 7 corre de forma local e inmediata sin requerir claves de API. Gemini y OpenAI utilizan sus endpoints respectivos.",
     )
 
-    with st.expander("🔑 Configuración de API Keys (Opcional)"):
+    with st.expander("Configuración de API Keys (Opcional)"):
         st.caption("Solo necesarias si desea usar Gemini o OpenAI directamente en vez del Agente Local:")
         gemini_key_input = st.text_input("Gemini API Key:", type="password", value=os.getenv("GEMINI_API_KEY", ""))
         openai_key_input = st.text_input("OpenAI API Key:", type="password", value=os.getenv("OPENAI_API_KEY", ""))
@@ -232,7 +231,7 @@ with col_left:
 
     if source_image:
         st.image(source_image, caption="Fotografía de entrada proporcionada", use_container_width=True)
-        with st.expander("🔍 Vista de Preprocesamiento y ControlNet Canny", expanded=False):
+        with st.expander("Vista de Preprocesamiento y ControlNet Canny", expanded=False):
             preprocessed = st.session_state.engine.preprocess_face(source_image)
             edges = st.session_state.engine.extract_controlnet_edges(preprocessed)
             col_c1, col_c2 = st.columns(2)
@@ -243,7 +242,7 @@ with col_left:
 
     st.markdown("---")
 
-    generate_clicked = st.button("🚀 Generar Variaciones Visuales", type="primary", use_container_width=True)
+    generate_clicked = st.button("Generar Variaciones Visuales", type="primary", use_container_width=True)
 
     if generate_clicked:
         if not source_image:
@@ -270,7 +269,7 @@ with col_left:
                 elapsed = time.time() - start_time
 
                 if not safety_res.is_safe:
-                    st.error(f"❌ {safety_res.warning_message}")
+                    st.error(safety_res.warning_message)
                 else:
                     st.session_state.variations = variations
                     st.success(f"Se generaron {len(variations)} variaciones exitosamente en {elapsed:.2f} s.")
@@ -280,11 +279,11 @@ with col_right:
     st.subheader("2. Variaciones Generadas y Feedback Humano (Human-in-the-Loop)")
 
     if not st.session_state.variations:
-        st.info("👈 Presione el botón azul **'Generar Variaciones Visuales'** en el panel izquierdo para producir las opciones de fotos profesionales.")
+        st.info("Presione el botón 'Generar Variaciones Visuales' en el panel izquierdo para producir las opciones de fotos profesionales.")
     else:
         st.caption(
-            f"Mostrando {len(st.session_state.variations)} variaciones bajo el **{current_mode.value}**. "
-            "Cada variación inicia en estado **Pendiente**. Haga clic en **Aceptar** o **Rechazar** para registrar su decisión humana:"
+            f"Mostrando {len(st.session_state.variations)} variaciones bajo el {current_mode.value}. "
+            "Cada variación inicia en estado Pendiente. Haga clic en Aceptar o Rechazar para registrar su decisión humana:"
         )
 
         for idx, var in enumerate(st.session_state.variations):
@@ -296,10 +295,10 @@ with col_right:
 
                 with c_meta:
                     st.markdown(f"**{var.title}**")
-                    st.markdown(f"📱 **Plataforma:** `{var.platform}` | 👔 **Formalidad:** `{var.formality}`")
-                    st.markdown(f"💡 **Iluminación:** {var.recommended_lighting}")
-                    st.markdown(f"🏢 **Fondo:** {var.recommended_background}")
-                    st.markdown(f"👔 **Vestimenta:** {var.recommended_attire}")
+                    st.markdown(f"**Plataforma:** `{var.platform}` | **Formalidad:** `{var.formality}`")
+                    st.markdown(f"**Iluminación:** {var.recommended_lighting}")
+                    st.markdown(f"**Fondo:** {var.recommended_background}")
+                    st.markdown(f"**Vestimenta:** {var.recommended_attire}")
 
                     with st.expander("Detalles del Prompt Técnico"):
                         st.caption(f"**Prompt:** {var.prompt_used}")
@@ -310,11 +309,11 @@ with col_right:
                     is_accepted = curr_decision.get("accepted")
 
                     if is_accepted is True:
-                        st.success("✅ Decisión: ACEPTADA")
+                        st.success("Decisión: Aceptada")
                     elif is_accepted is False:
-                        st.error("❌ Decisión: RECHAZADA")
+                        st.error("Decisión: Rechazada")
                     else:
-                        st.warning("⏳ Decisión: PENDIENTE")
+                        st.warning("Decisión: Pendiente")
 
                     col_btn_acc, col_btn_rej = st.columns(2)
                     with col_btn_acc:
@@ -385,7 +384,7 @@ with col_expl:
 
     all_decisions_list = list(st.session_state.decisions.values())
 
-    if st.button("🧠 Generar Explicación con Agente IA", type="secondary", use_container_width=True):
+    if st.button("Generar Explicación con Agente IA", type="secondary", use_container_width=True):
         if not all_decisions_list:
             st.warning("Primero debe calificar o presionar 'Aceptar' / 'Rechazar' en al menos una imagen generada.")
         else:
@@ -424,7 +423,7 @@ with col_metrics:
     m3.metric("Calificación Promedio", f"{current_metrics.average_rating:.2f} / 5.0")
     m4.metric("Diversidad Visual", f"{current_metrics.visual_diversity_score:.2f}")
 
-    st.caption(f"📁 Persistencia en tiempo real: `data/processed/user_decisions.json` ({len(all_decisions_list)} registros)")
+    st.caption(f"Persistencia en tiempo real: `data/processed/user_decisions.json` ({len(all_decisions_list)} registros)")
 
     with open(DECISIONS_FILEPATH, "w", encoding="utf-8") as f:
         import json
@@ -434,7 +433,7 @@ with col_metrics:
         json_data = f.read()
 
     st.download_button(
-        label="📥 Descargar user_decisions.json",
+        label="Descargar user_decisions.json",
         data=json_data,
         file_name="user_decisions.json",
         mime="application/json",
