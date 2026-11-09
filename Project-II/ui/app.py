@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import requests
 import streamlit as st
 from PIL import Image
 
@@ -47,6 +48,12 @@ def initialize_session_state() -> None:
         st.session_state.agent_explanation = None
     if "engine" not in st.session_state:
         st.session_state.engine = GenerationEngine(mode=EngineMode.INTERMEDIATE)
+    if "gpu_backend_url" not in st.session_state:
+        st.session_state.gpu_backend_url = "http://localhost:8000"
+    if "gpu_connected" not in st.session_state:
+        st.session_state.gpu_connected = False
+    if "gpu_device_name" not in st.session_state:
+        st.session_state.gpu_device_name = ""
 
 
 initialize_session_state()
@@ -95,11 +102,41 @@ with st.sidebar:
 
     engine_mode_choice = st.radio(
         "Nivel Técnico del Motor Generativo:",
-        options=[EngineMode.INTERMEDIATE.value, EngineMode.BASIC.value],
+        options=[
+            EngineMode.INTERMEDIATE.value,
+            EngineMode.REMOTE_GPU.value,
+            EngineMode.BASIC.value,
+        ],
         index=0,
-        help="Nivel Intermedio: Detección facial + ControlNet Canny + síntesis de atributos. Nivel Básico: API o difusión directa.",
+        help="Nivel Intermedio: Detección facial + ControlNet Canny + síntesis de atributos. Servidor GPU: Conexión a Colab/MV con difusión real.",
     )
-    current_mode = EngineMode.INTERMEDIATE if "Intermedio" in engine_mode_choice else EngineMode.BASIC
+
+    if "Servidor GPU" in engine_mode_choice:
+        current_mode = EngineMode.REMOTE_GPU
+        st.session_state.gpu_backend_url = st.text_input(
+            "URL del Servidor GPU (Colab / MV):",
+            value=st.session_state.gpu_backend_url,
+            help="Ejemplo: https://xyz.trycloudflare.com o http://123.45.67.89:8000",
+        )
+        if st.button("🔌 Probar Conexión GPU", use_container_width=True):
+            try:
+                resp = requests.get(f"{st.session_state.gpu_backend_url.rstrip('/')}/health", timeout=6)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    st.session_state.gpu_connected = True
+                    st.session_state.gpu_device_name = data.get("device_name", "GPU Conectada")
+                    st.success(f"🟢 Conectado: {st.session_state.gpu_device_name}")
+                else:
+                    st.session_state.gpu_connected = False
+                    st.error("Servidor no disponible.")
+            except Exception as exc:
+                st.session_state.gpu_connected = False
+                st.error(f"Error de conexión: {str(exc)}")
+    elif "Intermedio" in engine_mode_choice:
+        current_mode = EngineMode.INTERMEDIATE
+    else:
+        current_mode = EngineMode.BASIC
+
     st.session_state.engine.mode = current_mode
 
     st.divider()
@@ -195,15 +232,14 @@ with col_left:
 
     if source_image:
         st.image(source_image, caption="Fotografía de entrada proporcionada", use_container_width=True)
-        if current_mode == EngineMode.INTERMEDIATE:
-            with st.expander("🔍 Vista de Preprocesamiento y ControlNet Canny", expanded=False):
-                preprocessed = st.session_state.engine.preprocess_face(source_image)
-                edges = st.session_state.engine.extract_controlnet_edges(preprocessed)
-                col_c1, col_c2 = st.columns(2)
-                with col_c1:
-                    st.image(preprocessed, caption="Rostro centrado / 512x512", use_container_width=True)
-                with col_c2:
-                    st.image(edges, caption="Estructura Canny (ControlNet)", use_container_width=True)
+        with st.expander("🔍 Vista de Preprocesamiento y ControlNet Canny", expanded=False):
+            preprocessed = st.session_state.engine.preprocess_face(source_image)
+            edges = st.session_state.engine.extract_controlnet_edges(preprocessed)
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                st.image(preprocessed, caption="Rostro centrado / 512x512", use_container_width=True)
+            with col_c2:
+                st.image(edges, caption="Estructura Canny (ControlNet)", use_container_width=True)
 
     st.markdown("---")
 
@@ -217,12 +253,20 @@ with col_left:
         else:
             with st.spinner("Procesando transformaciones con el motor generativo..."):
                 start_time = time.time()
-                variations, safety_res = st.session_state.engine.generate_batch(
-                    source_image,
-                    selected_preset_ids,
-                    custom_prompt=custom_prompt_input,
-                    mode=current_mode,
-                )
+                if current_mode == EngineMode.REMOTE_GPU:
+                    variations, safety_res = st.session_state.engine.generate_via_remote_gpu(
+                        source_image,
+                        selected_preset_ids,
+                        backend_url=st.session_state.gpu_backend_url,
+                        custom_prompt=custom_prompt_input,
+                    )
+                else:
+                    variations, safety_res = st.session_state.engine.generate_batch(
+                        source_image,
+                        selected_preset_ids,
+                        custom_prompt=custom_prompt_input,
+                        mode=current_mode,
+                    )
                 elapsed = time.time() - start_time
 
                 if not safety_res.is_safe:

@@ -45,6 +45,7 @@ Project-II/
 │   ├── config.py                   # Catálogo de presets, paquetes y plantillas de prompts
 │   ├── safety.py                   # Filtro ético y validador de términos prohibidos
 │   ├── generator.py                # Motor generativo (Niveles Intermedio y Básico)
+│   ├── gpu_server.py               # Servidor FastAPI para inferencia GPU en Colab o VM
 │   ├── agent.py                    # Agente LLM explicador de decisiones de usuario
 │   └── evaluator.py                # Métricas cuantitativas y cualitativas de evaluación
 │
@@ -71,6 +72,10 @@ En cumplimiento con la sección 2.3 del enunciado y las indicaciones de los doce
 ### 3.2 Nivel Básico (API / Difusión Directa) — Respaldo y Contingencia
 - Permite la interacción directa mediante APIs preentrenadas (vía Hugging Face Inference API o endpoints compatibles con Stable Diffusion).
 - Opera como mecanismo de tolerancia a fallos cuando no se cuenta con GPU de alta memoria de video (VRAM) local, garantizando ejecución fluida y tiempo de respuesta inmediato.
+
+### 3.3 Servidor GPU Remoto (Google Colab / Máquina Virtual) — Inferencia Real
+- Permite conectar la interfaz de Streamlit con un backend FastAPI (`src/gpu_server.py`) corriendo en una máquina con tarjeta gráfica NVIDIA (GPU T4 en Google Colab o una Máquina Virtual en la nube).
+- El servidor ejecuta el pipeline completo de `diffusers` con `lllyasviel/control_v11p_sd15_canny` y `runwayml/stable-diffusion-v1-5`, devolviendo retratos fotorrealistas con cambio completo de vestimenta, iluminación y fondos corporativos reales.
 
 ---
 
@@ -200,3 +205,32 @@ OPENAI_API_KEY=su_clave_de_openai
 ```
 
 *Nota: Si no se configuran claves de API, el sistema utilizará automáticamente el Agente Analítico Experto Grupo 7 sin ninguna interrupción.*
+
+### 9.4 Despliegue del Backend GPU en Google Colab o Máquina Virtual (VM)
+
+Para generar variaciones fotorrealistas reales con Stable Diffusion y ControlNet Canny sin sobrecargar la computadora personal:
+
+#### Opción 1: En Google Colab (Gratis con GPU T4)
+1. Abra el notebook [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) en Google Colab.
+2. Active la GPU gratuita en *Entorno de ejecución > Cambiar tipo de entorno > GPU T4*.
+3. Ejecute las celdas para instalar dependencias y levantar el servidor FastAPI con túnel Cloudflare.
+4. Copie la URL pública generada (ej: `https://xxxx.trycloudflare.com`).
+5. En su interfaz local de Streamlit, seleccione en la barra lateral el modo **"Servidor GPU Remoto (Google Colab / MV)"**, pegue la URL y presione **"🔌 Probar Conexión GPU"**.
+
+#### Opción 2: En una Máquina Virtual en la Nube (GCP / RunPod / AWS)
+1. Cree una instancia con GPU NVIDIA (por ejemplo, T4 o L4 en Google Cloud o RunPod).
+2. Clone el repositorio y descargue dependencias:
+   ```bash
+   git clone https://github.com/KarTaGo124/Planning-Decision-Making-AI.git
+   cd Planning-Decision-Making-AI/Project-II
+   pip install -r requirements.txt
+   pip install diffusers transformers accelerate controlnet_aux
+   ```
+3. Inicie el servidor GPU en el puerto 8000:
+   ```bash
+   python -m uvicorn src.gpu_server:app --host 0.0.0.0 --port 8000
+   ```
+4. O ejecute directamente la aplicación de Streamlit en la VM abriendo el puerto 8501 en el firewall para acceso público web:
+   ```bash
+   streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
+   ```
