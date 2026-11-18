@@ -1,0 +1,212 @@
+{
+  "summary": {
+    "face_box_512": [
+      115,
+      75,
+      284,
+      284
+    ],
+    "reference_L": 42.77,
+    "groups": {
+      "nivel_intermedio_controlnet": {
+        "n": 5,
+        "mean_seconds": 2.88,
+        "mean_delta_L": -0.43,
+        "mean_delta_E": 1.95,
+        "mean_detail": 102.5,
+        "pairwise_diversity": 0.0378
+      },
+      "nivel_basico_img2img": {
+        "n": 5,
+        "mean_seconds": 2.28,
+        "mean_delta_L": -0.44,
+        "mean_delta_E": 2.3,
+        "mean_detail": 101.7,
+        "pairwise_diversity": 0.041
+      },
+      "barrido_strength": {
+        "n": 3,
+        "mean_seconds": 3.9,
+        "mean_delta_L": 0.95,
+        "mean_delta_E": 2.92,
+        "mean_detail": 102.4,
+        "pairwise_diversity": 0.0359
+      },
+      "comparacion_lora": {
+        "n": 2,
+        "mean_seconds": 3.89,
+        "mean_delta_L": 1.11,
+        "mean_delta_E": 2.35,
+        "mean_detail": 100.1,
+        "pairwise_diversity": null
+      }
+    }
+  },
+  "images": [
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var1_linkedin_formal.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.42,
+      "seconds": 2.778,
+      "delta_L": -0.14,
+      "delta_E": 2.85,
+      "detail": 94.4,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var2_linkedin_business_casual.png",
+      "preset_id": "linkedin_business_casual",
+      "strength": 0.45,
+      "seconds": 2.869,
+      "delta_L": -0.08,
+      "delta_E": 1.74,
+      "detail": 104.6,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var3_linkedin_smart_casual.png",
+      "preset_id": "linkedin_smart_casual",
+      "strength": 0.48,
+      "seconds": 3.125,
+      "delta_L": -0.54,
+      "delta_E": 1.59,
+      "detail": 91.9,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var4_whatsapp_business_casual.png",
+      "preset_id": "whatsapp_business_casual",
+      "strength": 0.43,
+      "seconds": 2.707,
+      "delta_L": 0.4,
+      "delta_E": 1.09,
+      "detail": 79.8,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var5_whatsapp_smart_casual.png",
+      "preset_id": "whatsapp_smart_casual",
+      "strength": 0.45,
+      "seconds": 2.913,
+      "delta_L": -1.78,
+      "delta_E": 2.46,
+      "detail": 141.7,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var1_linkedin_formal.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.42,
+      "seconds": 2.116,
+      "delta_L": 0.12,
+      "delta_E": 3.46,
+      "detail": 94.5,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var2_linkedin_business_casual.png",
+      "preset_id": "linkedin_business_casual",
+      "strength": 0.45,
+      "seconds": 2.306,
+      "delta_L": -0.29,
+      "delta_E": 1.89,
+      "detail": 120.0,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var3_linkedin_smart_casual.png",
+      "preset_id": "linkedin_smart_casual",
+      "strength": 0.48,
+      "seconds": 2.5,
+      "delta_L": -0.86,
+      "delta_E": 2.06,
+      "detail": 85.6,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var4_whatsapp_business_casual.png",
+      "preset_id": "whatsapp_business_casual",
+      "strength": 0.43,
+      "seconds": 2.143,
+      "delta_L": 0.57,
+      "delta_E": 1.42,
+      "detail": 76.5,
+      "lora_active": true
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var5_whatsapp_smart_casual.png",
+      "preset_id": "whatsapp_smart_casual",
+      "strength": 0.45,
+      "seconds": 2.327,
+      "delta_L": -1.76,
+      "delta_E": 2.65,
+      "detail": 131.8,
+      "lora_active": true
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_045.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.45,
+      "seconds": 2.993,
+      "delta_L": 0.11,
+      "delta_E": 2.73,
+      "detail": 95.7,
+      "lora_active": true
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_060.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 3.978,
+      "delta_L": 1.11,
+      "delta_E": 2.5,
+      "detail": 102.5,
+      "lora_active": true
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_075.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.75,
+      "seconds": 4.742,
+      "delta_L": 1.64,
+      "delta_E": 3.54,
+      "detail": 108.9,
+      "lora_active": true
+    },
+    {
+      "group": "comparacion_lora",
+      "file": "comparacion_lora/sin_lora.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 3.678,
+      "delta_L": 1.11,
+      "delta_E": 2.21,
+      "detail": 97.7,
+      "lora_active": false
+    },
+    {
+      "group": "comparacion_lora",
+      "file": "comparacion_lora/con_lora.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 4.098,
+      "delta_L": 1.11,
+      "delta_E": 2.5,
+      "detail": 102.5,
+      "lora_active": true
+    }
+  ]
+}

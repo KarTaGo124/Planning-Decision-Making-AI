@@ -13,6 +13,7 @@
         "mean_seconds": 2.61,
         "mean_delta_L": -0.39,
         "mean_delta_E": 1.87,
+        "mean_detail": 101.8,
         "pairwise_diversity": 0.0363
       },
       "nivel_basico_img2img": {
@@ -20,6 +21,7 @@
         "mean_seconds": 1.96,
         "mean_delta_L": -0.35,
         "mean_delta_E": 2.14,
+        "mean_detail": 100.4,
         "pairwise_diversity": 0.0397
       },
       "barrido_strength": {
@@ -27,6 +29,7 @@
         "mean_seconds": 3.43,
         "mean_delta_L": 0.91,
         "mean_delta_E": 2.64,
+        "mean_detail": 97.8,
         "pairwise_diversity": 0.0337
       },
       "comparacion_lora": {
@@ -34,6 +37,7 @@
         "mean_seconds": 3.56,
         "mean_delta_L": 1.11,
         "mean_delta_E": 2.21,
+        "mean_detail": 97.7,
         "pairwise_diversity": null
       }
     }
@@ -46,7 +50,9 @@
       "strength": 0.42,
       "seconds": 2.645,
       "delta_L": -0.16,
-      "delta_E": 2.59
+      "delta_E": 2.59,
+      "detail": 92.3,
+      "lora_active": false
     },
     {
       "group": "nivel_intermedio_controlnet",
@@ -55,7 +61,9 @@
       "strength": 0.45,
       "seconds": 2.586,
       "delta_L": -0.0,
-      "delta_E": 1.54
+      "delta_E": 1.54,
+      "detail": 104.6,
+      "lora_active": false
     },
     {
       "group": "nivel_intermedio_controlnet",
@@ -64,7 +72,9 @@
       "strength": 0.48,
       "seconds": 2.791,
       "delta_L": -0.51,
-      "delta_E": 1.58
+      "delta_E": 1.58,
+      "detail": 91.5,
+      "lora_active": false
     },
     {
       "group": "nivel_intermedio_controlnet",
@@ -73,7 +83,9 @@
       "strength": 0.43,
       "seconds": 2.4,
       "delta_L": 0.43,
-      "delta_E": 1.13
+      "delta_E": 1.13,
+      "detail": 79.6,
+      "lora_active": false
     },
     {
       "group": "nivel_intermedio_controlnet",
@@ -82,7 +94,9 @@
       "strength": 0.45,
       "seconds": 2.629,
       "delta_L": -1.7,
-      "delta_E": 2.53
+      "delta_E": 2.53,
+      "detail": 140.8,
+      "lora_active": false
     },
     {
       "group": "nivel_basico_img2img",
@@ -91,7 +105,9 @@
       "strength": 0.42,
       "seconds": 1.829,
       "delta_L": 0.12,
-      "delta_E": 3.14
+      "delta_E": 3.14,
+      "detail": 90.2,
+      "lora_active": false
     },
     {
       "group": "nivel_basico_img2img",
@@ -100,7 +116,9 @@
       "strength": 0.45,
       "seconds": 1.979,
       "delta_L": -0.06,
-      "delta_E": 1.66
+      "delta_E": 1.66,
+      "detail": 120.0,
+      "lora_active": false
     },
     {
       "group": "nivel_basico_img2img",
@@ -109,7 +127,9 @@
       "strength": 0.48,
       "seconds": 2.136,
       "delta_L": -0.73,
-      "delta_E": 1.88
+      "delta_E": 1.88,
+      "detail": 83.6,
+      "lora_active": false
     },
     {
       "group": "nivel_basico_img2img",
@@ -118,7 +138,9 @@
       "strength": 0.43,
       "seconds": 1.838,
       "delta_L": 0.55,
-      "delta_E": 1.38
+      "delta_E": 1.38,
+      "detail": 78.2,
+      "lora_active": false
     },
     {
       "group": "nivel_basico_img2img",
@@ -127,7 +149,9 @@
       "strength": 0.45,
       "seconds": 2.005,
       "delta_L": -1.64,
-      "delta_E": 2.63
+      "delta_E": 2.63,
+      "detail": 129.9,
+      "lora_active": false
     },
     {
       "group": "barrido_strength",
@@ -136,7 +160,9 @@
       "strength": 0.45,
       "seconds": 2.668,
       "delta_L": 0.09,
-      "delta_E": 2.45
+      "delta_E": 2.45,
+      "detail": 93.7,
+      "lora_active": false
     },
     {
       "group": "barrido_strength",
@@ -145,7 +171,9 @@
       "strength": 0.6,
       "seconds": 3.491,
       "delta_L": 1.11,
-      "delta_E": 2.21
+      "delta_E": 2.21,
+      "detail": 97.7,
+      "lora_active": false
     },
     {
       "group": "barrido_strength",
@@ -154,7 +182,9 @@
       "strength": 0.75,
       "seconds": 4.143,
       "delta_L": 1.54,
-      "delta_E": 3.27
+      "delta_E": 3.27,
+      "detail": 102.0,
+      "lora_active": false
     },
     {
       "group": "comparacion_lora",
@@ -163,7 +193,9 @@
       "strength": 0.6,
       "seconds": 3.55,
       "delta_L": 1.11,
-      "delta_E": 2.21
+      "delta_E": 2.21,
+      "detail": 97.7,
+      "lora_active": false
     },
     {
       "group": "comparacion_lora",
@@ -172,7 +204,9 @@
       "strength": 0.6,
       "seconds": 3.563,
       "delta_L": 1.11,
-      "delta_E": 2.21
+      "delta_E": 2.21,
+      "detail": 97.7,
+      "lora_active": false
     }
   ]
 }

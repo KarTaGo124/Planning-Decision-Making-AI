@@ -57,7 +57,7 @@ def initialize_session_state() -> None:
     if "engine" not in st.session_state:
         st.session_state.engine = GenerationEngine(mode=EngineMode.LOCAL)
     if "gpu_backend_url" not in st.session_state:
-        st.session_state.gpu_backend_url = "http://localhost:8000"
+        st.session_state.gpu_backend_url = os.getenv("GPU_SERVER_URL", "")
     if "gpu_connected" not in st.session_state:
         st.session_state.gpu_connected = False
     if "gpu_device_name" not in st.session_state:
@@ -262,8 +262,9 @@ with st.sidebar:
         st.session_state.gpu_backend_url = st.text_input(
             "URL del Servidor GPU (Colab / MV):",
             value=st.session_state.gpu_backend_url,
-            help="Ejemplo: https://xyz.trycloudflare.com o http://123.45.67.89:8000",
-        )
+            placeholder="https://....trycloudflare.com",
+            help="URL que muestra la última celda del notebook de Colab, o la de una máquina virtual (http://IP:8000).",
+        ).strip()
         if st.button("Probar Conexión GPU", use_container_width=True):
             try:
                 resp = requests.get(f"{st.session_state.gpu_backend_url.rstrip('/')}/health", timeout=6)
@@ -391,7 +392,9 @@ with col_left:
     generate_clicked = st.button("Generar Variaciones Visuales", type="primary", use_container_width=True)
 
     if generate_clicked:
-        if not source_image:
+        if current_mode in GPU_MODES and not st.session_state.gpu_backend_url:
+            st.error("Ingrese en la barra lateral la URL del servidor GPU (termina en trycloudflare.com) y presione Probar Conexión GPU.")
+        elif not source_image:
             st.error("Por favor, suba una fotografía o active la imagen de demostración.")
         elif not selected_preset_ids:
             st.error("Debe seleccionar al menos un estilo o paquete.")

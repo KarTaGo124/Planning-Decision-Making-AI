@@ -12,6 +12,7 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parents[1]
 RESULTS = PROJECT_ROOT / "data" / "processed" / "colab_v1_img2img_sin_preservacion"
+RESULTS_LORA = PROJECT_ROOT / "data" / "processed" / "colab_v2"
 CAPTURES = Path(sys.argv[1]) if len(sys.argv) > 1 else None
 FIGURES = HERE / "figuras"
 FIGURES.mkdir(exist_ok=True)
@@ -84,6 +85,7 @@ def copy_results() -> None:
     shutil.copy(RESULTS / "resumen_nivel_intermedio_controlnet.png", FIGURES / "fig3_intermedio.png")
     shutil.copy(RESULTS / "resumen_nivel_basico_img2img.png", FIGURES / "fig4_basico.png")
     shutil.copy(RESULTS / "resumen_barrido_strength.png", FIGURES / "fig5_barrido.png")
+    shutil.copy(RESULTS_LORA / "resumen_comparacion_lora.png", FIGURES / "fig9_lora.png")
 
 
 def captures() -> None:

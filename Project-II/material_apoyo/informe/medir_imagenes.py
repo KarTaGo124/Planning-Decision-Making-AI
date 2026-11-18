@@ -12,8 +12,9 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.generator import GenerationEngine
 
-RESULTS = PROJECT_ROOT / "data" / "processed" / "colab_v1_img2img_sin_preservacion"
-OUTPUT = Path(__file__).resolve().parent / "datos" / "metricas_imagenes.json"
+RUN = sys.argv[1] if len(sys.argv) > 1 else "colab_v1_img2img_sin_preservacion"
+RESULTS = PROJECT_ROOT / "data" / "processed" / RUN
+OUTPUT = Path(__file__).resolve().parent / "datos" / (sys.argv[2] if len(sys.argv) > 2 else "metricas_imagenes.json")
 
 
 def load(path: Path) -> np.ndarray:
@@ -30,6 +31,11 @@ def lab_mean(region: np.ndarray) -> np.ndarray:
     lab[..., 0] *= 100.0 / 255.0
     lab[..., 1:] -= 128.0
     return lab.reshape(-1, 3).mean(axis=0)
+
+
+def detail(image: np.ndarray) -> float:
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    return float(cv2.Laplacian(gray, cv2.CV_64F).var())
 
 
 def pairwise_diversity(images) -> float:
@@ -58,6 +64,8 @@ def main() -> None:
             "seconds": record["elapsed_seconds"],
             "delta_L": round(float(delta[0]), 2),
             "delta_E": round(float(np.linalg.norm(delta)), 2),
+            "detail": round(detail(image), 1),
+            "lora_active": record.get("lora_active"),
         }
         rows.append(row)
         groups.setdefault(record["group"], []).append((row, image))
@@ -70,6 +78,7 @@ def main() -> None:
             "mean_seconds": round(float(np.mean([r["seconds"] for r in group_rows])), 2),
             "mean_delta_L": round(float(np.mean([r["delta_L"] for r in group_rows])), 2),
             "mean_delta_E": round(float(np.mean([r["delta_E"] for r in group_rows])), 2),
+            "mean_detail": round(float(np.mean([r["detail"] for r in group_rows])), 1),
             "pairwise_diversity": pairwise_diversity([img for _, img in items]) if len(items) > 2 else None,
         }
 

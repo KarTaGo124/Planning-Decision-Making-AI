@@ -375,7 +375,13 @@ class GenerationEngine:
                     warning_message=f"El servidor GPU respondió con código {response.status_code}. {detail}".strip(),
                 )
         except Exception as exc:
-            return [], SafetyCheckResult(is_safe=False, warning_message=f"Error al conectar con servidor GPU ({str(exc)}).")
+            return [], SafetyCheckResult(
+                is_safe=False,
+                warning_message=(
+                    "No se pudo conectar con el servidor GPU. Verifique que la URL sea la que muestra "
+                    f"la última celda del notebook y que esa celda siga en ejecución. Detalle: {type(exc).__name__}."
+                ),
+            )
 
     def generate_from_package(
         self,

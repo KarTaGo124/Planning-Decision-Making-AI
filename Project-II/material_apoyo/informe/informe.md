@@ -7,7 +7,7 @@
 <b>Repositorio:</b> https://github.com/KarTaGo124/Planning-Decision-Making-AI (carpeta <code>Project-II</code>)</p>
 </div>
 
-**Resumen.** Construimos un sistema que recibe una foto del usuario, genera cinco variaciones de retrato profesional adaptadas a LinkedIn, WhatsApp corporativo o GitHub, deja que el usuario acepte o rechace cada una y usa un agente basado en un modelo de lenguaje para explicar qué eligió y por qué. Implementamos dos formas de generar: Stable Diffusion 1.5 con ControlNet Canny en modo img2img (nivel intermedio) y Stable Diffusion 1.5 img2img sin ControlNet (nivel básico), ambas en una GPU T4 gratuita de Google Colab y conectadas a una interfaz Streamlit. Medimos latencia, diversidad, cambio de identidad y fidelidad del agente. El agente alcanzó 100 % de fidelidad en 10 corridas. El hallazgo principal es una limitación: con la intensidad necesaria para cambiar la ropa, el modelo altera rasgos de identidad como la textura del pelo. Lo documentamos como sesgo y proponemos la mejora.
+**Resumen.** Construimos un sistema que recibe una foto del usuario, genera cinco variaciones de retrato profesional adaptadas a LinkedIn, WhatsApp corporativo o GitHub, deja que el usuario acepte o rechace cada una y usa un agente basado en un modelo de lenguaje para explicar qué eligió y por qué. Implementamos dos formas de generar: Stable Diffusion 1.5 con ControlNet Canny en modo img2img (nivel intermedio) y Stable Diffusion 1.5 img2img sin ControlNet (nivel básico), ambas con un LoRA público, en una GPU T4 gratuita de Google Colab y conectadas a una interfaz Streamlit. Medimos latencia, diversidad, cambio de identidad y fidelidad del agente. El agente alcanzó 100 % de fidelidad en 10 corridas. El hallazgo principal es una limitación: con la intensidad necesaria para cambiar la ropa, el modelo altera rasgos de identidad como la textura del pelo. Lo documentamos como sesgo y proponemos la mejora.
 
 ## 1. Problema y contexto
 
@@ -84,7 +84,7 @@ Los textos de condicionamiento están en inglés, que es el idioma de entrenamie
 
 **Personalización con LoRA.** Por las restricciones de acceso a Khipu, el docente indicó priorizar la personalización con LoRA en plataformas gratuitas. Integramos el LoRA público `OedoSoldier/detail-tweaker-lora` (`add_detail.safetensors`, escala 0,6), que mejora el nivel de detalle en SD 1.5. LoRA congela los pesos del modelo y aprende una actualización de bajo rango, ΔW = BA, sobre las capas de atención. Por eso se carga en segundos y casi no ocupa memoria. El adaptador se puede activar o desactivar en cada petición para comparar resultados.
 
-El LoRA está integrado, pero en la corrida final no cargó por un conflicto de versiones de torchao en Colab. Colab trae preinstalada la versión 0.10.0 y la librería `peft` exige una superior a 0.16.0. Por eso los resultados de la sección 7 son sin LoRA. El notebook final desinstala `torchao` antes de cargar los modelos. Verificamos localmente que, sin `torchao`, el adaptador carga sobre la arquitectura de SD 1.5: inyecta 384 capas en la UNet y 144 en el codificador de texto, y se activa y desactiva sin errores.
+En la primera corrida en Colab el LoRA no cargó por un conflicto de versiones de torchao: Colab trae preinstalada la versión 0.10.0 y la librería `peft` exige una superior a 0.16.0. El notebook final desinstala `torchao` antes de cargar los modelos. Con ese cambio, en la segunda corrida el LoRA cargó (384 capas en la UNet y 144 en el codificador de texto) y se aplicó a todas las variaciones. La sección 7 compara ambas corridas.
 
 **Despliegue.** El notebook `controlnet_portrait_pipeline.ipynb` se ejecuta con "Ejecutar todas". Instala dependencias, sube la foto, genera los experimentos de la sección 7, descarga un zip con las imágenes y métricas, y deja el servidor GPU publicado con una URL de Cloudflare que se pega en la interfaz.
 
@@ -125,35 +125,48 @@ La métrica se calcula sobre cada explicación y se muestra al usuario. No es un
 
 ## 7. Evaluación y resultados
 
-Todas las mediciones se hicieron en una Tesla T4, con la foto B, el paquete de 5 variaciones, 25 pasos y semillas fijas. Los scripts y los datos crudos están en `material_apoyo/informe/`.
+Todas las mediciones se hicieron en una Tesla T4, con la foto B, el paquete de 5 variaciones, 25 pasos y semillas fijas. Hicimos dos corridas con la misma configuración: la primera sin LoRA, por el conflicto descrito en la sección 4, y la segunda con LoRA. Los scripts y los datos crudos están en `material_apoyo/informe/`.
 
-| Métrica | Definición | Nivel intermedio | Nivel básico |
-|---|---|---|---|
-| Latencia en la GPU | Segundos por imagen | 2,61 s | 1,96 s |
-| Latencia extremo a extremo | Lote de 5 desde la app, con red | 25–35 s | — |
-| Diversidad visual | Diferencia media absoluta entre pares de imágenes (0–1) | 0,036 | 0,040 |
-| Cambio de luminosidad de la piel | ΔL\* medio en el centro de la cara (escala 0–100) | −0,39 | −0,35 |
-| Diferencia de color de la piel | ΔE medio en el centro de la cara | 1,87 | 2,14 |
-| Imágenes marcadas por el filtro de SD | De 15 generadas | 0 | 0 |
+| Métrica | Definición | Intermedio sin LoRA | Intermedio con LoRA | Básico sin LoRA | Básico con LoRA |
+|---|---|---|---|---|---|
+| Latencia en la GPU | Segundos por imagen | 2,61 s | 2,88 s | 1,96 s | 2,28 s |
+| Diversidad visual | Diferencia media absoluta entre pares de imágenes (0–1) | 0,036 | 0,038 | 0,040 | 0,041 |
+| Detalle | Varianza del Laplaciano (entrada: 86,9) | 101,8 | 102,5 | 100,4 | 101,7 |
+| Cambio de luminosidad de la piel | ΔL\* medio en el centro de la cara (escala 0–100) | −0,39 | −0,43 | −0,35 | −0,44 |
+| Diferencia de color de la piel | ΔE medio en el centro de la cara | 1,87 | 1,95 | 2,14 | 2,30 |
 
-<figure><img src="figuras/fig3_intermedio.png" style="width:100%"><figcaption>Figura 5. Nivel intermedio (ControlNet Canny + img2img): entrada y las 5 variaciones del paquete corporativo. El nivel básico se muestra en el Anexo A.</figcaption></figure>
+Ninguna de las 30 imágenes fue marcada por el filtro de contenido de SD. Desde la app, un lote de 5 tarda entre 25 y 35 s de extremo a extremo, contando la red.
+
+<figure><img src="figuras/fig3_intermedio.png" style="width:100%"><figcaption>Figura 5. Nivel intermedio (ControlNet Canny + img2img) sin LoRA: entrada y las 5 variaciones del paquete corporativo. Con LoRA el resultado es prácticamente igual. El nivel básico se muestra en el Anexo A.</figcaption></figure>
 
 **Calidad y diversidad.**
 
 - **Calidad:** las imágenes son fotorrealistas, sin artefactos graves ni deformaciones faciales, y conservan pose, encuadre y expresión.
 - **Diversidad baja:** con *strength* entre 0,42 y 0,48 la ropa cambia poco. El color y el corte de la polera original se mantienen. Solo "Business Casual" muestra un blazer y "Smart Casual Cercano" agrega un cuello de polo; en "Formal Clásico" no aparece el terno. La diferencia media entre variaciones (0,036 a 0,040) confirma que se parecen mucho entre sí.
-- **Comparación entre métodos:** con la misma semilla, los dos niveles producen resultados muy parecidos. Con esta intensidad, la imagen de partida pesa más que el condicionamiento de ControlNet, y el nivel básico es un 25 % más rápido.
+- **Comparación entre métodos:** con la misma semilla, los dos niveles producen resultados muy parecidos. Con esta intensidad, la imagen de partida pesa más que el condicionamiento de ControlNet, y el nivel básico es entre un 21 % y un 25 % más rápido.
 
 **Intensidad frente a identidad.** El barrido de *strength* (Figura 6) muestra el compromiso central del sistema:
 
 - **Ropa:** el terno aparece a partir de 0,60.
 - **Pelo:** con esa intensidad cambia de liso a crespo. El mismo cambio aparece en 2 de las 5 variaciones del paquete ("LinkedIn Smart Casual" y "WhatsApp Business Casual") y en los dos métodos.
+- **Rasgos:** con 0,60 y 0,75 también cambian la nariz y los labios, y la persona deja de ser reconocible.
 - **Color del terno:** en "Formal Clásico", el "azul marino" del texto tiñe el pelo.
 - **Piel:** el cambio es pequeño (ΔL\* medio de −0,4 en el centro de la cara; hasta −2,2 en la cara completa con *strength* de 0,60 a 0,75). No es el efecto dominante.
 
 Interpretamos el cambio de textura del pelo como un sesgo del modelo preentrenado, coherente con estudios que documentan estereotipos demográficos en SD (Bianchi et al., 2023; Luccioni et al., 2023), y lo tratamos como la limitación principal (sección 9).
 
 <figure><img src="figuras/fig5_barrido.png" style="width:74%"><figcaption>Figura 6. Barrido de <i>strength</i> (0,45, 0,60 y 0,75) con el estilo Formal Clásico y la misma semilla.</figcaption></figure>
+
+**Efecto del LoRA.** El adaptador funciona, pero su efecto es pequeño (Figura 7):
+
+- **Detalle:** con el *strength* de los estilos (0,42 a 0,48), aumenta entre 0,7 % y 1,3 %. A 0,60 aumenta 4,9 % (de 97,7 a 102,5).
+- **Diferencia de píxeles:** en promedio, 0,4 % a 0,7 % respecto de la imagen sin LoRA.
+- **Latencia:** suma unos 0,3 s por imagen.
+- **Identidad:** no cambia el compromiso entre ropa e identidad; el pelo se altera igual con y sin LoRA.
+
+Es coherente con lo que es: un LoRA de detalle, usado con escala 0,6, que no aprendió un estilo corporativo.
+
+<figure><img src="figuras/fig9_lora.png" style="width:64%"><figcaption>Figura 7. Estilo Formal Clásico con <i>strength</i> 0,60 y la misma semilla, sin LoRA y con LoRA.</figcaption></figure>
 
 **Coherencia del agente.** Evaluamos el agente con 10 conjuntos de decisiones variadas sobre el paquete de 5 estilos:
 
@@ -175,13 +188,13 @@ La primera versión de la métrica daba 93,8 % a Gemini. Al revisar los cinco ca
 | Conexión con Colab | Cortes esporádicos del túnel de Cloudflare | Reintento automático de la petición |
 | Métrica de fidelidad | Falsos negativos con negaciones | Normalización de "no fue aceptada / rechazada" |
 | Filtro ético | Dejaba pasar variantes como "s1n r0pa" o "shirtless" | Normalización de números usados como letras y términos nuevos |
-| Corrida en Colab | El LoRA no cargó por el conflicto con `torchao` | Desinstalación de `torchao` en el notebook |
+| Primera corrida en Colab | El LoRA no cargó por el conflicto con `torchao` | Desinstalación de `torchao` en el notebook; en la segunda corrida el LoRA carga |
 
 ## 9. Limitaciones y trabajo futuro
 
 1. **Identidad frente a vestimenta.** El img2img aplicado a toda la imagen obliga a elegir entre conservar la identidad (*strength* bajo) y cambiar la ropa (*strength* alto). La mejora propuesta es usar *inpainting* con una máscara facial, que conserva los píxeles reales de la cara y el pelo y regenera solo la ropa y el fondo (Lugmayr et al., 2022), con un *strength* de 0,75 o más.
 2. **Influencia de los bordes Canny.** Los bordes fijan también el cuello de la polera original, lo que dificulta dibujar un cuello de camisa. Una alternativa es atenuar los bordes en la zona del torso.
-3. **LoRA sin evaluar en la GPU.** Falta medir su efecto en Colab con la corrección de `torchao`.
+3. **Alcance del LoRA.** El LoRA público mejora poco el detalle y no aporta un estilo de retrato corporativo. Un LoRA entrenado en Colab con retratos ejecutivos de licencia libre permitiría personalizar de verdad la vestimenta y la iluminación.
 4. **Alcance de la métrica de fidelidad.** Supone que la explicación está organizada en secciones, con la decisión antes del título, que es el formato que se pide al modelo. No evalúa la calidad de las justificaciones.
 5. **Infraestructura.** Las sesiones gratuitas de Colab expiran y el túnel cambia de URL en cada ejecución. Para la demostración se debe ejecutar el notebook poco antes.
 

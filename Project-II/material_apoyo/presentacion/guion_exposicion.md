@@ -54,7 +54,7 @@ El preprocesamiento es más importante de lo que parece. Usamos dos detectores d
 
 ### 7. Dos formas de generar sobre una GPU T4 · Matías · 1:30
 
-Implementamos dos formas de generar, como pide el enunciado. El nivel intermedio usa Stable Diffusion 1.5 con ControlNet Canny en modo img2img: los bordes de la cara condicionan la imagen con una escala de 0,85. El nivel básico usa el mismo modelo en img2img, pero sin ControlNet. En la GPU T4, el intermedio tarda 2,61 segundos por imagen y el básico 1,96. Si no hay GPU, la app tiene un respaldo con filtros de OpenCV, que no es generativo, solo para que la interfaz siga funcionando. Sobre personalización: usamos un LoRA público, detail-tweaker, con escala 0,6. El LoRA está integrado, pero en la corrida final no cargó por un conflicto de versiones de torchao en Colab: Colab trae la versión 0.10 y la librería peft exige una mayor a 0.16. El notebook ahora la desinstala, y verificamos localmente que el LoRA carga sobre la arquitectura de Stable Diffusion 1.5: 384 capas en la UNet y 144 en el codificador de texto. Los resultados que les mostraremos son sin LoRA.
+Implementamos dos formas de generar, como pide el enunciado. El nivel intermedio usa Stable Diffusion 1.5 con ControlNet Canny en modo img2img: los bordes de la cara condicionan la imagen con una escala de 0,85. El nivel básico usa el mismo modelo en img2img, pero sin ControlNet. En la GPU T4, sin LoRA, el intermedio tarda 2,61 segundos por imagen y el básico 1,96; con LoRA, 2,88 y 2,28. Si no hay GPU, la app tiene un respaldo con filtros de OpenCV, que no es generativo, solo para que la interfaz siga funcionando. Sobre personalización: usamos un LoRA público, detail-tweaker, con escala 0,6. En la primera corrida en Colab el LoRA no cargó por un conflicto de versiones de torchao: Colab trae la versión 0.10 y la librería peft exige una mayor a 0.16. El notebook ahora la desinstala, y en la segunda corrida el LoRA cargó y se aplicó a todas las variaciones. Su efecto es pequeño: aumenta el detalle entre 1 y 5 por ciento y suma unos 0,3 segundos por imagen, sin cambiar la identidad.
 
 ### 8. Interfaz: cada imagen espera la decisión humana · Matías · 0:45
 
@@ -66,7 +66,7 @@ Vamos a la demo. [Seguir los pasos de la sección «Demo en vivo» del guion.] M
 
 ### 10. Resultados: 5 variaciones por foto en segundos · Alejandro · 1:00
 
-Gracias, Matías. Estos son resultados reales de la GPU, con la misma foto y las mismas semillas para los dos métodos. Arriba, el nivel intermedio con ControlNet; abajo, el básico. En la GPU cada imagen tarda 2,61 y 1,96 segundos, respectivamente. Desde la app, el lote de cinco toma de 25 a 35 segundos, entre 5 y 7 segundos por imagen, porque incluye la red por el túnel de Cloudflare. El filtro de contenido de Stable Diffusion no marcó ninguna imagen. Pero si miran la ropa, casi no cambia: la polera sigue ahí en casi todas. Eso nos llevó al hallazgo principal.
+Gracias, Matías. Estos son resultados reales de la GPU, con la misma foto y las mismas semillas para los dos métodos. Arriba, el nivel intermedio con ControlNet; abajo, el básico. En la GPU cada imagen tarda 2,61 y 1,96 segundos sin LoRA, y unos 0,3 segundos más con LoRA. Desde la app, el lote de cinco toma de 25 a 35 segundos, entre 5 y 7 segundos por imagen, porque incluye la red por el túnel de Cloudflare. El filtro de contenido de Stable Diffusion no marcó ninguna imagen. Pero si miran la ropa, casi no cambia: la polera sigue ahí en casi todas. Eso nos llevó al hallazgo principal.
 
 ### 11. Hallazgo: más cambio de ropa, menos identidad · Alejandro · 1:25
 
@@ -82,11 +82,11 @@ En ética trabajamos en tres momentos. Antes de generar, un filtro bloquea térm
 
 ### 14. Iteraciones guiadas por pruebas · Matías · 0:45
 
-Esta tabla resume cómo las pruebas guiaron el desarrollo. Cada fila es un problema que encontramos usando el sistema y el cambio que hicimos: desde la detección de la cara y el recorte, hasta la cadena de modelos de Gemini, que bajó la espera de 68 segundos a entre 4 y 12, el reintento ante cortes del túnel, la métrica de fidelidad, el filtro ético y el conflicto de versiones que impidió cargar el LoRA.
+Esta tabla resume cómo las pruebas guiaron el desarrollo. Cada fila es un problema que encontramos usando el sistema y el cambio que hicimos: desde la detección de la cara y el recorte, hasta la cadena de modelos de Gemini, que bajó la espera de 68 segundos a entre 4 y 20, el reintento ante cortes del túnel, la métrica de fidelidad, el filtro ético y el conflicto de versiones que impidió cargar el LoRA en la primera corrida.
 
 ### 15. Conclusiones y próximos pasos · Alejandro · 1:00
 
-Para cerrar. Logramos un sistema completo: dos formas de generar en GPU con cinco variaciones por foto, una interfaz donde la persona decide imagen por imagen con un registro estructurado, un agente con 100% de fidelidad en nuestras pruebas y guardrails éticos. También encontramos su límite principal: con Stable Diffusion 1.5 en img2img, cambiar la ropa y conservar la identidad están en tensión. Los próximos pasos son el inpainting con máscara facial, confirmar el LoRA en la próxima corrida de Colab y evaluar también la calidad de las razones que da el agente. El código está en el repositorio que ven en pantalla. Muchas gracias; quedamos atentos a sus preguntas.
+Para cerrar. Logramos un sistema completo: dos formas de generar en GPU con cinco variaciones por foto, una interfaz donde la persona decide imagen por imagen con un registro estructurado, un agente con 100% de fidelidad en nuestras pruebas y guardrails éticos. También encontramos su límite principal: con Stable Diffusion 1.5 en img2img, cambiar la ropa y conservar la identidad están en tensión. Los próximos pasos son el inpainting con máscara facial, entrenar un LoRA propio de retrato corporativo y evaluar también la calidad de las razones que da el agente. El código está en el repositorio que ven en pantalla. Muchas gracias; quedamos atentos a sus preguntas.
 
 ## Demo en vivo: pasos exactos
 
@@ -98,7 +98,7 @@ Preparación, 15 a 20 minutos antes de exponer (la primera vez Colab descarga un
 4. Esperar la sección 9 y copiar la URL que termina en `.trycloudflare.com`. No cerrar la pestaña de Colab: esa celda queda corriendo.
 5. Revisar que exista el archivo `.env` con `GEMINI_API_KEY` en la raíz del repositorio de la laptop de la demo.
 6. En la laptop, doble clic en `Project-II/run_app.bat`. Se abre http://localhost:8501.
-7. En la barra lateral, en **Motor generativo**, elegir **Nivel Intermedio (ControlNet Canny + img2img, GPU)**. Pegar la URL y presionar **Probar Conexión GPU**. Debe aparecer `Conectado: Tesla T4` (si dice `LoRA no cargado`, seguir: está explicado en la diapositiva 7).
+7. En la barra lateral, en **Motor generativo**, elegir **Nivel Intermedio (ControlNet Canny + img2img, GPU)**. Pegar la URL y presionar **Probar Conexión GPU**. Debe aparecer `Conectado: Tesla T4 · LoRA activo`. Si dice `LoRA no cargado`, se puede seguir igual.
 
 Durante la demo (unos 3 minutos y medio):
 
@@ -129,7 +129,7 @@ No del todo. Con strength bajo la ropa casi no cambia y, aun así, el pelo cambi
 Con strength entre 0,42 y 0,48 ambos dependen sobre todo de la foto inicial, así que las diferencias fueron pequeñas. ControlNet está pensado para fijar la estructura de la cara cuando se sube el strength, pero no comparamos los dos métodos con strength alto: es una prueba pendiente. Cuesta 0,65 s más por imagen.
 
 **4. ¿Por qué no entrenaron un LoRA propio?**
-Por tiempo y por las restricciones de acceso a Khipu. Usamos un LoRA público. El LoRA está integrado, pero en la corrida final no cargó por un conflicto de versiones de torchao en Colab; el notebook ya lo corrige y verificamos localmente que carga.
+Por tiempo y por las restricciones de acceso a Khipu. Usamos un LoRA público de detalle. En la primera corrida no cargó por un conflicto de versiones de torchao en Colab; el notebook lo corrige y en la segunda corrida cargó. Su efecto es pequeño (1 a 5 % más de detalle), así que el siguiente paso sería entrenar uno propio con retratos corporativos.
 
 **5. ¿Cómo saben que el agente no inventa decisiones?**
 La app muestra primero la lista exacta de aceptadas y rechazadas, tomada del JSON, y aparte medimos la fidelidad de la explicación del modelo: 100% en 10 corridas. La métrica no evalúa si las razones son buenas, solo que sean consistentes con los datos, y supone una respuesta ordenada por secciones.
