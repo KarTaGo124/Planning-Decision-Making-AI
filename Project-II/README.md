@@ -7,25 +7,21 @@
 - Matías Alonso Meneses Roncal (`matias.meneses@utec.edu.pe`)  
 - Alejandro Joel Ore García (`alejandro.ore@utec.edu.pe`)  
 
-**Caso de Uso Seleccionado:** Asistente Interactivo de Retratos Profesionales Multiplataforma (LinkedIn, WhatsApp Corporativo, GitHub)  
-**Nivel Técnico Principal:** Nivel Intermedio (ControlNet Canny + *img2img* + Agente Explicador LLM + Interfaz Gráfica Streamlit)  
-**Nivel Técnico de Respaldo:** Nivel Básico (API Preentrenada / Difusión Directa y Contingencia Local)  
+**Caso de uso:** retratos profesionales para LinkedIn, WhatsApp corporativo y GitHub, generados a partir de una foto del usuario.
+**Formas de generar:**
+- **Nivel Intermedio:** Stable Diffusion 1.5 + ControlNet Canny en modo img2img.
+- **Nivel Básico:** Stable Diffusion 1.5 img2img sin ControlNet.
+
+Ambas usan el LoRA público detail-tweaker y corren en una GPU T4 de Google Colab. La interfaz es Streamlit y el agente explicador usa Gemini o un agente de reglas.
 
 ---
 
-## 1. Documentación Central y Entregables Oficiales
+## 1. Documentación y entregables
 
-### Guía de Ejecución Rápida
-* **Guía Completa de Cómo Correr Todo:** Consulte [`HOW_TO_RUN.md`](HOW_TO_RUN.md) para el paso a paso detallado de ejecución en **Google Colab (GPU Gratis)**, **Windows con 1 clic (`run_app.bat`)**, o **Máquina Virtual (MV en la nube)**, además del guión para la sustentación frente al profesor.
-
-### Entregable Final (Sustentación del Proyecto)
-* **Diapositivas Interactivas de Sustentación:** [`docs/final_submission/presentation.html`](docs/final_submission/presentation.html) *(Diseño sobrio académico con navegación por teclado y soporte para impresión PDF).*
-* **Guión de Exposición Oral:** [`docs/final_submission/presentation_script.md`](docs/final_submission/presentation_script.md) *(Guión detallado diapositiva por diapositiva en tono natural de estudiante).*
-* **Informe Técnico Final (Rúbrica 20 Pts):** [`docs/final_submission/technical_report.md`](docs/final_submission/technical_report.md) *(Documento exhaustivo cubriendo los 6 criterios de evaluación).*
-* **Diapositivas en Formato Markdown:** [`docs/final_submission/presentation.md`](docs/final_submission/presentation.md)
-
-### Guías Técnicas y Materiales del Curso
-* **Guía Técnica Integral:** [`TECHNICAL_GUIDE.md`](TECHNICAL_GUIDE.md) *(Documentación exhaustiva de arquitectura, catálogo de presets, seguridad y métricas).*
+* **Cómo ejecutar:** [`HOW_TO_RUN.md`](HOW_TO_RUN.md) (Colab, Windows con 1 clic y máquina virtual).
+* **Entrega final:** carpeta [`entregable/`](entregable/), con el informe en PDF, la presentación y `ENTREGA.txt`.
+* **Material de preparación:** [`material_apoyo/`](material_apoyo/), con la fuente del informe, el guion de la exposición y el guion del video.
+* **Guía técnica del código:** [`TECHNICAL_GUIDE.md`](TECHNICAL_GUIDE.md).
 * **Enunciado Oficial:** [`docs/guidelines/project_2_statement.pdf`](docs/guidelines/project_2_statement.pdf)
 * **Rúbrica Oficial de Evaluación:** [`docs/guidelines/project_2_rubric.pdf`](docs/guidelines/project_2_rubric.pdf)
 * **Historial de Avance 1:** [`docs/submission_1/`](docs/submission_1/)
@@ -48,25 +44,24 @@ Project-II/
 │       └── user_decisions.json    # Registro de feedback humano serializado en tiempo real
 │
 ├── docs/
-│   ├── final_submission/          # Entregables de la sustentación final
-│   │   ├── presentation.html      # Diapositivas interactivas
-│   │   ├── presentation.md        # Diapositivas en markdown
-│   │   ├── presentation_script.md # Guión de exposición oral
-│   │   └── technical_report.md    # Informe técnico final
-│   ├── guidelines/                # Enunciado y rúbrica oficial de la cátedra
-│   └── submission_1/              # Entregable histórico del avance inicial
+│   ├── final_submission/          # Apunta a entregable/
+│   ├── guidelines/                # Enunciado, rúbrica e indicaciones del docente
+│   └── submission_1/              # Entregable del avance
+│
+├── entregable/                    # Entrega final: informe PDF, presentación y ENTREGA.txt
+├── material_apoyo/                # Fuente del informe, scripts de métricas y figuras, guiones
 │
 ├── notebooks/
-│   └── controlnet_portrait_pipeline.ipynb # Notebook para Google Colab con GPU T4 y túnel Cloudflare
+│   └── controlnet_portrait_pipeline.ipynb # Servidor GPU y experimentos en Google Colab ("Ejecutar todas")
 │
-├── src/                           # Código fuente limpio (Cero comentarios inline #)
-│   ├── __init__.py
-│   ├── config.py                  # Catálogo de presets de red social, formalidad y prompts
-│   ├── safety.py                  # Filtro ético léxico-semántico (bloqueo preventivo)
-│   ├── generator.py               # Motor generativo (ControlNet, API y contingencia local)
-│   ├── gpu_server.py              # Servidor backend FastAPI para inferencia remota con GPU
-│   ├── agent.py                   # Agente explicador de decisiones multimodelo (LLM)
-│   └── evaluator.py               # Métricas de tasa de aceptación, diversidad y fidelidad
+├── src/
+│   ├── config.py                  # Catálogo de estilos y paquetes
+│   ├── safety.py                  # Filtro ético previo a la generación
+│   ├── generator.py               # Preproceso facial, cliente del servidor GPU y contingencia local
+│   ├── diffusion.py               # SD 1.5 + ControlNet Canny / img2img + LoRA
+│   ├── gpu_server.py              # Servidor FastAPI para la GPU
+│   ├── agent.py                   # Agente explicador (Gemini, OpenAI, reglas)
+│   └── evaluator.py               # Fidelidad de la explicación y métricas de sesión
 │
 └── ui/
     └── app.py                     # Aplicación web interactiva en Streamlit (Human-in-the-Loop)
@@ -87,8 +82,8 @@ streamlit run ui/app.py
 ```
 
 ### Opción C: Inferencia con GPU T4 Gratuita en Google Colab
-1. Abra [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) en Google Colab.
-2. Active la GPU gratuita en Entorno de ejecución > Cambiar tipo de entorno > T4 GPU.
-3. Ejecute la Celda 3 para iniciar el servidor FastAPI y el túnel Cloudflare.
-4. En su aplicación local de Streamlit, seleccione en la barra lateral el modo "Servidor GPU Remoto (Google Colab / MV)", pegue la URL generada y presione "Probar Conexión GPU".
+1. Suba [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) a Google Colab.
+2. Elija GPU T4 en Entorno de ejecución > Cambiar tipo de entorno de ejecución.
+3. Use Entorno de ejecución > Ejecutar todas y suba una foto cuando el notebook la pida. Al terminar, se descarga `resultados_colab.zip` y aparece una URL `trycloudflare.com`.
+4. En la app de Streamlit, elija "Nivel Intermedio" o "Nivel Básico", pegue la URL y presione "Probar Conexión GPU".
 5. Presione "Generar Variaciones Visuales".

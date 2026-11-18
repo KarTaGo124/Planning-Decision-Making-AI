@@ -23,9 +23,22 @@ from src.safety import SafetyCheckResult, check_prompt_safety
 
 
 class EngineMode(str, Enum):
-    INTERMEDIATE = "Nivel Intermedio (ControlNet + img2img)"
-    BASIC = "Nivel Básico (API / Difusión Directa)"
-    REMOTE_GPU = "Servidor GPU Remoto (Google Colab / MV)"
+    INTERMEDIATE = "Nivel Intermedio (ControlNet Canny + img2img, GPU)"
+    BASIC = "Nivel Básico (Stable Diffusion img2img, GPU)"
+    LOCAL = "Contingencia local (filtro OpenCV, sin modelo generativo)"
+
+
+FACE_CASCADE_FILES = ("haarcascade_frontalface_alt2.xml", "haarcascade_frontalface_default.xml")
+FACE_DETECTION_SIDE = 640
+FACE_CROP_FACTOR = 1.9
+FACE_VERTICAL_OFFSET = 0.15
+HEAD_TOP_MARGIN = 0.25
+
+
+REMOTE_METHOD_BY_MODE = {
+    EngineMode.INTERMEDIATE: "controlnet_img2img",
+    EngineMode.BASIC: "img2img",
+}
 
 
 @dataclass
@@ -50,42 +63,63 @@ class GeneratedVariation:
 
 
 class GenerationEngine:
-    def __init__(self, mode: EngineMode = EngineMode.INTERMEDIATE):
+    def __init__(self, mode: EngineMode = EngineMode.LOCAL):
         self.mode = mode
-        self.face_cascade = self._init_face_cascade()
+        self.face_cascades = self._init_face_cascades()
+        self.last_face_box: Optional[Tuple[int, int, int, int]] = None
         self.hf_token = os.getenv("HF_TOKEN", "")
 
-    def _init_face_cascade(self) -> Optional[cv2.CascadeClassifier]:
-        try:
-            cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-            if os.path.exists(cascade_path):
-                return cv2.CascadeClassifier(cascade_path)
-        except Exception:
-            return None
+    def _init_face_cascades(self) -> List[cv2.CascadeClassifier]:
+        cascades = []
+        for name in FACE_CASCADE_FILES:
+            try:
+                path = cv2.data.haarcascades + name
+                if os.path.exists(path):
+                    cascade = cv2.CascadeClassifier(path)
+                    if not cascade.empty():
+                        cascades.append(cascade)
+            except Exception:
+                continue
+        return cascades
+
+    def detect_face(self, image_rgb: np.ndarray) -> Optional[Tuple[int, int, int, int]]:
+        gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
+        scale = min(1.0, FACE_DETECTION_SIDE / max(gray.shape))
+        if scale < 1.0:
+            gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+        gray = cv2.equalizeHist(gray)
+
+        for cascade in self.face_cascades:
+            faces = cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=5, minSize=(40, 40))
+            if len(faces) > 0:
+                x, y, w, h = max(faces, key=lambda rect: rect[2] * rect[3])
+                return tuple(int(round(value / scale)) for value in (x, y, w, h))
         return None
 
     def preprocess_face(self, pil_image: Image.Image, target_size: Tuple[int, int] = (512, 512)) -> Image.Image:
-        image_cv = cv2.cvtColor(np.array(pil_image.convert("RGB")), cv2.COLOR_RGB2BGR)
-        height, width, _ = image_cv.shape
+        image_rgb = np.array(pil_image.convert("RGB"))
+        height, width, _ = image_rgb.shape
+        face = self.detect_face(image_rgb)
+        self.last_face_box = face
 
-        if self.face_cascade:
-            gray = cv2.cvtColor(image_cv, cv2.COLOR_BGR2GRAY)
-            faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(60, 60))
-            if len(faces) > 0:
-                x, y, w, h = max(faces, key=lambda rect: rect[2] * rect[3])
-                cx, cy = x + w // 2, y + h // 2
-                crop_size = int(max(w, h) * 1.9)
-                x1 = max(0, cx - crop_size // 2)
-                y1 = max(0, cy - crop_size // 2)
-                x2 = min(width, cx + crop_size // 2)
-                y2 = min(height, cy + crop_size // 2)
+        if face is None:
+            return ImageOps.fit(pil_image.convert("RGB"), target_size, method=Image.Resampling.LANCZOS)
 
-                cropped = image_cv[y1:y2, x1:x2]
-                if cropped.shape[0] > 20 and cropped.shape[1] > 20:
-                    resized = cv2.resize(cropped, target_size, interpolation=cv2.INTER_LANCZOS4)
-                    return Image.fromarray(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
+        x, y, w, h = face
+        crop_size = min(int(max(w, h) * FACE_CROP_FACTOR), width, height)
+        center_x = x + w // 2
+        center_y = y + h // 2 + int(h * FACE_VERTICAL_OFFSET)
 
-        return ImageOps.fit(pil_image.convert("RGB"), target_size, method=Image.Resampling.LANCZOS)
+        x1 = center_x - crop_size // 2
+        y1 = center_y - crop_size // 2
+        y1 = min(y1, y - int(h * HEAD_TOP_MARGIN))
+        x1 = min(max(0, x1), width - crop_size)
+        y1 = min(max(0, y1), height - crop_size)
+
+        cropped = image_rgb[y1:y1 + crop_size, x1:x1 + crop_size]
+        interpolation = cv2.INTER_AREA if crop_size > target_size[0] else cv2.INTER_CUBIC
+        resized = cv2.resize(cropped, target_size, interpolation=interpolation)
+        return Image.fromarray(resized)
 
     def extract_controlnet_edges(self, pil_image: Image.Image, low_threshold: int = 100, high_threshold: int = 200) -> Image.Image:
         image_np = np.array(pil_image.convert("RGB"))
@@ -216,16 +250,10 @@ class GenerationEngine:
         preprocessed_img: Image.Image,
         preset: StylePreset,
         custom_prompt: Optional[str],
-        mode: EngineMode,
     ) -> GeneratedVariation:
         full_prompt = build_composite_prompt(preset.id, custom_prompt)
-        canny_edges: Optional[Image.Image] = None
-
-        if mode == EngineMode.INTERMEDIATE:
-            canny_edges = self.extract_controlnet_edges(preprocessed_img)
-            transformed = self._apply_preset_styling(preprocessed_img, preset)
-        else:
-            transformed = self._apply_preset_styling(preprocessed_img, preset)
+        canny_edges = self.extract_controlnet_edges(preprocessed_img)
+        transformed = self._apply_preset_styling(preprocessed_img, preset)
 
         unique_suffix = uuid.uuid4().hex[:6]
         variation_id = f"var_{preset.id}_{unique_suffix}"
@@ -239,7 +267,7 @@ class GenerationEngine:
             image=transformed,
             prompt_used=full_prompt,
             negative_prompt=NEGATIVE_PROMPT,
-            engine_mode=mode.value,
+            engine_mode=EngineMode.LOCAL.value,
             guidance_scale=preset.guidance_scale,
             denoising_strength=preset.denoising_strength,
             recommended_lighting=preset.recommended_lighting,
@@ -255,10 +283,7 @@ class GenerationEngine:
         input_image: Image.Image,
         preset_ids: List[str],
         custom_prompt: Optional[str] = None,
-        mode: Optional[EngineMode] = None,
     ) -> Tuple[List[GeneratedVariation], SafetyCheckResult]:
-        active_mode = mode or self.mode
-
         safety_result = check_prompt_safety(custom_prompt)
         if not safety_result.is_safe:
             return [], safety_result
@@ -270,7 +295,7 @@ class GenerationEngine:
             preset = get_preset(pid)
             if not preset:
                 continue
-            variation = self._synthesize_variation(preprocessed, preset, custom_prompt, active_mode)
+            variation = self._synthesize_variation(preprocessed, preset, custom_prompt)
             variations.append(variation)
 
         return variations, safety_result
@@ -281,8 +306,8 @@ class GenerationEngine:
         preset_ids: List[str],
         backend_url: str,
         custom_prompt: Optional[str] = None,
+        mode: EngineMode = EngineMode.INTERMEDIATE,
         num_steps: int = 25,
-        guidance_scale: float = 7.5,
     ) -> Tuple[List[GeneratedVariation], SafetyCheckResult]:
         safety_result = check_prompt_safety(custom_prompt)
         if not safety_result.is_safe:
@@ -299,12 +324,16 @@ class GenerationEngine:
             "image_base64": b64_image,
             "preset_ids": preset_ids,
             "custom_prompt": custom_prompt,
+            "method": REMOTE_METHOD_BY_MODE.get(mode, "controlnet_img2img"),
             "num_steps": num_steps,
-            "guidance_scale": guidance_scale,
         }
 
         try:
-            response = requests.post(endpoint, json=payload, timeout=120)
+            try:
+                response = requests.post(endpoint, json=payload, timeout=300)
+            except requests.ConnectionError:
+                time.sleep(2)
+                response = requests.post(endpoint, json=payload, timeout=300)
             if response.status_code == 200:
                 data = response.json()
                 variations: List[GeneratedVariation] = []
@@ -324,7 +353,7 @@ class GenerationEngine:
                             image=pil_img,
                             prompt_used=var_data["prompt_used"],
                             negative_prompt=var_data["negative_prompt"],
-                            engine_mode="Nivel Intermedio (ControlNet GPU Remoto)",
+                            engine_mode=mode.value,
                             guidance_scale=var_data["guidance_scale"],
                             denoising_strength=var_data["denoising_strength"],
                             recommended_lighting=var_data["recommended_lighting"],
@@ -337,7 +366,14 @@ class GenerationEngine:
                     )
                 return variations, safety_result
             else:
-                return [], SafetyCheckResult(is_safe=False, warning_message=f"El servidor GPU respondió con código {response.status_code}.")
+                try:
+                    detail = response.json().get("detail", "")
+                except Exception:
+                    detail = ""
+                return [], SafetyCheckResult(
+                    is_safe=False,
+                    warning_message=f"El servidor GPU respondió con código {response.status_code}. {detail}".strip(),
+                )
         except Exception as exc:
             return [], SafetyCheckResult(is_safe=False, warning_message=f"Error al conectar con servidor GPU ({str(exc)}).")
 
@@ -346,7 +382,6 @@ class GenerationEngine:
         input_image: Image.Image,
         package_id: str,
         custom_prompt: Optional[str] = None,
-        mode: Optional[EngineMode] = None,
     ) -> Tuple[List[GeneratedVariation], SafetyCheckResult]:
         package = get_package(package_id)
         if not package:
@@ -354,4 +389,4 @@ class GenerationEngine:
         else:
             preset_ids = package.preset_ids
 
-        return self.generate_batch(input_image, preset_ids, custom_prompt, mode)
+        return self.generate_batch(input_image, preset_ids, custom_prompt)

@@ -1,0 +1,24 @@
+PROYECTO 2 - CS5363 Planificacion y Toma de Decisiones en IA (UTEC 2026-2)
+Retratos profesionales controlados: sistema generativo interactivo con feedback humano y agente explicador
+
+Grupo 7
+- Jose Guillermo Galvez Pacori
+- Matias Alonso Meneses Roncal
+- Alejandro Joel Ore Garcia
+
+Repositorio (codigo en la carpeta Project-II):
+https://github.com/KarTaGo124/Planning-Decision-Making-AI
+
+Video demostrativo (3 minutos o menos):
+PENDIENTE
+
+Carpeta de Drive (informe PDF, presentacion PPT, este archivo):
+https://drive.google.com/drive/folders/1Mqc0uwjQkejTXz0lgVZyIbDizpZqlwtp?usp=sharing
+
+Archivos de esta entrega:
+- Informe_Proyecto2_Grupo7.pdf
+- Presentacion_Proyecto2_Grupo7.pptx
+
+Como ejecutar el sistema:
+Project-II/HOW_TO_RUN.md
+Notebook de Colab (servidor GPU): Project-II/notebooks/controlnet_portrait_pipeline.ipynb

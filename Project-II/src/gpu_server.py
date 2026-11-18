@@ -3,10 +3,9 @@ import io
 import os
 import sys
 import time
-from typing import Any, Dict, List, Optional
+from contextlib import asynccontextmanager
+from typing import List, Optional
 
-import cv2
-import numpy as np
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,10 +13,28 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.config import get_preset, build_composite_prompt, NEGATIVE_PROMPT
+from src.config import get_preset
+from src.diffusion import (
+    DIFFUSION_NEGATIVE_PROMPT,
+    METHOD_CONTROLNET,
+    SUPPORTED_METHODS,
+    DiffusionEngine,
+    build_diffusion_prompt,
+)
 from src.safety import check_prompt_safety
 
-app = FastAPI(title="ControlNet Portrait Generation GPU Backend", version="1.0.0")
+BASE_SEED = 1234
+
+engine = DiffusionEngine()
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    engine.load()
+    yield
+
+
+app = FastAPI(title="ControlNet Portrait Generation GPU Backend", version="2.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,16 +44,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-pipeline_instance = None
-pipeline_device = "cpu"
-
 
 class GenerationRequest(BaseModel):
     image_base64: str
     preset_ids: List[str]
     custom_prompt: Optional[str] = None
+    method: str = METHOD_CONTROLNET
     num_steps: int = 25
-    guidance_scale: float = 7.5
+    guidance_scale: Optional[float] = None
+    strength: Optional[float] = None
+    seed: Optional[int] = None
+    use_lora: bool = True
 
 
 class VariationResponse(BaseModel):
@@ -48,8 +66,13 @@ class VariationResponse(BaseModel):
     image_base64: str
     prompt_used: str
     negative_prompt: str
+    method: str
     guidance_scale: float
     denoising_strength: float
+    seed: int
+    lora_active: bool
+    nsfw_flagged: bool
+    elapsed_seconds: float
     recommended_lighting: str
     recommended_background: str
     recommended_expression: str
@@ -61,45 +84,9 @@ class GenerationResponse(BaseModel):
     success: bool
     variations: List[VariationResponse]
     device: str
+    method: str
     elapsed_seconds: float
     message: Optional[str] = None
-
-
-def get_or_load_pipeline():
-    global pipeline_instance, pipeline_device
-    if pipeline_instance is not None:
-        return pipeline_instance
-
-    try:
-        import torch
-        from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
-
-        if torch.cuda.is_available():
-            pipeline_device = f"cuda:{torch.cuda.get_device_name(0)}"
-            dtype = torch.float16
-        else:
-            pipeline_device = "cpu"
-            dtype = torch.float32
-
-        controlnet = ControlNetModel.from_pretrained(
-            "lllyasviel/control_v11p_sd15_canny",
-            torch_dtype=dtype,
-        )
-        pipe = StableDiffusionControlNetPipeline.from_pretrained(
-            "runwayml/stable-diffusion-v1-5",
-            controlnet=controlnet,
-            torch_dtype=dtype,
-            safety_checker=None,
-        )
-        pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-        if torch.cuda.is_available():
-            pipe.enable_model_cpu_offload()
-
-        pipeline_instance = pipe
-        return pipeline_instance
-    except Exception as exc:
-        pipeline_device = f"error: {str(exc)}"
-        return None
 
 
 def decode_base64_to_image(b64_string: str) -> Image.Image:
@@ -115,27 +102,17 @@ def encode_image_to_base64(image: Image.Image) -> str:
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
 
-def extract_canny_edges(pil_image: Image.Image, low_threshold: int = 100, high_threshold: int = 200) -> Image.Image:
-    image_np = np.array(pil_image.resize((512, 512)))
-    gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
-    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-    edges = cv2.Canny(blurred, low_threshold, high_threshold)
-    edges_3ch = np.stack([edges] * 3, axis=-1)
-    return Image.fromarray(edges_3ch)
-
-
 @app.get("/health")
 def health_check():
-    import torch
-    cuda_available = torch.cuda.is_available()
-    device_name = torch.cuda.get_device_name(0) if cuda_available else "CPU (No GPU)"
-    return {
-        "status": "online",
-        "cuda_available": cuda_available,
-        "device_name": device_name,
-        "pipeline_loaded": (pipeline_instance is not None),
-        "timestamp": time.time(),
-    }
+    status = engine.describe()
+    status.update(
+        {
+            "status": "online",
+            "cuda_available": engine.device == "cuda",
+            "timestamp": time.time(),
+        }
+    )
+    return status
 
 
 @app.post("/generate", response_model=GenerationResponse)
@@ -149,51 +126,59 @@ def generate_portraits(request: GenerationRequest):
             detail=safety_result.warning_message or "Prompt violates safety guidelines.",
         )
 
+    if request.method not in SUPPORTED_METHODS:
+        raise HTTPException(status_code=400, detail=f"Unsupported method. Use one of: {', '.join(SUPPORTED_METHODS)}.")
+
     try:
         input_image = decode_base64_to_image(request.image_base64)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid base64 image data.")
 
-    canny_image = extract_canny_edges(input_image)
-    pipe = get_or_load_pipeline()
+    if not engine.load():
+        raise HTTPException(status_code=503, detail=f"Diffusion pipeline unavailable ({engine.load_error}).")
+
     variations: List[VariationResponse] = []
 
-    for pid in request.preset_ids:
+    for index, pid in enumerate(request.preset_ids):
         preset = get_preset(pid)
         if not preset:
             continue
 
-        full_prompt = build_composite_prompt(preset.id, request.custom_prompt)
-        var_id = f"gpu_var_{preset.id}_{int(time.time() * 1000) % 100000}"
+        full_prompt = build_diffusion_prompt(preset.id, request.custom_prompt)
+        seed = (request.seed if request.seed is not None else BASE_SEED) + index
 
-        if pipe is not None:
-            try:
-                generated_img = pipe(
-                    prompt=full_prompt,
-                    negative_prompt=NEGATIVE_PROMPT,
-                    image=canny_image,
-                    num_inference_steps=request.num_steps,
-                    guidance_scale=request.guidance_scale or preset.guidance_scale,
-                    controlnet_conditioning_scale=0.85,
-                ).images[0]
-            except Exception:
-                generated_img = canny_image
-        else:
-            generated_img = canny_image
+        try:
+            result = engine.generate(
+                init_image=input_image,
+                prompt=full_prompt,
+                negative_prompt=DIFFUSION_NEGATIVE_PROMPT,
+                method=request.method,
+                strength=request.strength if request.strength is not None else preset.denoising_strength,
+                guidance_scale=request.guidance_scale if request.guidance_scale is not None else preset.guidance_scale,
+                num_steps=request.num_steps,
+                seed=seed,
+                use_lora=request.use_lora,
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Generation failed for preset '{preset.id}' ({type(exc).__name__}: {exc}).")
 
-        b64_output = encode_image_to_base64(generated_img)
         variations.append(
             VariationResponse(
-                variation_id=var_id,
+                variation_id=f"gpu_var_{preset.id}_{int(time.time() * 1000) % 100000}",
                 preset_id=preset.id,
                 title=preset.title,
                 platform=preset.platform.value,
                 formality=preset.formality.value,
-                image_base64=b64_output,
+                image_base64=encode_image_to_base64(result.image),
                 prompt_used=full_prompt,
-                negative_prompt=NEGATIVE_PROMPT,
-                guidance_scale=preset.guidance_scale,
-                denoising_strength=preset.denoising_strength,
+                negative_prompt=DIFFUSION_NEGATIVE_PROMPT,
+                method=result.method,
+                guidance_scale=result.guidance_scale,
+                denoising_strength=result.strength,
+                seed=result.seed,
+                lora_active=result.lora_active,
+                nsfw_flagged=result.nsfw_flagged,
+                elapsed_seconds=result.elapsed_seconds,
                 recommended_lighting=preset.recommended_lighting,
                 recommended_background=preset.recommended_background,
                 recommended_expression=preset.recommended_expression,
@@ -206,9 +191,10 @@ def generate_portraits(request: GenerationRequest):
     return GenerationResponse(
         success=True,
         variations=variations,
-        device=pipeline_device,
+        device=engine.device_name,
+        method=request.method,
         elapsed_seconds=round(elapsed, 2),
-        message=f"Generated {len(variations)} variations on {pipeline_device}.",
+        message=f"Generated {len(variations)} variations with {request.method} on {engine.device_name}.",
     )
 
 

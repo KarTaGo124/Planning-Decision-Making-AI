@@ -28,6 +28,17 @@ PROHIBITED_TERMS: List[Tuple[str, str]] = [
     ("traje de bano", "ropa inapropiada"),
     ("traje de baño", "ropa inapropiada"),
     ("topless", "desnudez"),
+    ("shirtless", "desnudez"),
+    ("sin camisa", "desnudez"),
+    ("sin polo", "desnudez"),
+    ("semidesnudo", "desnudez"),
+    ("semidesnuda", "desnudez"),
+    ("semi desnudo", "desnudez"),
+    ("semi desnuda", "desnudez"),
+    ("desnudar", "desnudez"),
+    ("calzoncillos", "ropa inapropiada"),
+    ("underwear", "ropa inapropiada"),
+    ("lingerie", "ropa inapropiada"),
     ("nudity", "desnudez"),
     ("nude", "desnudez"),
     ("naked", "desnudez"),
@@ -59,6 +70,9 @@ PROHIBITED_PATTERNS: List[Tuple[Pattern[str], str]] = [
 ]
 
 
+LEET_TRANSLATION = str.maketrans({"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s"})
+
+
 def normalize_text(text: str) -> str:
     normalized = unicodedata.normalize("NFKD", text)
     cleaned = "".join(c for c in normalized if not unicodedata.combining(c))
@@ -69,7 +83,15 @@ def check_prompt_safety(prompt: Optional[str]) -> SafetyCheckResult:
     if not prompt or not prompt.strip():
         return SafetyCheckResult(is_safe=True)
 
-    normalized_prompt = normalize_text(prompt)
+    normalized = normalize_text(prompt)
+    for candidate in dict.fromkeys((normalized, normalized.translate(LEET_TRANSLATION))):
+        result = _check_normalized(candidate)
+        if not result.is_safe:
+            return result
+    return SafetyCheckResult(is_safe=True)
+
+
+def _check_normalized(normalized_prompt: str) -> SafetyCheckResult:
 
     for pattern, category in PROHIBITED_PATTERNS:
         match = pattern.search(normalized_prompt)

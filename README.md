@@ -28,14 +28,12 @@ Planning-Decision-Making-AI/
 │
 └── Project-II/                    # Proyecto 2: Sistema Generativo Interactivo con Feedback Humano y Agentes LLM
     ├── README.md                  # Documentación técnica, niveles y rúbrica de Proyecto 2
-    ├── docs/
-    │   ├── Evaluacion_Proyecto2.pdf           # Guía oficial de la cátedra
-    │   ├── PRESENTACION_AVANCE_PROYECTO2.html # Presentación interactiva en diapositivas (Avance)
-    │   └── PRESENTACION_AVANCE_PROYECTO2.md   # Documento técnico de apoyo del avance
-    ├── data/                      # Datasets e imágenes de entrada (raw/ y processed/)
-    ├── notebooks/                 # Prototipado generativo y experimentación
-    ├── src/                       # Módulos del generador, agente LLM y métricas
-    └── ui/                        # Interfaz gráfica interactiva (Human-in-the-Loop)
+    ├── docs/                      # Enunciado, rúbrica, indicaciones y avance
+    ├── entregable/                # Entrega final: informe, presentación, guion del video y fuentes
+    ├── data/                      # Imágenes y registros locales (excluidos del repositorio)
+    ├── notebooks/                 # Servidor GPU y experimentos en Google Colab
+    ├── src/                       # Filtro ético, preproceso, difusión, servidor GPU, agente y métricas
+    └── ui/                        # Interfaz Streamlit (Human-in-the-Loop)
 ```
 
 ---
@@ -58,19 +56,17 @@ Planning-Decision-Making-AI/
 ---
 
 ### 🎨 [Proyecto 2: Sistema Generativo Interactivo para Variaciones Visuales con Feedback Humano y Explicación mediante Agentes de IA](Project-II/)
-* **Caso de Uso:** Asistente interactivo de edición y estilizado de retratos profesionales (iluminación, expresión, fondo, vestimenta y estilo estético).
-* **Nivel Técnico:** Intermedio (Stable Diffusion con *img2img* / ControlNet + Agente LLM + Interfaz Gráfica).
-* **Documentación del Avance:**
-  * **Presentación Interactiva:** [`Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.html`](Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.html)
-  * **Documento Técnico de Apoyo:** [`Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.md`](Project-II/docs/PRESENTACION_AVANCE_PROYECTO2.md)
-  * **Guía Oficial de la Cátedra:** [`Project-II/docs/Evaluacion_Proyecto2.pdf`](Project-II/docs/Evaluacion_Proyecto2.pdf)
-* **Aspectos Clave:**
-  * **Módulo Generativo Controlable:** Generación de exactamente **cinco (5) variaciones visuales** a partir de una fotografía cargada por el usuario preservando la identidad facial.
-  * **Interfaz Gráfica y Feedback:** Visualización interactiva donde el usuario evalúa, acepta o rechaza individualmente cada variación, registrando las decisiones de manera estructurada en JSON.
-  * **Agente Basado en LLMs:** Generación automatizada de un resumen y explicación textual coherente que describe y justifica fielmente las opciones aceptadas y rechazadas.
-  * **Evaluación Multicriterio:** Calidad semántica (CLIP-Score), diversidad visual (LPIPS), tasa de aceptación útil, latencia de inferencia y coherencia factual del agente.
-  * **Reflexión Ética:** Tratamiento efímero y privado de imágenes personales, auditoría de sesgos algorítmicos y prevención de suplantación de identidad.
-* **Entregables:** Código fuente del sistema integrado (Generador + UI + Agente LLM), informe técnico de máximo 5 páginas, soporte visual y demostración en vivo o en video.
+* **Caso de uso:** retratos profesionales para LinkedIn, WhatsApp corporativo y GitHub a partir de una foto del usuario.
+* **Generación:** dos métodos en una GPU T4 de Google Colab:
+  * Stable Diffusion 1.5 + ControlNet Canny en modo img2img (nivel intermedio);
+  * Stable Diffusion 1.5 img2img sin ControlNet (nivel básico).
+
+  Ambos usan un LoRA público.
+* **Interacción:** cinco variaciones por foto. El usuario acepta o rechaza cada una, con calificación y comentario, y las decisiones quedan registradas en JSON.
+* **Explicación:** un agente con Gemini lista lo aceptado y lo rechazado y lo justifica. La fidelidad de la explicación se mide contra el registro.
+* **Evaluación:** latencia, diversidad visual, cambio de identidad y fidelidad del agente.
+* **Ética:** filtro preventivo de prompts, datos locales fuera del repositorio y análisis del sesgo del modelo.
+* **Entrega final:** [`Project-II/entregable/`](Project-II/entregable/).
 
 👉 *Consulta los requisitos, arquitectura y rúbrica en el [README de Project-II](Project-II/README.md).*
 

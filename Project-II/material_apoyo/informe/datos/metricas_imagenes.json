@@ -1,0 +1,178 @@
+{
+  "summary": {
+    "face_box_512": [
+      115,
+      75,
+      284,
+      284
+    ],
+    "reference_L": 42.77,
+    "groups": {
+      "nivel_intermedio_controlnet": {
+        "n": 5,
+        "mean_seconds": 2.61,
+        "mean_delta_L": -0.39,
+        "mean_delta_E": 1.87,
+        "pairwise_diversity": 0.0363
+      },
+      "nivel_basico_img2img": {
+        "n": 5,
+        "mean_seconds": 1.96,
+        "mean_delta_L": -0.35,
+        "mean_delta_E": 2.14,
+        "pairwise_diversity": 0.0397
+      },
+      "barrido_strength": {
+        "n": 3,
+        "mean_seconds": 3.43,
+        "mean_delta_L": 0.91,
+        "mean_delta_E": 2.64,
+        "pairwise_diversity": 0.0337
+      },
+      "comparacion_lora": {
+        "n": 2,
+        "mean_seconds": 3.56,
+        "mean_delta_L": 1.11,
+        "mean_delta_E": 2.21,
+        "pairwise_diversity": null
+      }
+    }
+  },
+  "images": [
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var1_linkedin_formal.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.42,
+      "seconds": 2.645,
+      "delta_L": -0.16,
+      "delta_E": 2.59
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var2_linkedin_business_casual.png",
+      "preset_id": "linkedin_business_casual",
+      "strength": 0.45,
+      "seconds": 2.586,
+      "delta_L": -0.0,
+      "delta_E": 1.54
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var3_linkedin_smart_casual.png",
+      "preset_id": "linkedin_smart_casual",
+      "strength": 0.48,
+      "seconds": 2.791,
+      "delta_L": -0.51,
+      "delta_E": 1.58
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var4_whatsapp_business_casual.png",
+      "preset_id": "whatsapp_business_casual",
+      "strength": 0.43,
+      "seconds": 2.4,
+      "delta_L": 0.43,
+      "delta_E": 1.13
+    },
+    {
+      "group": "nivel_intermedio_controlnet",
+      "file": "nivel_intermedio_controlnet/var5_whatsapp_smart_casual.png",
+      "preset_id": "whatsapp_smart_casual",
+      "strength": 0.45,
+      "seconds": 2.629,
+      "delta_L": -1.7,
+      "delta_E": 2.53
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var1_linkedin_formal.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.42,
+      "seconds": 1.829,
+      "delta_L": 0.12,
+      "delta_E": 3.14
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var2_linkedin_business_casual.png",
+      "preset_id": "linkedin_business_casual",
+      "strength": 0.45,
+      "seconds": 1.979,
+      "delta_L": -0.06,
+      "delta_E": 1.66
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var3_linkedin_smart_casual.png",
+      "preset_id": "linkedin_smart_casual",
+      "strength": 0.48,
+      "seconds": 2.136,
+      "delta_L": -0.73,
+      "delta_E": 1.88
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var4_whatsapp_business_casual.png",
+      "preset_id": "whatsapp_business_casual",
+      "strength": 0.43,
+      "seconds": 1.838,
+      "delta_L": 0.55,
+      "delta_E": 1.38
+    },
+    {
+      "group": "nivel_basico_img2img",
+      "file": "nivel_basico_img2img/var5_whatsapp_smart_casual.png",
+      "preset_id": "whatsapp_smart_casual",
+      "strength": 0.45,
+      "seconds": 2.005,
+      "delta_L": -1.64,
+      "delta_E": 2.63
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_045.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.45,
+      "seconds": 2.668,
+      "delta_L": 0.09,
+      "delta_E": 2.45
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_060.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 3.491,
+      "delta_L": 1.11,
+      "delta_E": 2.21
+    },
+    {
+      "group": "barrido_strength",
+      "file": "barrido_strength/strength_075.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.75,
+      "seconds": 4.143,
+      "delta_L": 1.54,
+      "delta_E": 3.27
+    },
+    {
+      "group": "comparacion_lora",
+      "file": "comparacion_lora/sin_lora.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 3.55,
+      "delta_L": 1.11,
+      "delta_E": 2.21
+    },
+    {
+      "group": "comparacion_lora",
+      "file": "comparacion_lora/con_lora.png",
+      "preset_id": "linkedin_formal",
+      "strength": 0.6,
+      "seconds": 3.563,
+      "delta_L": 1.11,
+      "delta_E": 2.21
+    }
+  ]
+}

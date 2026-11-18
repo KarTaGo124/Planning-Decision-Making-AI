@@ -1,5 +1,6 @@
 import json
 import math
+import re
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List, Optional
 
@@ -37,34 +38,82 @@ def compute_diversity_score(decisions: List[Dict[str, Any]]) -> float:
     return round(normalized_diversity, 3)
 
 
+ACCEPT_STEM = "acept"
+REJECT_STEM = "rechaz"
+
+
+NEGATED_ACCEPT = re.compile(r"\bno\s+(?:fue\s+|se\s+|ha\s+sido\s+|era\s+)?acept\w*")
+NEGATED_REJECT = re.compile(r"\bno\s+(?:fue\s+|se\s+|ha\s+sido\s+|era\s+)?rechaz\w*")
+
+
+def _strip_quoted_notes(text: str) -> str:
+    text = re.sub(r"«[^»]*»", "", text.lower())
+    text = NEGATED_ACCEPT.sub("rechazada", text)
+    return NEGATED_REJECT.sub("aceptada", text)
+
+
+def _polarity_before(text: str, position: int) -> Optional[bool]:
+    preceding = text[:position]
+    last_accept = preceding.rfind(ACCEPT_STEM)
+    last_reject = preceding.rfind(REJECT_STEM)
+    if last_accept < 0 and last_reject < 0:
+        return None
+    return last_accept > last_reject
+
+
+def _title_matches_decision(text: str, title: str, accepted: bool) -> bool:
+    start = 0
+    while True:
+        position = text.find(title, start)
+        if position < 0:
+            return False
+        if _polarity_before(text, position) is accepted:
+            return True
+        start = position + len(title)
+
+
+SPANISH_NUMBER_WORDS = {
+    0: ("cero", "ninguna", "ninguno"),
+    1: ("una", "uno", "un"),
+    2: ("dos",),
+    3: ("tres",),
+    4: ("cuatro",),
+    5: ("cinco",),
+    6: ("seis",),
+    7: ("siete",),
+}
+
+
+def _states_count(text: str, value: int) -> bool:
+    if re.search(rf"(?<!\d){value}(?!\d)", text):
+        return True
+    return any(re.search(rf"\b{word}\b", text) for word in SPANISH_NUMBER_WORDS.get(value, ()))
+
+
 def evaluate_explanation_fidelity(narrative: str, decisions: List[Dict[str, Any]]) -> float:
-    if not decisions or not narrative:
+    voted = [d for d in decisions if isinstance(d.get("accepted"), bool)]
+    if not voted:
         return 1.0
+    if not narrative:
+        return 0.0
 
-    accepted = [d for d in decisions if d.get("accepted") is True]
-    rejected = [d for d in decisions if d.get("accepted") is False]
+    text = _strip_quoted_notes(narrative).lower()
+    accepted_count = sum(1 for d in voted if d["accepted"])
+    rejected_count = len(voted) - accepted_count
 
-    checks = 0
+    checks = len(voted) + 3
     passed = 0
 
-    if accepted:
-        checks += 1
-        acc_platform = accepted[0].get("platform", "")
-        if acc_platform.lower() in narrative.lower():
+    for d in voted:
+        title = str(d.get("title", "")).lower()
+        if title and _title_matches_decision(text, title, d["accepted"]):
             passed += 1
 
-    if rejected:
-        checks += 1
-        rej_formality = rejected[0].get("formality", "")
-        if rej_formality.lower() in narrative.lower() or "rechaz" in narrative.lower() or "descarte" in narrative.lower():
+    for value in (len(voted), accepted_count, rejected_count):
+        if _states_count(text, value):
             passed += 1
 
-    checks += 1
-    total_str = str(len(decisions))
-    if total_str in narrative or "100" in narrative or "%" in narrative:
-        passed += 1
-
-    return round(passed / checks if checks > 0 else 1.0, 3)
+    return round(passed / checks, 3)
 
 
 def compute_metrics(decisions: List[Dict[str, Any]], explanation_narrative: Optional[str] = None) -> MetricsSummary:
@@ -91,8 +140,8 @@ def compute_metrics(decisions: List[Dict[str, Any]], explanation_narrative: Opti
     ratings = [d.get("rating", 3) for d in decisions if d.get("rating") is not None]
     avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else 0.0
 
-    latencies = [d.get("latency_seconds", 2.0) for d in decisions if d.get("latency_seconds") is not None]
-    avg_latency = round(sum(latencies) / len(latencies), 2) if latencies else 2.0
+    latencies = [d["latency_seconds"] for d in decisions if d.get("latency_seconds") is not None]
+    avg_latency = round(sum(latencies) / len(latencies), 2) if latencies else 0.0
 
     plat_dist: Dict[str, int] = {}
     for d in decisions:

@@ -1,17 +1,24 @@
+import json
 import os
+import re
 import sys
 import time
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import requests
 import streamlit as st
-from PIL import Image
+from dotenv import load_dotenv
+from PIL import Image, ImageOps
 
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+for env_path in (PROJECT_ROOT / ".env", PROJECT_ROOT.parent / ".env"):
+    load_dotenv(env_path)
 
 from src.agent import AgentModel, ExplanationAgent
 from src.config import (
@@ -35,6 +42,8 @@ st.set_page_config(
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 DATA_PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 DECISIONS_FILEPATH = str(DATA_PROCESSED_DIR / "user_decisions.json")
+SESSIONS_DIR = DATA_PROCESSED_DIR / "sessions"
+GENERATED_DIR = DATA_PROCESSED_DIR / "generated"
 
 
 def initialize_session_state() -> None:
@@ -46,16 +55,127 @@ def initialize_session_state() -> None:
     if "agent_explanation" not in st.session_state:
         st.session_state.agent_explanation = None
     if "engine" not in st.session_state:
-        st.session_state.engine = GenerationEngine(mode=EngineMode.INTERMEDIATE)
+        st.session_state.engine = GenerationEngine(mode=EngineMode.LOCAL)
     if "gpu_backend_url" not in st.session_state:
         st.session_state.gpu_backend_url = "http://localhost:8000"
     if "gpu_connected" not in st.session_state:
         st.session_state.gpu_connected = False
     if "gpu_device_name" not in st.session_state:
         st.session_state.gpu_device_name = ""
+    if "latency_by_variation" not in st.session_state:
+        st.session_state.latency_by_variation = {}
+    if "last_archived_session" not in st.session_state:
+        st.session_state.last_archived_session = ""
 
 
 initialize_session_state()
+
+
+def build_decision_record(
+    var: GeneratedVariation,
+    accepted: bool,
+    previous: Dict[str, Any],
+    default_rating: int,
+    participant_code: str,
+) -> Dict[str, Any]:
+    return {
+        "variation_id": var.variation_id,
+        "preset_id": var.preset_id,
+        "title": var.title,
+        "platform": var.platform,
+        "formality": var.formality,
+        "accepted": accepted,
+        "rating": previous.get("rating", default_rating),
+        "recommended_lighting": var.recommended_lighting,
+        "recommended_background": var.recommended_background,
+        "user_notes": previous.get("user_notes", ""),
+        "timestamp": time.time(),
+        "latency_seconds": st.session_state.latency_by_variation.get(var.variation_id),
+        "engine_mode": var.engine_mode,
+        "participant": participant_code.strip(),
+    }
+
+
+GPU_MODES = (EngineMode.INTERMEDIATE, EngineMode.BASIC)
+
+
+def save_generation_batch(
+    source: Image.Image,
+    variations: List[GeneratedVariation],
+    mode: EngineMode,
+    elapsed_seconds: float,
+) -> Path:
+    batch_dir = GENERATED_DIR / time.strftime("%Y%m%d_%H%M%S")
+    batch_dir.mkdir(parents=True, exist_ok=True)
+    source.save(batch_dir / "00_entrada.png")
+    if variations[0].controlnet_edge_preview is not None:
+        variations[0].controlnet_edge_preview.save(batch_dir / "01_canny.png")
+
+    records = []
+    for position, var in enumerate(variations, start=1):
+        filename = f"var{position}_{var.preset_id}.png"
+        var.image.save(batch_dir / filename)
+        records.append(
+            {
+                "file": filename,
+                "variation_id": var.variation_id,
+                "title": var.title,
+                "prompt_used": var.prompt_used,
+                "guidance_scale": var.guidance_scale,
+                "denoising_strength": var.denoising_strength,
+            }
+        )
+
+    with open(batch_dir / "batch.json", "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "engine_mode": mode.value,
+                "total_elapsed_seconds": round(elapsed_seconds, 3),
+                "seconds_per_image": round(elapsed_seconds / len(variations), 3),
+                "variations": records,
+            },
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )
+    return batch_dir
+
+
+def archive_participant_session(participant_code: str, participant_profile: str) -> Optional[Path]:
+    decisions = list(st.session_state.decisions.values())
+    if not decisions:
+        return None
+
+    SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
+    explanation = st.session_state.agent_explanation
+    metrics = asdict(compute_metrics(decisions, explanation.narrative if explanation else None))
+    metrics.pop("explanation_fidelity_score", None)
+
+    safe_code = re.sub(r"[^A-Za-z0-9_-]", "_", participant_code.strip()) or "participante"
+    session_path = SESSIONS_DIR / f"{safe_code}_{time.strftime('%Y%m%d_%H%M%S')}.json"
+    payload = {
+        "participant": participant_code.strip(),
+        "profile": participant_profile.strip(),
+        "closed_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "metrics": metrics,
+        "agent": {
+            "model": explanation.model_name,
+            "fidelity_score": explanation.factual_consistency_score,
+            "narrative": explanation.narrative,
+        }
+        if explanation
+        else None,
+        "decisions": decisions,
+    }
+    with open(session_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+    st.session_state.decisions = {}
+    st.session_state.variations = []
+    st.session_state.agent_explanation = None
+    st.session_state.latency_by_variation = {}
+    save_decisions_json([], DECISIONS_FILEPATH)
+    return session_path
 
 
 def create_sample_portrait() -> Image.Image:
@@ -97,21 +217,48 @@ st.markdown(
 
 
 with st.sidebar:
+    st.header("Sesión de Validación")
+    participant_code = st.text_input(
+        "Código del participante:",
+        value="",
+        placeholder="Ej: U1",
+        help="Identificador anónimo. No ingrese nombres ni datos personales.",
+    )
+    participant_profile = st.text_input(
+        "Perfil del participante:",
+        value="",
+        placeholder="Ej: Estudiante de Ing. Industrial, 7mo ciclo",
+    )
+    if st.button("Guardar y cerrar sesión del participante", use_container_width=True):
+        if not participant_code.strip():
+            st.error("Ingrese el código del participante antes de cerrar la sesión.")
+        else:
+            archived_path = archive_participant_session(participant_code, participant_profile)
+            if archived_path is None:
+                st.warning("No hay decisiones registradas para guardar.")
+            else:
+                st.session_state.last_archived_session = archived_path.name
+    if st.session_state.last_archived_session:
+        st.caption(f"Última sesión guardada: `data/processed/sessions/{st.session_state.last_archived_session}`")
+
+    st.divider()
+
     st.header("Configuración del Sistema")
 
+    mode_by_label = {mode.value: mode for mode in (EngineMode.INTERMEDIATE, EngineMode.BASIC, EngineMode.LOCAL)}
     engine_mode_choice = st.radio(
-        "Nivel Técnico del Motor Generativo:",
-        options=[
-            EngineMode.INTERMEDIATE.value,
-            EngineMode.REMOTE_GPU.value,
-            EngineMode.BASIC.value,
-        ],
+        "Motor generativo:",
+        options=list(mode_by_label.keys()),
         index=0,
-        help="Nivel Intermedio: Detección facial + ControlNet Canny + síntesis de atributos. Servidor GPU: Conexión a Colab/MV con difusión real.",
+        help=(
+            "Nivel Intermedio: img2img condicionado por los bordes Canny del rostro (ControlNet). "
+            "Nivel Básico: img2img de Stable Diffusion sin ControlNet. "
+            "Ambos corren en el servidor GPU. La contingencia local solo aplica filtros de imagen."
+        ),
     )
+    current_mode = mode_by_label[engine_mode_choice]
 
-    if "Servidor GPU" in engine_mode_choice:
-        current_mode = EngineMode.REMOTE_GPU
+    if current_mode in GPU_MODES:
         st.session_state.gpu_backend_url = st.text_input(
             "URL del Servidor GPU (Colab / MV):",
             value=st.session_state.gpu_backend_url,
@@ -124,17 +271,16 @@ with st.sidebar:
                     data = resp.json()
                     st.session_state.gpu_connected = True
                     st.session_state.gpu_device_name = data.get("device_name", "GPU Conectada")
-                    st.success(f"Conectado: {st.session_state.gpu_device_name}")
+                    lora_status = "LoRA activo" if data.get("lora_loaded") else "LoRA no cargado"
+                    st.success(f"Conectado: {st.session_state.gpu_device_name} · {lora_status}")
                 else:
                     st.session_state.gpu_connected = False
                     st.error("Servidor no disponible.")
             except Exception as exc:
                 st.session_state.gpu_connected = False
                 st.error(f"Error de conexión: {str(exc)}")
-    elif "Intermedio" in engine_mode_choice:
-        current_mode = EngineMode.INTERMEDIATE
     else:
-        current_mode = EngineMode.BASIC
+        st.caption("Modo sin GPU: no usa un modelo generativo. Sirve solo como respaldo para probar la interfaz.")
 
     st.session_state.engine.mode = current_mode
 
@@ -225,7 +371,7 @@ with col_left:
 
     source_image: Optional[Image.Image] = None
     if uploaded_file is not None:
-        source_image = Image.open(uploaded_file).convert("RGB")
+        source_image = ImageOps.exif_transpose(Image.open(uploaded_file)).convert("RGB")
     elif use_sample:
         source_image = create_sample_portrait()
 
@@ -252,19 +398,19 @@ with col_left:
         else:
             with st.spinner("Procesando transformaciones con el motor generativo..."):
                 start_time = time.time()
-                if current_mode == EngineMode.REMOTE_GPU:
+                if current_mode in GPU_MODES:
                     variations, safety_res = st.session_state.engine.generate_via_remote_gpu(
                         source_image,
                         selected_preset_ids,
                         backend_url=st.session_state.gpu_backend_url,
                         custom_prompt=custom_prompt_input,
+                        mode=current_mode,
                     )
                 else:
                     variations, safety_res = st.session_state.engine.generate_batch(
                         source_image,
                         selected_preset_ids,
                         custom_prompt=custom_prompt_input,
-                        mode=current_mode,
                     )
                 elapsed = time.time() - start_time
 
@@ -272,7 +418,14 @@ with col_left:
                     st.error(safety_res.warning_message)
                 else:
                     st.session_state.variations = variations
-                    st.success(f"Se generaron {len(variations)} variaciones exitosamente en {elapsed:.2f} s.")
+                    per_image_latency = round(elapsed / len(variations), 3) if variations else None
+                    st.session_state.latency_by_variation = {v.variation_id: per_image_latency for v in variations}
+                    if variations:
+                        saved_dir = save_generation_batch(source_image, variations, current_mode, elapsed)
+                        st.success(f"Se generaron {len(variations)} variaciones exitosamente en {elapsed:.2f} s.")
+                        st.caption(f"Imágenes guardadas en `data/processed/generated/{saved_dir.name}`")
+                    else:
+                        st.error("El motor no devolvió ninguna variación.")
 
 
 with col_right:
@@ -318,39 +471,17 @@ with col_right:
                     col_btn_acc, col_btn_rej = st.columns(2)
                     with col_btn_acc:
                         if st.button("Aceptar", key=f"acc_{var.variation_id}", type="primary", use_container_width=True):
-                            st.session_state.decisions[var.variation_id] = {
-                                "variation_id": var.variation_id,
-                                "preset_id": var.preset_id,
-                                "title": var.title,
-                                "platform": var.platform,
-                                "formality": var.formality,
-                                "accepted": True,
-                                "rating": curr_decision.get("rating", 5),
-                                "recommended_lighting": var.recommended_lighting,
-                                "recommended_background": var.recommended_background,
-                                "user_notes": curr_decision.get("user_notes", ""),
-                                "timestamp": time.time(),
-                                "latency_seconds": 2.1,
-                            }
+                            st.session_state.decisions[var.variation_id] = build_decision_record(
+                                var, True, curr_decision, 5, participant_code
+                            )
                             save_decisions_json(list(st.session_state.decisions.values()), DECISIONS_FILEPATH)
                             st.rerun()
 
                     with col_btn_rej:
                         if st.button("Rechazar", key=f"rej_{var.variation_id}", use_container_width=True):
-                            st.session_state.decisions[var.variation_id] = {
-                                "variation_id": var.variation_id,
-                                "preset_id": var.preset_id,
-                                "title": var.title,
-                                "platform": var.platform,
-                                "formality": var.formality,
-                                "accepted": False,
-                                "rating": curr_decision.get("rating", 2),
-                                "recommended_lighting": var.recommended_lighting,
-                                "recommended_background": var.recommended_background,
-                                "user_notes": curr_decision.get("user_notes", ""),
-                                "timestamp": time.time(),
-                                "latency_seconds": 1.8,
-                            }
+                            st.session_state.decisions[var.variation_id] = build_decision_record(
+                                var, False, curr_decision, 2, participant_code
+                            )
                             save_decisions_json(list(st.session_state.decisions.values()), DECISIONS_FILEPATH)
                             st.rerun()
 
@@ -426,7 +557,6 @@ with col_metrics:
     st.caption(f"Persistencia en tiempo real: `data/processed/user_decisions.json` ({len(all_decisions_list)} registros)")
 
     with open(DECISIONS_FILEPATH, "w", encoding="utf-8") as f:
-        import json
         json.dump(all_decisions_list, f, indent=2, ensure_ascii=False)
 
     with open(DECISIONS_FILEPATH, "r", encoding="utf-8") as f:

@@ -35,3 +35,13 @@ Thumbs.db
 
 # Notas internas locales (no se versionan ni se pushean)
 **/docs/FEEDBACK_*.md
+
+# Local secrets
+.env
+
+# Entregables y material con fotos de personas: se entregan por Drive, no se publican
+Project-II/entregable/*.pdf
+Project-II/entregable/*.pptx
+Project-II/material_apoyo/informe/figuras/
+Project-II/material_apoyo/informe/informe.html
+Project-II/material_apoyo/presentacion/fuentes_ppt/img/
