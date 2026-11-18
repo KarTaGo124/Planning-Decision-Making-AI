@@ -91,12 +91,11 @@ def copy_results() -> None:
 def captures() -> None:
     if not CAPTURES:
         return
-    full = Image.open(CAPTURES / "ui_03_agente.png").convert("RGB")
-    full.crop((300, 330, 1600, 1300)).save(FIGURES / "fig6_interfaz_votacion.png")
-    full.crop((340, 2560, 1560, 3900)).save(FIGURES / "fig7_agente.png")
-    safety = Image.open(CAPTURES / "ui_04_filtro_etico.png").convert("RGB")
-    safety.crop((0, 1250, 300, 1620)).save(FIGURES / "fig8_filtro.png")
-    full.crop((0, 0, 1600, 2500)).save(FIGURES / "anexo_interfaz_completa.png")
+    full = Image.open(CAPTURES / "v2_03_agente.png").convert("RGB")
+    full.crop((360, 1060, 1540, 1800)).save(FIGURES / "fig6_interfaz_votacion.png")
+    full.crop((360, 1850, 1540, 2620)).save(FIGURES / "fig7_agente.png")
+    safety = Image.open(CAPTURES / "v2_04_filtro.png").convert("RGB")
+    safety.crop((10, 1150, 300, 1540)).save(FIGURES / "fig8_filtro.png")
 
 
 if __name__ == "__main__":

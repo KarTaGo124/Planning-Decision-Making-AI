@@ -90,14 +90,15 @@ En la primera corrida en Colab el LoRA no cargó por un conflicto de versiones d
 
 ## 5. Interfaz e interacción humano–IA
 
-<figure><img src="figuras/fig6_interfaz_votacion.png" style="width:86%"><figcaption>Figura 3. Interfaz conectada a la GPU de Colab: foto de entrada y variaciones con su decisión, calificación y comentario.</figcaption></figure>
+<figure><img src="figuras/fig6_interfaz_votacion.png" style="width:92%"><figcaption>Figura 3. Paso 2 de la interfaz, conectada a la GPU de Colab: las variaciones aceptadas quedan enmarcadas en verde y las rechazadas pasan a gris, cada una con su calificación y comentario.</figcaption></figure>
 
 La interfaz (Figura 3) sigue el flujo de la sección 1:
 
 - **Selección de estilos:** la barra lateral permite elegir el motor (intermedio, básico o contingencia local), un paquete temático o una selección manual de estilos, y escribir un ajuste de vestimenta en texto libre.
 - **Filtro inmediato:** el filtro ético revisa ese texto mientras se escribe y bloquea la solicitud con un mensaje explícito (Anexo B).
-- **Decisión pendiente:** cada variación aparece con su estilo, la iluminación, el fondo y la vestimenta propuestos, y en estado **Pendiente**. El sistema no asume ninguna aprobación hasta que el usuario vota.
-- **Retroalimentación por imagen:** botones *Aceptar* y *Rechazar*, una calificación de 1 a 5 y un comentario.
+- **Decisión pendiente:** las variaciones se muestran juntas, como una hoja de contactos de fotografía, cada una con su estilo y en estado **Pendiente**. El sistema no asume ninguna aprobación hasta que el usuario vota.
+- **Retroalimentación por imagen:** botones *Aceptar* y *Rechazar*, una calificación de 1 a 5 y un comentario. Al votar, la variación aceptada queda enmarcada en verde y la rechazada pasa a gris, de modo que la selección se ve de un vistazo.
+- **Transparencia:** antes de generar, la interfaz muestra el recorte de 512 × 512 px y los bordes Canny que guiarán al modelo.
 
 Cada acción se guarda de inmediato en `data/processed/user_decisions.json`, que se puede descargar desde la pantalla. Cada registro incluye la variación, el estilo, la decisión, la calificación, el comentario, el motor usado y la latencia medida (Anexo C). Cada lote generado se guarda en `data/processed/generated/` con la entrada, los bordes, las cinco imágenes y sus tiempos. La barra lateral también permite asociar las decisiones a un código anónimo de participante y cerrar la sesión en un archivo independiente.
 
@@ -107,7 +108,7 @@ Completar el ciclo toma nueve acciones: subir la foto, elegir el paquete, genera
 
 El agente (Figura 4) recibe el registro de decisiones y produce primero una lista determinista de las variaciones aceptadas y rechazadas, con su calificación y comentario. Esa lista proviene del JSON y no del modelo de lenguaje, lo que garantiza que el requisito central del enunciado se cumpla siempre. Después pide al modelo de lenguaje una explicación con cuatro secciones: conteos, cada aceptada con su motivo, cada rechazada con su motivo y recomendaciones para la siguiente generación. Las instrucciones exigen usar solo los datos entregados y no omitir ninguna variación.
 
-<figure><img src="figuras/fig7_agente.png" style="width:62%"><figcaption>Figura 4. Explicación generada por Gemini 3.5 Flash Lite para las decisiones de la Figura 3, con su fidelidad calculada y las métricas de la sesión.</figcaption></figure>
+<figure><img src="figuras/fig7_agente.png" style="width:80%"><figcaption>Figura 4. Paso 3 de la interfaz: explicación generada por Gemini 3.5 Flash Lite para las decisiones de la Figura 3, con su fidelidad calculada y el registro de la sesión.</figcaption></figure>
 
 Siguiendo la sugerencia de comparar más de un modelo de lenguaje, el agente ofrece tres opciones:
 
@@ -318,7 +319,7 @@ En esta sesión de prueba no se movió el control de calificación, así que tod
 ## Anexo D. Reproducibilidad
 
 1. **Servidor GPU.** Subir `notebooks/controlnet_portrait_pipeline.ipynb` a Google Colab, elegir GPU T4 y usar "Ejecutar todas". El notebook pide la foto, guarda los resultados en `resultados_colab.zip` y publica el servidor con una URL `trycloudflare.com`.
-2. **Interfaz.** En `Project-II`, ejecutar `pip install -r requirements.txt` y luego `streamlit run ui/app.py` (o `run_app.bat`). Pegar la URL del servidor y presionar "Probar Conexión GPU".
+2. **Interfaz.** En `Project-II`, ejecutar `pip install -r requirements.txt` y luego `streamlit run ui/app.py` (o `run_app.bat`). Pegar la URL del servidor y presionar "Probar conexión".
 3. **Agente con Gemini.** Crear un archivo `.env` con la línea `GEMINI_API_KEY=...`.
 4. **Métricas.** Ejecutar `material_apoyo/informe/medir_imagenes.py` (métricas de imagen) y `material_apoyo/informe/evaluar_agente.py 10` (fidelidad del agente). Los resultados se guardan en `material_apoyo/informe/datos/`.
 

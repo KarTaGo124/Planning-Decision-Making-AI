@@ -98,18 +98,18 @@ Preparación, 15 a 20 minutos antes de exponer (la primera vez Colab descarga un
 4. Esperar la sección 9 y copiar la URL que termina en `.trycloudflare.com`. No cerrar la pestaña de Colab: esa celda queda corriendo.
 5. Revisar que exista el archivo `.env` con `GEMINI_API_KEY` en la raíz del repositorio de la laptop de la demo.
 6. En la laptop, doble clic en `Project-II/run_app.bat`. Se abre http://localhost:8501.
-7. En la barra lateral, en **Motor generativo**, elegir **Nivel Intermedio (ControlNet Canny + img2img, GPU)**. Pegar la URL y presionar **Probar Conexión GPU**. Debe aparecer `Conectado: Tesla T4 · LoRA activo`. Si dice `LoRA no cargado`, se puede seguir igual.
+7. En la barra lateral, en **Motor generativo**, elegir **Nivel Intermedio (ControlNet Canny + img2img, GPU)**. Pegar la URL y presionar **Probar conexión**. Debe aparecer `Conectado a Tesla T4, LoRA activo`. Si dice `LoRA no cargado`, se puede seguir igual.
 
 Durante la demo (unos 3 minutos y medio):
 
 1. En **1. Fotografía de Entrada**, subir la foto.
 2. En **Seleccione un paquete sugerido**, dejar **Paquete Corporativo Multiplataforma (5 Variaciones)**.
-3. Presionar **Generar Variaciones Visuales**. Tarda de 25 a 35 s; mientras tanto, explicar que la foto viaja al servidor de Colab.
+3. Presionar **Generar variaciones**. Tarda de 25 a 35 s; mientras tanto, explicar que la foto viaja al servidor de Colab.
 4. Votar las 5 variaciones con **Aceptar** o **Rechazar**, mover la calificación y escribir un comentario corto en una o dos. Decir en voz alta por qué.
-5. En **Modelo para Sintetizar Explicaciones**, elegir **Google Gemini Flash (API)** y presionar **Generar Explicación con Agente IA**. Leer la lista de aceptadas y rechazadas y la fidelidad.
+5. En **Modelo para la explicación**, elegir **Google Gemini Flash (API)** y presionar **Generar explicación**. Leer la lista de aceptadas y rechazadas y la fidelidad.
 6. En **Personalización (Prompt Libre)**, escribir `sin ropa` y presionar Enter. Mostrar el bloqueo en rojo.
 
-Si una generación falla con «Remote end closed connection», es un corte del túnel: presionar de nuevo **Generar Variaciones Visuales**.
+Si una generación falla con «Remote end closed connection», es un corte del túnel: presionar de nuevo **Generar variaciones**.
 
 ## Plan B si falla la GPU
 

@@ -312,7 +312,7 @@ class ExplanationAgent:
             return fallback_result
 
         return ExplanationResult(
-            model_name=f"{active_model.value} · {model_id}",
+            model_name=f"{active_model.value}, modelo {model_id}",
             summary=f"Explicación analítica generada mediante {active_model.value}.",
             accepted_patterns=fallback_result.accepted_patterns,
             rejected_patterns=fallback_result.rejected_patterns,

@@ -40,10 +40,10 @@ Entorno de ejecución, Cambiar tipo de entorno de ejecución, **T4 GPU**, Guarda
 ### Paso 4: Conectar la aplicación Streamlit
 1. En su computadora ejecute `run_app.bat` o `streamlit run ui/app.py`.
 2. En la barra lateral, en "Motor generativo", elija `Nivel Intermedio (ControlNet Canny + img2img, GPU)` o `Nivel Básico (Stable Diffusion img2img, GPU)`.
-3. Pegue la URL de Cloudflare y presione `Probar Conexión GPU`. Debe aparecer `Conectado: Tesla T4 · LoRA activo`.
+3. Pegue la URL de Cloudflare y presione `Probar conexión`. Debe aparecer `Conectado a Tesla T4, LoRA activo`.
 
 ### Paso 5: Generar y evaluar
-- Suba la foto, elija un paquete de 5 variaciones y presione `Generar Variaciones Visuales`.
+- Suba la foto, elija un paquete de 5 variaciones y presione `Generar variaciones`.
 - Cada lote se guarda automáticamente en `data/processed/generated/<fecha_hora>/` (entrada, bordes Canny, las variaciones y `batch.json` con el tiempo).
 
 ---
@@ -118,18 +118,18 @@ Durante la exposición frente a los docentes, se sugiere seguir este orden de de
 2. **Generación del Lote de Variaciones:**
    - Limpie el prompt libre (o ingrese un detalle como: `corbata azul marino`).
    - Seleccione el Paquete Corporativo Multiplataforma (5 Variaciones).
-   - Presione `Generar Variaciones Visuales`.
+   - Presione `Generar variaciones`.
    - Muestre cómo se presentan las 5 fotos adaptadas para LinkedIn y WhatsApp.
 
 3. **Demostración del Paradigma Human-in-the-Loop:**
-   - Muestre que cada tarjeta visual inicia en estado: `Decisión: Pendiente`.
+   - Muestre que cada tarjeta visual inicia en estado: `Pendiente`.
    - Haga clic en Aceptar en 2 o 3 fotos y en Rechazar en las restantes.
    - Ajuste las estrellas de calificación (1 a 5) y registre una observación breve (ej. *"Buen contraste de iluminación"*).
-   - Muestre que el panel derecho actualiza en tiempo real la Tasa de Aceptación (%) y la Diversidad Visual.
-   - Presione `Descargar user_decisions.json` para evidenciar la trazabilidad de datos.
+   - Muestre que el Registro de la sesión se actualiza con cada decisión: aceptadas, rechazadas, calificación media y diversidad de estilos.
+   - Presione `Descargar registro (JSON)` para evidenciar la trazabilidad de datos.
 
 4. **Ejecución del Agente Explicador LLM:**
-   - En la Sección 3, presione `Generar Explicación con Agente IA`.
+   - En la Sección 3, presione `Generar explicación`.
    - Muestre el reporte del agente: la lista de variaciones aceptadas y rechazadas, la explicación de cada decisión y la fidelidad calculada contra el registro JSON.
 
 ---

@@ -1,0 +1,296 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap");
+
+:root {
+  --papel: #F7F8FA;
+  --estudio: #EAEEF2;
+  --tinta: #1E2A36;
+  --grafito: #5E6B78;
+  --linea: #D5DCE3;
+  --cianotipo: #23598C;
+  --revelado: #2E7D57;
+  --ladrillo: #A9463A;
+}
+
+.stApp,
+[data-testid="stSidebar"] {
+  font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+  color: var(--tinta);
+}
+
+.stApp button,
+.stApp input,
+.stApp textarea {
+  font-family: inherit;
+}
+
+.stAppDeployButton,
+#MainMenu {
+  display: none;
+}
+
+[data-testid="stMainBlockContainer"],
+.block-container {
+  padding-top: 2.2rem;
+  max-width: 1360px;
+}
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4 {
+  font-family: "Archivo", "Segoe UI", sans-serif;
+  color: var(--tinta);
+  letter-spacing: -0.005em;
+}
+
+.cabecera {
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.6rem;
+}
+
+.cabecera h1 {
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  font-weight: 640;
+  font-size: 2.45rem;
+  line-height: 1.05;
+  margin: 0 0 0.55rem 0;
+  padding: 0;
+}
+
+.cabecera .bajada {
+  font-size: 1.06rem;
+  line-height: 1.5;
+  max-width: 62ch;
+  margin: 0 0 0.5rem 0;
+}
+
+.cabecera .credito {
+  font-size: 0.82rem;
+  color: var(--grafito);
+  max-width: 90ch;
+  margin: 0;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .paso {
+  font-size: 1.32rem;
+  font-weight: 620;
+  margin: 0.2rem 0 0.15rem 0;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .paso .numero {
+  font-variation-settings: "wdth" 75;
+  font-stretch: 75%;
+  color: var(--cianotipo);
+  font-weight: 700;
+  margin-right: 0.45rem;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .indicacion {
+  color: var(--grafito);
+  font-size: 0.93rem;
+  max-width: 78ch;
+  margin: 0 0 0.9rem 0;
+}
+
+.vacio {
+  border: 1px dashed var(--linea);
+  border-radius: 4px;
+  padding: 2.4rem 1.4rem;
+  color: var(--grafito);
+  text-align: center;
+  background: #FFFFFF;
+}
+
+[data-testid="stSidebar"] {
+  background: var(--estudio);
+  border-right: 1px solid var(--linea);
+}
+
+[data-testid="stSidebar"] h4 {
+  font-size: 0.98rem;
+  font-weight: 650;
+  margin: 0.6rem 0 0.1rem 0;
+}
+
+[data-testid="stSidebar"] hr {
+  margin: 0.9rem 0;
+  border-color: var(--linea);
+}
+
+.stApp [data-testid="stMarkdownContainer"] .estado-conexion {
+  font-size: 0.86rem;
+  margin: 0.3rem 0 0 0;
+}
+
+.estado-conexion.ok { color: var(--revelado); }
+.estado-conexion.error { color: var(--ladrillo); }
+
+.stApp [data-testid="stMarkdownContainer"] .fotograma-numero {
+  font-variation-settings: "wdth" 75;
+  font-stretch: 75%;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--grafito);
+  margin: 0.55rem 0 0 0;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .fotograma-titulo {
+  font-weight: 620;
+  font-size: 0.98rem;
+  line-height: 1.25;
+  margin: 0.05rem 0 0.15rem 0;
+  min-height: 2.5em;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .fotograma-red {
+  font-size: 0.82rem;
+  color: var(--grafito);
+  margin: 0 0 0.35rem 0;
+  min-height: 2.5em;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .estado {
+  font-size: 0.86rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem 0;
+}
+
+.estado::before {
+  content: "";
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  vertical-align: 0.05rem;
+  border: 1.5px solid currentColor;
+}
+
+.estado-pendiente { color: var(--grafito); }
+.estado-aceptada { color: var(--revelado); }
+.estado-aceptada::before { background: currentColor; }
+.estado-rechazada { color: var(--ladrillo); }
+.estado-rechazada::before { background: currentColor; }
+
+[class*="st-key-fotograma-"] [data-testid="stImage"] img {
+  border-radius: 2px;
+  transition: filter 160ms ease, opacity 160ms ease, outline-color 160ms ease;
+}
+
+[class*="st-key-fotograma-pendiente"] [data-testid="stImage"] img {
+  outline: 1px solid var(--linea);
+  outline-offset: 4px;
+}
+
+[class*="st-key-fotograma-aceptada"] [data-testid="stImage"] img {
+  outline: 3px solid var(--revelado);
+  outline-offset: 4px;
+}
+
+[class*="st-key-fotograma-rechazada"] [data-testid="stImage"] img {
+  outline: 1px solid var(--linea);
+  outline-offset: 4px;
+  filter: grayscale(0.9);
+  opacity: 0.5;
+}
+
+[class*="st-key-acc_"] button {
+  background: #FFFFFF;
+  border: 1px solid var(--revelado);
+  color: var(--revelado);
+}
+
+[class*="st-key-acc_"] button:hover,
+[class*="st-key-acc_"] button:focus-visible {
+  background: var(--revelado);
+  border-color: var(--revelado);
+  color: #FFFFFF;
+}
+
+[class*="st-key-rej_"] button {
+  background: #FFFFFF;
+  border: 1px solid var(--ladrillo);
+  color: var(--ladrillo);
+}
+
+[class*="st-key-rej_"] button:hover,
+[class*="st-key-rej_"] button:focus-visible {
+  background: var(--ladrillo);
+  border-color: var(--ladrillo);
+  color: #FFFFFF;
+}
+
+.stApp button {
+  border-radius: 6px;
+}
+
+.stApp button:focus-visible {
+  outline: 2px solid var(--cianotipo);
+  outline-offset: 2px;
+}
+
+.registro {
+  border-top: 1px solid var(--linea);
+  margin: 0.4rem 0 0.8rem 0;
+}
+
+.registro div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.registro dt {
+  color: var(--grafito);
+  font-size: 0.92rem;
+}
+
+.registro dd {
+  margin: 0;
+  font-weight: 640;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stApp [data-testid="stMarkdownContainer"] .explicacion-meta {
+  font-size: 0.86rem;
+  color: var(--grafito);
+  margin: 0.2rem 0 0.8rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="st-key-fotograma-"] [data-testid="stImage"] img {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .cabecera h1 {
+    font-size: 1.9rem;
+  }
+}
+
+.st-key-explicacion h1,
+.st-key-explicacion h2,
+.st-key-explicacion h3 {
+  font-size: 1.08rem;
+  font-weight: 640;
+  margin: 1rem 0 0.35rem 0;
+  padding: 0;
+}
+
+.st-key-explicacion h4 {
+  font-size: 0.98rem;
+  font-weight: 620;
+  margin: 0.8rem 0 0.3rem 0;
+}
+
+.st-key-explicacion p,
+.st-key-explicacion li {
+  max-width: 80ch;
+  line-height: 1.55;
+}

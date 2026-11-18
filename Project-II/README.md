@@ -85,5 +85,5 @@ streamlit run ui/app.py
 1. Suba [`notebooks/controlnet_portrait_pipeline.ipynb`](notebooks/controlnet_portrait_pipeline.ipynb) a Google Colab.
 2. Elija GPU T4 en Entorno de ejecución > Cambiar tipo de entorno de ejecución.
 3. Use Entorno de ejecución > Ejecutar todas y suba una foto cuando el notebook la pida. Al terminar, se descarga `resultados_colab.zip` y aparece una URL `trycloudflare.com`.
-4. En la app de Streamlit, elija "Nivel Intermedio" o "Nivel Básico", pegue la URL y presione "Probar Conexión GPU".
-5. Presione "Generar Variaciones Visuales".
+4. En la app de Streamlit, elija "Nivel Intermedio" o "Nivel Básico", pegue la URL y presione "Probar conexión".
+5. Presione "Generar variaciones".
