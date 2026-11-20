@@ -10,14 +10,14 @@ Repositorio (codigo en la carpeta Project-II):
 https://github.com/KarTaGo124/Planning-Decision-Making-AI
 
 Video demostrativo (3 minutos o menos):
-PENDIENTE
+(Ubicado en el Drive)
 
 Carpeta de Drive (informe PDF, presentacion PPT, este archivo):
 https://drive.google.com/drive/folders/1Mqc0uwjQkejTXz0lgVZyIbDizpZqlwtp?usp=sharing
 
 Archivos de esta entrega:
-- Informe_Proyecto2_Grupo7.pdf
-- Presentacion_Proyecto2_Grupo7.pptx
+- Informe.pdf
+- Diapositivas.pdf
 
 Como ejecutar el sistema:
 Project-II/HOW_TO_RUN.md
