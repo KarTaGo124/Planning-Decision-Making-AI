@@ -1,0 +1,110 @@
+{
+  "participant": "Michael Hinojosa",
+  "profile": "",
+  "closed_at": "2026-11-20 12:39:58",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 3,
+    "rejected_count": 2,
+    "acceptance_rate_percent": 60.0,
+    "average_rating": 3.0,
+    "average_latency_seconds": 7.98,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Formal": 1,
+      "Business Casual": 2,
+      "Smart Casual": 2
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 60.0%.\n\n#### Variaciones aceptadas (3)\n- LinkedIn - Business Casual (calificación 3/5) «Expresión quizas demasiado seria?»\n- WhatsApp - Smart Casual Cercano (calificación 3/5)\n- WhatsApp - Business Casual (calificación 4/5)\n\n#### Variaciones rechazadas (2)\n- LinkedIn - Formal Clásico (calificación 2/5) «Mi cara no se ve asi»\n- LinkedIn - Smart Casual (calificación 3/5) «Expresión muy seria y la iluminación se ve rara»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluación\nSe evaluaron un total de **5 variaciones**. De ellas, **3 fueron aceptadas** y **2 fueron rechazadas**.\n\n### 2. Variaciones aceptadas\n*   **LinkedIn - Business Casual**\n    *   *Por qué se aceptó:* El usuario la aceptó a pesar de señalar en sus notas que la «Expresión quizas demasiado seria?». Funciona bajo un nivel de formalidad *Business Casual* para la plataforma *LinkedIn*, utilizando una *Luz natural de ventana cálida y envolvente* y un fondo de *Espacio de trabajo colaborativo o ventanal con luz diurna*. Obtuvo una calificación de 3.\n*   **WhatsApp - Smart Casual Cercano**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 3 para la plataforma *WhatsApp* con un nivel de formalidad *Smart Casual*. Cuenta con una *Luz diurna frontal limpia y sin sombras duras* y un *Fondo luminoso y limpio con colores claros*. El usuario no dejó notas negativas al respecto.\n*   **WhatsApp - Business Casual**\n    *   *Por qué se aceptó:* Es la mejor valorada (calificación de 4) y fue aceptada para la plataforma *WhatsApp* con un nivel de formalidad *Business Casual*. Utiliza una *Luz suave de oficina con balance de blancos neutro* y un *Entorno de oficina neutro minimalista*. No presenta notas de insatisfacción por parte del usuario.\n\n### 3. Variaciones rechazadas\n*   **LinkedIn - Formal Clásico**\n    *   *Por qué se rechazó:* Fue rechazada (calificación de 2) para la plataforma *LinkedIn* con formalidad *Formal*. El motivo principal indicado en las notas del usuario fue un problema grave de parecido: «Mi cara no se ve asi», a pesar de usar una *Luz frontal difusa de tres puntos* y un fondo de *Oficina corporativa moderna con bokeh suave*.\n*   **LinkedIn - Smart Casual**\n    *   *Por qué se rechazó:* Fue rechazada (calificación de 3) para la plataforma *LinkedIn* con formalidad *Smart Casual*. El usuario indicó en sus notas que tenía una «Expresión muy seria y la iluminación se ve rara» (la cual estaba configurada como *Iluminación ambiental cálida con contraste moderado* sobre una *Pared arquitectónica de concreto pulido o madera clara desenfocada*).\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Mejorar el parecido facial:** Es prioritario ajustar el modelo de reconocimiento facial, ya que la variación formal clásica fue rechazada explícitamente porque el usuario indicó que su cara no se ve así.\n*   **Suavizar las expresiones:** Evitar expresiones demasiado serias, ya que fue una queja recurrente tanto en la variación *Business Casual* de LinkedIn como en la *Smart Casual* de la misma plataforma.\n*   **Revisar esquemas de iluminación:** Descartar o ajustar la *iluminación ambiental cálida con contraste moderado*, ya que el usuario reportó que se veía rara en las fotos de LinkedIn. Mantener en su lugar luces naturales, frontales limpias o suaves (como las utilizadas en las fotos exitosas de WhatsApp y el Business Casual de LinkedIn).\n*   **Mantener la preferencia por entornos limpios y naturales:** Los fondos luminosos, neutros, minimalistas o con luz diurna natural (presentes en las opciones aceptadas) generan una mejor recepción por parte del usuario."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_formal_15739",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Mi cara no se ve asi",
+      "timestamp": 1795196104.183,
+      "latency_seconds": 7.982,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Michael Hinojosa"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_19423",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "Expresión quizas demasiado seria?",
+      "timestamp": 1795196166.527,
+      "latency_seconds": 7.982,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Michael Hinojosa"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_23527",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "Expresión muy seria y la iluminación se ve rara",
+      "timestamp": 1795196237.341,
+      "latency_seconds": 7.982,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Michael Hinojosa"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_31033",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "",
+      "timestamp": 1795196296.764,
+      "latency_seconds": 7.982,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Michael Hinojosa"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_27086",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "",
+      "timestamp": 1795196361.418,
+      "latency_seconds": 7.982,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Michael Hinojosa"
+    }
+  ]
+}

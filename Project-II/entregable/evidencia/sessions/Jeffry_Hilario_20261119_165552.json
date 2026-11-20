@@ -1,0 +1,110 @@
+{
+  "participant": "Jeffry Hilario",
+  "profile": "",
+  "closed_at": "2026-11-19 16:55:52",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 0,
+    "rejected_count": 5,
+    "acceptance_rate_percent": 0.0,
+    "average_rating": 2.0,
+    "average_latency_seconds": 8.09,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Formal": 1,
+      "Business Casual": 2,
+      "Smart Casual": 2
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 0.0%.\n\n#### Variaciones aceptadas (0)\n- Ninguna.\n\n#### Variaciones rechazadas (5)\n- LinkedIn - Formal Clásico (calificación 2/5) «Me cambiaste los rasgos faciales»\n- LinkedIn - Business Casual (calificación 2/5) «Me cambiaste los rasgos faciales»\n- LinkedIn - Smart Casual (calificación 2/5) «Me cambiaste los rasgos faciales»\n- WhatsApp - Business Casual (calificación 2/5) «Me cambiaste los rasgos faciales»\n- WhatsApp - Smart Casual Cercano (calificación 2/5) «Me cambiaste los rasgos faciales»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluación\n* **Variaciones evaluadas:** 5\n* **Variaciones aceptadas:** 0\n* **Variaciones rechazadas:** 5\n\n### 2. Variaciones aceptadas\n* No hay variaciones aceptadas en esta tanda (0 de 5).\n\n### 3. Variaciones rechazadas\nTodas las variaciones fueron rechazadas debido a un motivo común señalado por el usuario en sus notas (\"Me cambiaste los rasgos faciales\"), obteniendo una calificación de 2 y un estado de `aceptada: false`. Las variaciones rechazadas son:\n\n* **LinkedIn - Formal Clásico** (`gpu_var_linkedin_formal_89643`): Rechazada porque el sistema alteró los rasgos faciales del usuario, a pesar de contar con iluminación de luz frontal difusa de tres puntos y fondo de oficina corporativa moderna con bokeh suave.\n* **LinkedIn - Business Casual** (`gpu_var_linkedin_business_casual_93491`): Rechazada por cambio en los rasgos faciales, independientemente de la iluminación natural de ventana cálida y envolvente y el fondo de espacio de trabajo colaborativo o ventanal.\n* **LinkedIn - Smart Casual** (`gpu_var_linkedin_smart_casual_97775`): Rechazada debido a la modificación de los rasgos faciales, a pesar de la iluminación ambiental cálida con contraste moderado y el fondo de pared arquitectónica de concreto pulido o madera clara desenfocada.\n* **WhatsApp - Business Casual** (`gpu_var_whatsapp_business_casual_1519`): Rechazada porque se alteraron los rasgos faciales, sin importar el uso de luz suave de oficina con balance de blancos neutro y un entorno de oficina neutro minimalista.\n* **WhatsApp - Smart Casual Cercano** (`gpu_var_whatsapp_smart_casual_5654`): Rechazada por el cambio en los rasgos faciales, a pesar de haber utilizado luz diurna frontal limpia sin sombras duras y un fondo luminoso y limpio con colores claros.\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n* **Priorizar la fidelidad facial:** La principal falla técnica y motivo unánime de rechazo fue la alteración de los rasgos faciales del usuario en el 100% de los casos. Es imperativo ajustar el modelo de generación (por ejemplo, aumentando la fuerza del reconocimiento facial, usando mejores pesos de *ControlNet* o *LoRA* de identidad) para mantener la semejanza exacta del usuario antes de probar nuevos cambios de ropa, iluminación o fondos."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_formal_89643",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Me cambiaste los rasgos faciales",
+      "timestamp": 1795125058.183,
+      "latency_seconds": 8.092,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jeffry Hilario"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_93491",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "Me cambiaste los rasgos faciales",
+      "timestamp": 1795125127.527,
+      "latency_seconds": 8.092,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jeffry Hilario"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_97775",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "Me cambiaste los rasgos faciales",
+      "timestamp": 1795125188.341,
+      "latency_seconds": 8.092,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jeffry Hilario"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_1519",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "Me cambiaste los rasgos faciales",
+      "timestamp": 1795125264.764,
+      "latency_seconds": 8.092,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jeffry Hilario"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_5654",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "Me cambiaste los rasgos faciales",
+      "timestamp": 1795125318.418,
+      "latency_seconds": 8.092,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jeffry Hilario"
+    }
+  ]
+}

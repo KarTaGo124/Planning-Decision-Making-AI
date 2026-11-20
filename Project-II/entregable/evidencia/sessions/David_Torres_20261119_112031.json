@@ -1,0 +1,110 @@
+{
+  "participant": "David Torres",
+  "profile": "",
+  "closed_at": "2026-11-19 11:20:31",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 3,
+    "rejected_count": 2,
+    "acceptance_rate_percent": 60.0,
+    "average_rating": 2.8,
+    "average_latency_seconds": 8.2,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Smart Casual": 2,
+      "Business Casual": 2,
+      "Formal": 1
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 60.0%.\n\n#### Variaciones aceptadas (3)\n- LinkedIn - Formal Clásico (calificación 3/5) «Me has cambiado la forma del pelo»\n- LinkedIn - Business Casual (calificación 3/5)\n- WhatsApp - Smart Casual Cercano (calificación 4/5)\n\n#### Variaciones rechazadas (2)\n- LinkedIn - Smart Casual (calificación 2/5) «Mi cara se ve algo extraña»\n- WhatsApp - Business Casual (calificación 2/5) «Me cambiaste mucho el color de piel»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluaciones\nSe evaluaron un total de **5** variaciones de fotos profesionales generadas por IA, de las cuales **3 fueron aceptadas** y **2 fueron rechazadas**.\n\n### 2. Variaciones aceptadas\n*   **LinkedIn - Formal Clásico**\n    *   *Por qué se aceptó:* Fue aceptada (con una calificación de 3) a pesar de que el usuario señaló en sus notas que la IA le cambió la forma del pelo. Cuenta con iluminación frontal difusa de tres puntos y un fondo de oficina corporativa moderna con bokeh suave.\n*   **LinkedIn - Business Casual**\n    *   *Por qué se aceptó:* Fue aceptada (con una calificación de 3) utilizando un nivel de formalidad *Business Casual* para la plataforma LinkedIn. Presenta una iluminación natural de ventana cálida y envolvente, con un fondo de espacio de trabajo colaborativo o ventanal con luz diurna. El usuario no dejó notas negativas.\n*   **WhatsApp - Smart Casual Cercano**\n    *   *Por qué se aceptó:* Es la variación mejor calificada (4 de 5) y fue aceptada. Está diseñada para la plataforma WhatsApp con un estilo *Smart Casual*, utilizando luz diurna frontal limpia y sin sombras duras, sobre un fondo luminoso y limpio con colores claros. No tiene notas registradas.\n\n### 3. Variaciones rechazadas\n*   **LinkedIn - Smart Casual**\n    *   *Por qué se rechazó:* Fue rechazada con una calificación baja (2) para la plataforma LinkedIn y formalidad *Smart Casual*. El motivo principal indicado en las notas del usuario fue que su cara se veía «algo extraña». Su configuración incluía iluminación ambiental cálida con contraste moderado y un fondo de pared arquitectónica de concreto pulido o madera clara desenfocada.\n*   **WhatsApp - Business Casual**\n    *   *Por qué se rechazó:* Fue rechazada con una calificación baja (2) para la plataforma WhatsApp en formalidad *Business Casual*. El motivo explícito en las notas del usuario fue que le cambiaron mucho el color de piel. Utilizaba luz suave de oficina con balance de blancos neutro y un entorno de oficina neutro minimalista.\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Preservar la identidad facial:** Es fundamental mejorar la precisión en el reconocimiento y renderizado de los rasgos faciales del usuario, evitando alteraciones no deseadas en la forma del pelo, la extrañzade en la cara y, especialmente, el cambio en el color de piel.\n*   **Mantener esquemas de iluminación exitosos:** Continuar utilizando la luz diurna frontal limpia (como en el caso de WhatsApp - Smart Casual Cercano) y la luz natural de ventana cálida y envolvente (como en LinkedIn - Business Casual), ya que resultaron del agrado del usuario.\n*   **Atender a los entornos preferidos:** Los fondos luminosos, limpios, con colores claros o espacios de trabajo colaborativos y ventanales obtuvieron una mejor recepción en las fotos aceptadas frente a las paredes de concreto pulido o entornos de oficina excesivamente neutros de las rechazadas."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_71499",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "Mi cara se ve algo extraña",
+      "timestamp": 1795104946.183,
+      "latency_seconds": 8.197,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "David Torres"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_75159",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "Me cambiaste mucho el color de piel",
+      "timestamp": 1795105013.527,
+      "latency_seconds": 8.197,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "David Torres"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_formal_63647",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Me has cambiado la forma del pelo",
+      "timestamp": 1795105091.341,
+      "latency_seconds": 8.197,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "David Torres"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_67372",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "",
+      "timestamp": 1795105142.764,
+      "latency_seconds": 8.197,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "David Torres"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_79228",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "",
+      "timestamp": 1795105194.418,
+      "latency_seconds": 8.197,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "David Torres"
+    }
+  ]
+}

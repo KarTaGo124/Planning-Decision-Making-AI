@@ -1,0 +1,110 @@
+{
+  "participant": "Zamir Lizardo",
+  "profile": "",
+  "closed_at": "2026-11-20 09:30:27",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 3,
+    "rejected_count": 2,
+    "acceptance_rate_percent": 60.0,
+    "average_rating": 3.0,
+    "average_latency_seconds": 6.8,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Formal": 1,
+      "Business Casual": 2,
+      "Smart Casual": 2
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 60.0%.\n\n#### Variaciones aceptadas (3)\n- LinkedIn - Smart Casual (calificación 4/5)\n- LinkedIn - Business Casual (calificación 4/5)\n- WhatsApp - Smart Casual Cercano (calificación 3/5)\n\n#### Variaciones rechazadas (2)\n- LinkedIn - Formal Clásico (calificación 2/5) «Expresion muy seria»\n- WhatsApp - Business Casual (calificación 2/5) «Mi cara no se ve asi»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Cuántas variaciones se evaluaron, cuántas fueron aceptadas y cuántas rechazadas\nSe evaluaron un total de **5** variaciones de fotos profesionales. De ellas, **3** fueron aceptadas y **2** fueron rechazadas.\n\n### 2. Variaciones aceptadas\n*   **LinkedIn - Smart Casual**: Fue aceptada porque presenta un nivel de formalidad \"Smart Casual\" adecuado para la plataforma LinkedIn, combinada con una iluminación ambiental cálida con contraste moderado y un fondo de pared arquitectónica de concreto pulido o madera clara desenfocada. El usuario le dio una calificación de 4 y no dejó notas negativas.\n*   **LinkedIn - Business Casual**: Fue aceptada con una calificación de 4. El usuario aprobó esta opción que mantiene la formalidad \"Business Casual\" para LinkedIn, destacando el uso de una iluminación natural de ventana cálida y envolvente, junto con un fondo de espacio de trabajo colaborativo o ventanal con luz diurna. No registró notas.\n*   **WhatsApp - Smart Casual Cercano**: Fue aceptada para la plataforma WhatsApp con una calificación de 3. Se alinea con el nivel de formalidad \"Smart Casual\", apoyada por una iluminación diurna frontal limpia y sin sombras duras, y un fondo luminoso y limpio con colores claros. No incluye notas de rechazo.\n\n### 3. Variaciones rechazadas\n*   **LinkedIn - Formal Clásico**: Fue rechazada y calificada con un 2. Aunque estaba destinada para LinkedIn con un nivel de formalidad \"Formal\", iluminación de luz frontal difusa de tres puntos y un fondo de oficina corporativa moderna con bokeh suave, el usuario indicó en sus notas que la **\"Expresion muy seria\"** fue el motivo de su insatisfacción.\n*   **WhatsApp - Business Casual**: Fue rechazada y calificada con un 2. A pesar de contar con un entorno de oficina neutro minimalista y luz suave de oficina con balance de blancos neutro para la formalidad \"Business Casual\" en WhatsApp, el usuario la rechazó debido a un problema de parecido físico, señalando explícitamente en las notas: **\"Mi cara no se ve asi\"**.\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Mantener el nivel de formalidad y estilo visual:** Seguir generando opciones bajo el estilo \"Smart Casual\" y \"Business Casual\", ya que son los únicos que han obtenido la aprobación del usuario (calificaciones de 3 y 4).\n*   **Suavizar las expresiones faciales:** Evitar expresiones demasiado serias o rígidas (como ocurrió en la foto formal rechazada), buscando gestos más naturales y accesibles.\n*   **Mejorar el parecido facial (Fidelidad biométrica):** Ajustar los parámetros de generación de la IA para garantizar que el rostro refleje con mayor precisión la apariencia real del usuario, evitando así el rechazo por falta de reconocimiento (\"Mi cara no se ve asi\").\n*   **Conservar la iluminación cálida y natural:** Priorizar esquemas de iluminación como la luz natural de ventana o la iluminación ambiental cálida, que estuvieron presentes en las variaciones mejor puntuadas."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_formal_72822",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Expresion muy seria",
+      "timestamp": 1795184742.183,
+      "latency_seconds": 6.799,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Zamir Lizardo"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_84055",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "Mi cara no se ve asi",
+      "timestamp": 1795184806.527,
+      "latency_seconds": 6.799,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Zamir Lizardo"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_80504",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "",
+      "timestamp": 1795184876.341,
+      "latency_seconds": 6.799,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Zamir Lizardo"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_76488",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "",
+      "timestamp": 1795184931.764,
+      "latency_seconds": 6.799,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Zamir Lizardo"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_88055",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "",
+      "timestamp": 1795184992.418,
+      "latency_seconds": 6.799,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Zamir Lizardo"
+    }
+  ]
+}

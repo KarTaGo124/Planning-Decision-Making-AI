@@ -1,0 +1,110 @@
+{
+  "participant": "Kalos Lazo",
+  "profile": "",
+  "closed_at": "2026-11-20 11:44:42",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 2,
+    "rejected_count": 3,
+    "acceptance_rate_percent": 40.0,
+    "average_rating": 3.4,
+    "average_latency_seconds": 7.48,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Formal": 1,
+      "Smart Casual": 2,
+      "Business Casual": 2
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 40.0%.\n\n#### Variaciones aceptadas (2)\n- WhatsApp - Business Casual (calificación 4/5)\n- LinkedIn - Business Casual (calificación 4/5)\n\n#### Variaciones rechazadas (3)\n- LinkedIn - Formal Clásico (calificación 3/5) «Me cambiaste la expresión a una más neutra?»\n- LinkedIn - Smart Casual (calificación 3/5) «Mi tono de piel no es así»\n- WhatsApp - Smart Casual Cercano (calificación 3/5) «Mi tono de piel no es así»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluación\n* **Variaciones evaluadas:** 5\n* **Variaciones aceptadas:** 2\n* **Variaciones rechazadas:** 3\n\n---\n\n### 2. Variaciones aceptadas\n* **WhatsApp - Business Casual**\n  * **Por qué se aceptó:** Fue calificada con un 4 y aceptada por el usuario. Presenta un nivel de formalidad \"Business Casual\" adecuado para WhatsApp, con una iluminación de \"luz suave de oficina con balance de blancos neutro\" y un fondo de \"entorno de oficina neutro minimalista\". El usuario no dejó notas negativas, lo que indica conformidad con el resultado.\n* **LinkedIn - Business Casual**\n  * **Por qué se aceptó:** Obtuvo una calificación de 4 y fue aceptada. Su nivel de formalidad es \"Business Casual\" para la plataforma LinkedIn. Utiliza una iluminación de \"luz natural de ventana cálida y envolvente\" sobre un fondo de \"espacio de trabajo colaborativo o ventanal con luz diurna\". Al igual que la anterior, no registró notas de rechazo o corrección por parte del usuario.\n\n---\n\n### 3. Variaciones rechazadas\n* **LinkedIn - Formal Clásico**\n  * **Por qué se rechazó:** Fue rechazada y calificada con un 3. Aunque la iluminación (\"luz frontal difusa de tres puntos\") y el fondo (\"oficina corporativa moderna con bokeh suave\") eran adecuados, el usuario la rechazó debido a una alteración en su expresión, manifestada en su nota: *\"Me cambiaste la expresión a una más neutra?\"*.\n* **LinkedIn - Smart Casual**\n  * **Por qué se rechazó:** Rechazada con una calificación de 3. El motivo principal del rechazo fue la alteración en su apariencia física, específicamente indicada en su nota: *\"Mi tono de piel no es así\"*. \n* **WhatsApp - Smart Casual Cercano**\n  * **Por qué se rechazó:** Calificada con un 3 y marcada como no aceptada. Al igual que el caso anterior, el usuario la rechazó debido a un fallo en la generación de su identidad visual, reiterando en su nota: *\"Mi tono de piel no es así\"*.\n\n---\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n* **Respetar el tono de piel del usuario:** Las variaciones con nivel de formalidad \"Smart Casual\" fallaron repetidamente debido a inexactitudes en el tono de piel (*\"Mi tono de piel no es así\"*). Es prioritario calibrar el generador de IA para mantener la fidelidad cromática de la piel en todos los estilos.\n* **Mantener la expresividad natural:** Evitar modificar la expresión facial hacia rostros excesivamente neutros en las fotos de formalidad \"Formal\", ya que el usuario notó y desaprobó este cambio (*\"Me cambiaste la expresión a una más neutra?\"*).\n* **Priorizar el nivel \"Business Casual\":** Dado que el 100% de las variaciones aceptadas pertenecen al nivel de formalidad \"Business Casual\" (tanto para LinkedIn como para WhatsApp, con calificaciones de 4), se recomienda usar esta categoría como base principal para futuras generaciones.\n* **Replicar esquemas de iluminación exitosos:** Mantener el uso de \"luz suave de oficina con balance de blancos neutro\" y \"luz natural de ventana cálida y envolvente\", ya que estuvieron presentes en las fotos mejor evaluadas."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_formal_67801",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Me cambiaste la expresión a una más neutra?",
+      "timestamp": 1795192787.183,
+      "latency_seconds": 7.478,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Kalos Lazo"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_75552",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "Mi tono de piel no es así",
+      "timestamp": 1795192855.527,
+      "latency_seconds": 7.478,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Kalos Lazo"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_82978",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "Mi tono de piel no es así",
+      "timestamp": 1795192915.341,
+      "latency_seconds": 7.478,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Kalos Lazo"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_79061",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "",
+      "timestamp": 1795192989.764,
+      "latency_seconds": 7.478,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Kalos Lazo"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_71527",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "",
+      "timestamp": 1795193045.418,
+      "latency_seconds": 7.478,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Kalos Lazo"
+    }
+  ]
+}

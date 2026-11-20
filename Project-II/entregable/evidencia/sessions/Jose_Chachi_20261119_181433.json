@@ -1,0 +1,110 @@
+{
+  "participant": "Jose Chachi",
+  "profile": "",
+  "closed_at": "2026-11-19 18:14:33",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 4,
+    "rejected_count": 1,
+    "acceptance_rate_percent": 80.0,
+    "average_rating": 3.8,
+    "average_latency_seconds": 7.24,
+    "platform_distribution": {
+      "LinkedIn": 3,
+      "WhatsApp": 2
+    },
+    "formality_distribution": {
+      "Business Casual": 2,
+      "Formal": 1,
+      "Smart Casual": 2
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 80.0%.\n\n#### Variaciones aceptadas (4)\n- LinkedIn - Business Casual (calificación 4/5) «Me gusta la corbata»\n- LinkedIn - Formal Clásico (calificación 4/5) «Me gusta la corbata»\n- WhatsApp - Business Casual (calificación 4/5)\n- LinkedIn - Smart Casual (calificación 4/5)\n\n#### Variaciones rechazadas (1)\n- WhatsApp - Smart Casual Cercano (calificación 3/5) «Creo que cambiaste mi cara de más»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluación\nSe evaluaron un total de 5 variaciones de fotos profesionales generadas por IA. De ellas, **4 fueron aceptadas** y **1 fue rechazada**.\n\n### 2. Variaciones aceptadas\n*   **LinkedIn - Business Casual**\n    *   *Por qué se aceptó:* Fue calificada con 4 estrellas y el usuario indicó explícitamente en sus notas: \"Me gusta la corbata\". Cuenta con un nivel de formalidad Business Casual, iluminación de luz natural de ventana cálida y envolvente, y un fondo de espacio de trabajo colaborativo o ventanal con luz diurna.\n*   **LinkedIn - Formal Clásico**\n    *   *Por qué se aceptó:* Obtuvo una calificación de 4 estrellas. Al igual que en la anterior, el usuario destacó en sus notas: \"Me gusta la corbata\". Presenta un nivel de formalidad Formal, iluminación frontal difusa de tres puntos y fondo de oficina corporativa moderna con bokeh suave.\n*   **WhatsApp - Business Casual**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 4 estrellas (sin notas adicionales). Su formalidad es Business Casual, con iluminación suave de oficina con balance de blancos neutro y un fondo de entorno de oficina neutro minimalista.\n*   **LinkedIn - Smart Casual**\n    *   *Por qué se aceptó:* Se aceptó y recibió una calificación de 4 estrellas (sin notas adicionales). Corresponde al nivel de formalidad Smart Casual, con iluminación ambiental cálida con contraste moderado y un fondo de pared arquitectónica de concreto pulido o madera clara desenfocada.\n\n### 3. Variaciones rechazadas\n*   **WhatsApp - Smart Casual Cercano**\n    *   *Por qué se rechazó:* Fue la única variación no aceptada (marcada como `aceptada: false`). Obtuvo una calificación de 3 estrellas y el usuario dejó la siguiente nota aclarando el motivo del rechazo: \"Creo que cambiaste mi cara de más\".\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Mantener los elementos visuales exitosos:** Conservar el uso de corbatas (mencionadas positivamente en múltiples ocasiones) y los niveles de formalidad Business Casual, Formal y Smart Casual que ya demostraron ser del agrado del usuario.\n*   **Preservar la identidad facial:** Prestar especial atención a los algoritmos de reconocimiento facial en la generación, evitando alteraciones excesivas en los rasgos del usuario, ya que esto causó el rechazo en la prueba anterior (\"cambiaste mi cara de más\").\n*   **Sostener la calidad en la iluminación y fondos:** Continuar utilizando esquemas de iluminación variados pero favorecedores (como luz natural cálida, luz frontal difusa o ambiental cálida) y fondos corporativos o de oficina bien integrados, que obtuvieron calificaciones altas de 4 estrellas."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_44512",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "Me gusta la corbata",
+      "timestamp": 1795129781.183,
+      "latency_seconds": 7.242,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jose Chachi"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_formal_40880",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "Me gusta la corbata",
+      "timestamp": 1795129853.527,
+      "latency_seconds": 7.242,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jose Chachi"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_51852",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "",
+      "timestamp": 1795129918.341,
+      "latency_seconds": 7.242,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jose Chachi"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_55705",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "Creo que cambiaste mi cara de más",
+      "timestamp": 1795129976.764,
+      "latency_seconds": 7.242,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jose Chachi"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_48409",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "",
+      "timestamp": 1795130039.418,
+      "latency_seconds": 7.242,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Jose Chachi"
+    }
+  ]
+}

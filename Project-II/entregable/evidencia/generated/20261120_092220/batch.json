@@ -1,0 +1,47 @@
+{
+  "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+  "total_elapsed_seconds": 33.996,
+  "seconds_per_image": 6.799,
+  "variations": [
+    {
+      "file": "var1_linkedin_formal.png",
+      "variation_id": "gpu_var_linkedin_formal_72822",
+      "title": "LinkedIn - Formal Clásico",
+      "prompt_used": "person wearing a navy blue business suit, white shirt, tie, diffused studio lighting, blurred modern corporate office background, professional headshot photo, sharp focus on face, realistic skin, 85mm lens",
+      "guidance_scale": 7.5,
+      "denoising_strength": 0.42
+    },
+    {
+      "file": "var2_linkedin_business_casual.png",
+      "variation_id": "gpu_var_linkedin_business_casual_76488",
+      "title": "LinkedIn - Business Casual",
+      "prompt_used": "person wearing a navy blazer over a light blue open collar shirt, no tie, soft window light, blurred coworking space background, professional headshot photo, sharp focus on face, realistic skin, 85mm lens",
+      "guidance_scale": 7.5,
+      "denoising_strength": 0.45
+    },
+    {
+      "file": "var3_linkedin_smart_casual.png",
+      "variation_id": "gpu_var_linkedin_smart_casual_80504",
+      "title": "LinkedIn - Smart Casual",
+      "prompt_used": "person wearing a neat crew neck sweater, warm ambient lighting, blurred light wood architectural background, professional headshot photo, sharp focus on face, realistic skin, 85mm lens",
+      "guidance_scale": 7.0,
+      "denoising_strength": 0.48
+    },
+    {
+      "file": "var4_whatsapp_business_casual.png",
+      "variation_id": "gpu_var_whatsapp_business_casual_84055",
+      "title": "WhatsApp - Business Casual",
+      "prompt_used": "person wearing a casual blazer over a plain t-shirt, soft office lighting, minimal neutral office background, professional headshot photo, sharp focus on face, realistic skin, 85mm lens",
+      "guidance_scale": 7.2,
+      "denoising_strength": 0.43
+    },
+    {
+      "file": "var5_whatsapp_smart_casual.png",
+      "variation_id": "gpu_var_whatsapp_smart_casual_88055",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "prompt_used": "person wearing a clean light polo shirt, bright daylight, plain light background, friendly smile, close-up, professional headshot photo, sharp focus on face, realistic skin, 85mm lens",
+      "guidance_scale": 7.0,
+      "denoising_strength": 0.45
+    }
+  ]
+}

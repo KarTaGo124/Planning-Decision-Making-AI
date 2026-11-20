@@ -1,0 +1,110 @@
+{
+  "participant": "Fernando Usurin",
+  "profile": "",
+  "closed_at": "2026-11-19 12:49:28",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 2,
+    "rejected_count": 3,
+    "acceptance_rate_percent": 40.0,
+    "average_rating": 3.0,
+    "average_latency_seconds": 7.79,
+    "platform_distribution": {
+      "WhatsApp": 2,
+      "LinkedIn": 3
+    },
+    "formality_distribution": {
+      "Smart Casual": 2,
+      "Business Casual": 2,
+      "Formal": 1
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 40.0%.\n\n#### Variaciones aceptadas (2)\n- WhatsApp - Business Casual (calificación 4/5)\n- LinkedIn - Formal Clásico (calificación 4/5)\n\n#### Variaciones rechazadas (3)\n- WhatsApp - Smart Casual Cercano (calificación 2/5) «No me veo asi»\n- LinkedIn - Smart Casual (calificación 2/5) «No me veo asi»\n- LinkedIn - Business Casual (calificación 3/5) «Mi pelo se ve raro»\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Resumen de evaluación\nSe evaluaron un total de **5 variaciones**. De ellas, **2 fueron aceptadas** y **3 fueron rechazadas**.\n\n### 2. Variaciones aceptadas\n*   **WhatsApp - Business Casual**\n    *   **Por qué se aceptó:** Fue calificada con un 4. El usuario aceptó esta opción gracias a que combina una iluminación suave de oficina con balance de blancos neutro y un fondo de entorno de oficina neutro minimalista, en un nivel de formalidad *Business Casual* adaptado a la plataforma WhatsApp. Las notas del usuario están vacías, lo que indica conformidad total.\n*   **LinkedIn - Formal Clásico**\n    *   **Por qué se aceptó:** Obtuvo una calificación de 4. Se aceptó al presentar una formalidad *Formal* adecuada para LinkedIn, apoyada por una iluminación frontal difusa de tres puntos y un fondo de oficina corporativa moderna con bokeh suave. No incluye notas de rechazo del usuario.\n\n### 3. Variaciones rechazadas\n*   **WhatsApp - Smart Casual Cercano**\n    *   **Por qué se rechazó:** Fue rechazada (calificación de 2). El motivo principal indicado por el usuario en sus notas es que «No me veo asi», a pesar de contar con una luz diurna frontal limpia sin sombras duras y un fondo luminoso y limpio con colores claros.\n*   **LinkedIn - Smart Casual**\n    *   **Por qué se rechazó:** Rechazada con una calificación de 2. Al igual que en el caso anterior, el usuario indicó como nota de rechazo que «No me veo asi», desaprobando el resultado a pesar de la iluminación ambiental cálida con contraste moderado y el fondo de pared arquitectónica de concreto pulido o madera clara desenfocada.\n*   **LinkedIn - Business Casual**\n    *   **Por qué se rechazó:** Aunque tuvo una calificación ligeramente superior (3), fue rechazada (*aceptada: false*). El motivo específico señalado por el usuario en sus notas fue que «Mi pelo se ve raro», a pesar de utilizar luz natural de ventana cálida y envolvente con un fondo de espacio de trabajo colaborativo o ventanal.\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Mejorar el realismo facial y del cabello:** Es prioritario corregir la generación de rasgos identitarios y del cabello, ya que el motivo principal de rechazo en dos de los casos fue que el usuario siente que «No me veo asi» o que «Mi pelo se ve raro».\n*   **Priorizar formalidades *Business Casual* y *Formal*:** El usuario mostró mayor aceptación (calificaciones de 4) en las fotos con formalidad *Business Casual* (para WhatsApp) y *Formal Clásico* (para LinkedIn), por lo que se deben mantener o refinar estos niveles de vestimenta.\n*   **Mantener esquemas de iluminación controlados:** Continuar utilizando configuraciones similares a las de las fotos aceptadas (luz suave de oficina o luz frontal difusa de tres puntos), evitando variaciones que alteren la percepción real de la persona."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_13475",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "No me veo asi",
+      "timestamp": 1795110278.183,
+      "latency_seconds": 7.793,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Fernando Usurin"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_5565",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": false,
+      "rating": 2,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "No me veo asi",
+      "timestamp": 1795110336.527,
+      "latency_seconds": 7.793,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Fernando Usurin"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_1135",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": false,
+      "rating": 3,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "Mi pelo se ve raro",
+      "timestamp": 1795110410.341,
+      "latency_seconds": 7.793,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Fernando Usurin"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_9378",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "",
+      "timestamp": 1795110476.764,
+      "latency_seconds": 7.793,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Fernando Usurin"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_formal_97050",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "",
+      "timestamp": 1795110531.418,
+      "latency_seconds": 7.793,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Fernando Usurin"
+    }
+  ]
+}

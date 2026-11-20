@@ -1,0 +1,110 @@
+{
+  "participant": "Javier Olivares",
+  "profile": "",
+  "closed_at": "2026-11-19 15:26:44",
+  "metrics": {
+    "total_evaluated": 5,
+    "accepted_count": 5,
+    "rejected_count": 0,
+    "acceptance_rate_percent": 100.0,
+    "average_rating": 3.6,
+    "average_latency_seconds": 8.12,
+    "platform_distribution": {
+      "WhatsApp": 2,
+      "LinkedIn": 3
+    },
+    "formality_distribution": {
+      "Business Casual": 2,
+      "Smart Casual": 2,
+      "Formal": 1
+    },
+    "visual_diversity_score": 0.96
+  },
+  "agent": {
+    "model": "Google Gemini Flash (API), modelo gemini-3.5-flash-lite",
+    "fidelity_score": 1.0,
+    "narrative": "**Resultado:** 5 variaciones evaluadas, con una tasa de aprobación de 100.0%.\n\n#### Variaciones aceptadas (5)\n- WhatsApp - Business Casual (calificación 3/5) «Mi cara se ve un poco extraña»\n- LinkedIn - Smart Casual (calificación 4/5)\n- WhatsApp - Smart Casual Cercano (calificación 3/5) «La expresión de la cara es quizas muy alegre»\n- LinkedIn - Formal Clásico (calificación 4/5)\n- LinkedIn - Business Casual (calificación 4/5)\n\n#### Variaciones rechazadas (0)\n- Ninguna.\n\n#### Explicación generada por Google Gemini Flash (API)\n\nAquí tienes el análisis basado exclusivamente en los datos proporcionados:\n\n### 1. Cuántas variaciones se evaluaron, cuántas fueron aceptadas y cuántas rechazadas.\nSe evaluaron un total de **5 variaciones**. De este total, **5 fueron aceptadas** y **0 fueron rechazadas**.\n\n### 2. Variaciones aceptadas\n*   **WhatsApp - Business Casual**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 3 estrellas. Cuenta con iluminación de luz suave de oficina con balance de blancos neutro y un fondo de entorno de oficina neutro minimalista. Aunque se aceptó, el usuario indicó en sus notas que su cara se ve un poco extraña.\n*   **LinkedIn - Smart Casual**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación alta de 4 estrellas. Presenta iluminación ambiental cálida con contraste moderado y un fondo de pared arquitectónica de concreto pulido o madera clara desenfocada. El usuario no dejó notas negativas al respecto.\n*   **WhatsApp - Smart Casual Cercano**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 3 estrellas. Utiliza luz diurna frontal limpia y sin sombras duras, sobre un fondo luminoso y limpio con colores claros. El usuario señaló en sus notas que la expresión de la cara es quizás muy alegre.\n*   **LinkedIn - Formal Clásico**\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 4 estrellas. Cuenta con iluminación de luz frontal difusa de tres puntos y un fondo de oficina corporativa moderna con bokeh suave. No incluye notas negativas.\n*   **LinkedIn - LinkedIn - Business Casual** (Título exacto: *LinkedIn - Business Casual*)\n    *   *Por qué se aceptó:* Fue aceptada con una calificación de 4 estrellas. Su iluminación es de luz natural de ventana cálida y envolvente, con un fondo de espacio de trabajo colaborativo o ventanal con luz diurna. No presenta notas del usuario.\n\n### 3. Variaciones rechazadas\nEn esta tanda **no hubo variaciones rechazadas**, ya que las 5 evaluadas fueron aceptadas por el usuario (todas obtuvieron calificaciones de 3 o 4 estrellas).\n\n### 4. Recomendaciones accionables para la siguiente tanda de generación\n*   **Mejorar la fidelidad facial:** Dado que en una de las fotos el usuario señaló que su cara se ve \"un poco extraña\", es prioritario ajustar los parámetros de IA para mantener una mayor precisión y naturalidad en los rasgos faciales.\n*   **Controlar la expresividad:** El usuario indicó que en una de las imágenes la expresión era \"quizas muy alegre\". Para la próxima tanda, se debe buscar un punto medio en la sonrisa o neutralidad de la expresión, especialmente en contextos profesionales como WhatsApp o LinkedIn.\n*   **Mantener la preferencia por entornos profesionales y cálidos:** Las calificaciones más altas (4 estrellas) se concentraron en configuraciones con luz ambiental cálida, luz natural de ventana o luz frontal difusa, combinadas con fondos de oficinas modernas, espacios colaborativos o paredes arquitectónicas. Estos esquemas de iluminación y fondos deben replicarse o priorizarse."
+  },
+  "decisions": [
+    {
+      "variation_id": "gpu_var_whatsapp_business_casual_54036",
+      "preset_id": "whatsapp_business_casual",
+      "title": "WhatsApp - Business Casual",
+      "platform": "WhatsApp",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz suave de oficina con balance de blancos neutro",
+      "recommended_background": "Entorno de oficina neutro minimalista",
+      "user_notes": "Mi cara se ve un poco extraña",
+      "timestamp": 1795119729.183,
+      "latency_seconds": 8.116,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Javier Olivares"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_smart_casual_50647",
+      "preset_id": "linkedin_smart_casual",
+      "title": "LinkedIn - Smart Casual",
+      "platform": "LinkedIn",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Iluminación ambiental cálida con contraste moderado",
+      "recommended_background": "Pared arquitectónica de concreto pulido o madera clara desenfocada",
+      "user_notes": "",
+      "timestamp": 1795119792.527,
+      "latency_seconds": 8.116,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Javier Olivares"
+    },
+    {
+      "variation_id": "gpu_var_whatsapp_smart_casual_57728",
+      "preset_id": "whatsapp_smart_casual",
+      "title": "WhatsApp - Smart Casual Cercano",
+      "platform": "WhatsApp",
+      "formality": "Smart Casual",
+      "accepted": true,
+      "rating": 3,
+      "recommended_lighting": "Luz diurna frontal limpia y sin sombras duras",
+      "recommended_background": "Fondo luminoso y limpio con colores claros",
+      "user_notes": "La expresión de la cara es quizas muy alegre",
+      "timestamp": 1795119863.341,
+      "latency_seconds": 8.116,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Javier Olivares"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_formal_43317",
+      "preset_id": "linkedin_formal",
+      "title": "LinkedIn - Formal Clásico",
+      "platform": "LinkedIn",
+      "formality": "Formal",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz frontal difusa de tres puntos",
+      "recommended_background": "Oficina corporativa moderna con bokeh suave",
+      "user_notes": "",
+      "timestamp": 1795119912.764,
+      "latency_seconds": 8.116,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Javier Olivares"
+    },
+    {
+      "variation_id": "gpu_var_linkedin_business_casual_46784",
+      "preset_id": "linkedin_business_casual",
+      "title": "LinkedIn - Business Casual",
+      "platform": "LinkedIn",
+      "formality": "Business Casual",
+      "accepted": true,
+      "rating": 4,
+      "recommended_lighting": "Luz natural de ventana cálida y envolvente",
+      "recommended_background": "Espacio de trabajo colaborativo o ventanal con luz diurna",
+      "user_notes": "",
+      "timestamp": 1795119969.418,
+      "latency_seconds": 8.116,
+      "engine_mode": "Nivel Intermedio (ControlNet Canny + img2img, GPU)",
+      "participant": "Javier Olivares"
+    }
+  ]
+}
