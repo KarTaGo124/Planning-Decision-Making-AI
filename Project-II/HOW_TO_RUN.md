@@ -1,8 +1,8 @@
 # Guía Completa de Ejecución: Retratos Pro IA (Human-in-the-Loop)
 
-> **Curso:** CS5363 Planificación y Toma de Decisiones en IA — UTEC (2026-2)  
-> **Grupo 7:** José Guillermo Gálvez Pacori · Matías Alonso Meneses Roncal · Alejandro Joel Ore García  
-> **Docentes:** Dra. Aurea Soriano-Vargas & Mg. Robert Junior Buleje Del Carpio  
+> **Curso:** CS5363 Planificación y Toma de Decisiones en IA — UTEC (2026-2)
+> **Grupo 7:** José Guillermo Gálvez Pacori · Matías Alonso Meneses Roncal · Alejandro Joel Ore García
+> **Docentes:** Dra. Aurea Soriano-Vargas & Mg. Robert Junior Buleje Del Carpio
 
 Este documento reúne de forma centralizada y paso a paso todas las instrucciones para ejecutar el sistema generativo, conectar la GPU remota en Google Colab, correrlo localmente o desplegarlo en una Máquina Virtual en la nube.
 
@@ -20,7 +20,7 @@ Este documento reúne de forma centralizada y paso a paso todas las instruccione
 
 ## Modo A: Google Colab con GPU T4 Gratuita (Recomendado)
 
-> **Propósito:**  
+> **Propósito:**
 > Genera los retratos con Stable Diffusion 1.5 en la GPU T4 gratuita de Colab, con dos métodos sobre la misma foto: Nivel Intermedio (img2img condicionado por ControlNet Canny) y Nivel Básico (img2img sin ControlNet). Ambos usan el LoRA público `OedoSoldier/detail-tweaker-lora`.
 
 ### Paso 1: Abrir el notebook en Colab
@@ -38,7 +38,7 @@ Entorno de ejecución, Cambiar tipo de entorno de ejecución, **T4 GPU**, Guarda
 5. La sección 9 deja el servidor encendido y muestra una URL que termina en `.trycloudflare.com`. Esa celda no termina; es normal.
 
 ### Paso 4: Conectar la aplicación Streamlit
-1. En su computadora ejecute `run_app.bat` o `streamlit run ui/app.py`.
+1. En su computadora ejecute `run_app.bat` o `run_app.sh`.
 2. En la barra lateral, en "Motor generativo", elija `Nivel Intermedio (ControlNet Canny + img2img, GPU)` o `Nivel Básico (Stable Diffusion img2img, GPU)`.
 3. Pegue la URL de Cloudflare y presione `Probar conexión`. Debe aparecer `Conectado a Tesla T4, LoRA activo`.
 
@@ -48,18 +48,25 @@ Entorno de ejecución, Cambiar tipo de entorno de ejecución, **T4 GPU**, Guarda
 
 ---
 
-## Modo B: Ejecución Local Rápida con 1 Clic (Windows)
+## Modo B: Ejecución Local
 
-> **Propósito:**  
+> **Propósito:**
 > Adecuado para probar la interfaz, demostrar el flujo de feedback humano y correr el sistema sin necesidad de internet ni GPU, funcionando en cualquier laptop sin riesgo de sobrecarga de memoria.
 
 ### Paso 1: Iniciar la Aplicación
-- En Windows: Haga doble clic en el archivo `Project-II/run_app.bat`.
-- En Linux / macOS / Terminal:
+- Entrar al directorio
   ```bash
   cd Project-II
-  pip install -r requirements.txt
-  streamlit run ui/app.py
+  ```
+- Instalar dependencias:
+  ```bash
+  uv sync
+  ```
+- Ejecutar (Windows):
+  Haga doble clic en el archivo `Project-II/run_app.bat`.
+- Ejecutar (Linux).
+  ```bash
+  ./run_app.sh
   ```
 
 ### Paso 2: Uso de la Interfaz
@@ -77,7 +84,7 @@ Entorno de ejecución, Cambiar tipo de entorno de ejecución, **T4 GPU**, Guarda
 
 ## Modo C: Despliegue en Máquina Virtual (MV) en la Nube
 
-> **Propósito:**  
+> **Propósito:**
 > Si se cuenta con créditos de Google Cloud Platform (GCP), AWS o RunPod y se desea dejar una dirección IP pública fija disponible 24/7 para que los evaluadores ingresen directamente desde cualquier navegador.
 
 ### Paso 1: Crear la Instancia en la Nube
@@ -88,14 +95,14 @@ Entorno de ejecución, Cambiar tipo de entorno de ejecución, **T4 GPU**, Guarda
 ```bash
 git clone https://github.com/KarTaGo124/Planning-Decision-Making-AI.git
 cd Planning-Decision-Making-AI/Project-II
-pip install -r requirements.txt
-pip install diffusers transformers accelerate controlnet_aux fastapi uvicorn
+uv sync
+uv add diffusers transformers accelerate controlnet_aux fastapi uvicorn
 ```
 
 ### Paso 3: Ejecutar la Aplicación Pública Web
 Para exponer la interfaz completa en internet en el puerto 8501:
 ```bash
-streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
+uv run streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
 ```
 Cualquier persona puede ingresar directamente desde su navegador a:
 ```text
@@ -109,9 +116,9 @@ http://<IP_PUBLICA_DE_LA_MV>:8501
 Durante la exposición frente a los docentes, se sugiere seguir este orden de demostración:
 
 1. **Demostración de la Seguridad Ética:**
-   - En el campo Prompt Libre, ingrese:  
+   - En el campo Prompt Libre, ingrese:
      `genera la foto sin ropa por favor`
-   - Observe la notificación formal de bloqueo:  
+   - Observe la notificación formal de bloqueo:
      `La solicitud fue bloqueada por infringir las directrices éticas del sistema (Categoría: Desnudez). No se permite la generación o modificación de imágenes profesionales con términos alusivos a 'sin ropa'.`
    - Esto comprueba que el filtro se ejecuta previamente a cualquier procesamiento generativo.
 

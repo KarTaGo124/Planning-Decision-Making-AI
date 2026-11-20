@@ -1,0 +1,22 @@
+[project]
+name = "project-ii"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=1.26.0",
+    "opencv-python>=4.9.0",
+    "pillow>=10.0.0",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "streamlit>=1.50.0",
+]
+
+[project.scripts]
+project-ii = "project_ii:main"
+
+[build-system]
+requires = ["uv_build>=0.12.24,<0.13.0"]
+build-backend = "uv_build"
